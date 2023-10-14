@@ -12,6 +12,7 @@ Le mod rajoute 2 catégories (1.7 et Utilitaire).
   - Le ping actuel
   - Le ParticleMod
   - et un AutoGG
-
+------------Nouveau---------------
+  - Un LowFire
 La source du client est publique, vous pouvez l'utiliser si vous le souhaitez.
 Il y Aura des rajouts "réguliers" aumoins 1 module par an XD.
