@@ -1,5 +1,5 @@
 # Honertis
-Bienvenue sur le github de Honertis, le client Craftok devloppé par TheAltening45.
+Bienvenue sur le github de Honertis, le client Craftok développé par TheAltening45.
 Le mod rajoute 2 catégories (1.7 et utilities).
   Dans ces 2 catégories il ya:
   - Le Rajout du BlockHit
