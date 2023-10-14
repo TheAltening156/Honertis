@@ -19,7 +19,8 @@ public class ModulesManager {
 			new FullBright(),
 			new Ping(),
 			new MoreParticles(),
-			new AutoGG());
+			new AutoGG(),
+			new LowFire());
 	}
 	
 	

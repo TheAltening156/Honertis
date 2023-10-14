@@ -361,10 +361,10 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
             	HitColor h = (HitColor) Honertis.modulesManager.getModuleByName("HitColor");
             	boolean toggled = h.isEnabled();
             	boolean t1 = h.custom.isToggled();
-            	float r = toggled ? (!t1 ? (float)h.r.getDefValue()/255f : 0.77f) : 0.77F,
-            		  g = toggled ? (!t1 ? (float)h.g.getDefValue()/255f : 0f) : 0.0F,
-            		  b = toggled ? (!t1 ? (float)h.b.getDefValue()/255f : 0f) : 0.0F,
-            		  a = toggled ? (!t1 ? (float)h.a.getDefValue()/255f : 0.6F) : 0.3F;
+            	float r = toggled ? (t1 ? (float)h.r.getDefValue()/255f : 0.77f) : 0.77F,
+            		  g = toggled ? (t1 ? (float)h.g.getDefValue()/255f : 0f) : 0.0F,
+            		  b = toggled ? (t1 ? (float)h.b.getDefValue()/255f : 0f) : 0.0F,
+            		  a = toggled ? (t1 ? (float)h.a.getDefValue()/255f : 0.6F) : 0.3F;
             	this.brightnessBuffer.put(r);
                 this.brightnessBuffer.put(g);
                 this.brightnessBuffer.put(b);

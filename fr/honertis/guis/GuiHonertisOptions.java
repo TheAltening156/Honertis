@@ -11,6 +11,7 @@ import fr.honertis.Honertis;
 import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.module.modules.HitColor;
+import fr.honertis.settings.BooleanSettings;
 import fr.honertis.settings.NumberSettings;
 import fr.honertis.settings.Settings;
 import fr.honertis.utils.DrawUtils;
@@ -29,7 +30,7 @@ public class GuiHonertisOptions extends GuiScreen {
 	
 	@Override
 	public void initGui() {
-		buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height - 25, "Back"));
+		buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height - 25, "Retour"));
 		super.initGui();
 	}
 	
@@ -66,7 +67,7 @@ public class GuiHonertisOptions extends GuiScreen {
 					
 					if (m.showSettings) {
 						HitColor clr = (HitColor) Honertis.modulesManager.getModuleByName("HitColor");
-						if (m.name.equals(clr.name)) {
+						if (m.name.equals(clr.name) && clr.custom.isToggled()) {
 							drawRect(settsX + 165, settsY + 15, settsX + 190, settsY + 40, new Color((int)clr.r.getDefValue(), (int)clr.g.getDefValue(), (int)clr.b.getDefValue(), (int)clr.a.getDefValue()).getRGB());
 							mc.fontRendererObj.drawString("rendu :", settsX + 160, settsY, -1);
 						}
@@ -95,6 +96,13 @@ public class GuiHonertisOptions extends GuiScreen {
 									num.setValue(num.getIncrement() == 1 ? (int) val : val);
 								}
 		                      
+							}
+							if (s instanceof BooleanSettings) {
+								BooleanSettings ss = (BooleanSettings) s;
+								drawRect(settsX + 118, settsY - 4, settsX + 147, settsY + 11, ss.isToggled() ? new Color(0, 205, 0, 190).getRGB() : new Color(205, 0, 0, 190).getRGB() );
+								mc.fontRendererObj.drawCenteredString(ss.isToggled() ? "I" : "O", settsX + 132, settsY, -1);
+								drawRect(  settsX + 95 - 12 + (ss.isToggled() ? 60 : 34), settsY - 5, settsX + 95 - 12 + (ss.isToggled() ? 66 : 40), settsY + 12, -1);
+							
 							}
 		                    mc.fontRendererObj.drawString(s.name, settsX - 70, settsY, -1);
 		                    posY += 25;
@@ -141,6 +149,12 @@ public class GuiHonertisOptions extends GuiScreen {
 							if (s instanceof NumberSettings) {
 								if (isHovered(settsX - 3, settsY - 3, settsX + 127, settsY + 13, mouseX, mouseY) && mouseButton == 0) {
 									clicked = true;
+								}
+							}
+							if (s instanceof BooleanSettings) {
+								BooleanSettings ss = (BooleanSettings) s; 
+								if (isHovered(settsX + 118, settsY - 5, settsX + 147, settsY + 12, mouseX, mouseY) && mouseButton == 0) {
+									ss.toggle();
 								}
 							}
 							posY += 25;

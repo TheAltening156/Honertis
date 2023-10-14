@@ -555,7 +555,7 @@ public class ItemRenderer
             float f4 = textureatlassprite.getMaxV();
             float f5 = (0.0F - f) / 2.0F;
             float f6 = f5 + f;
-            float f7 = 0.0F - f / 2.0F;
+            float f7 = 0.0F - f / (Honertis.modulesManager.getModuleByName("LowFire").isEnabled() ? 1.15F : 2.0f);
             float f8 = f7 + f;
             float f9 = -0.5F;
             GlStateManager.translate((float)(-(i * 2 - 1)) * 0.24F, -0.3F, 0.0F);
