@@ -1,6 +1,6 @@
 # Honertis
 Bienvenue sur le github de Honertis, le client Craftok développé par TheAltening45.
-Le mod rajoute 2 catégories (1.7 et utilities).
+Le mod rajoute 2 catégories (1.7 et Utilitaire).
   Dans ces 2 catégories il ya:
   - Le Rajout du BlockHit
   - L'ancienne taille de la Canne à pêche
@@ -12,4 +12,6 @@ Le mod rajoute 2 catégories (1.7 et utilities).
   - Le ping actuel
   - Le ParticleMod
   - et un AutoGG
-Client Craftok Minecraft 1.8
+
+La source du client est publique, vous pouvez l'utiliser si vous le souhaitez.
+Il y Aura des rajouts "réguliers" aumoins 1 module par an XD.
