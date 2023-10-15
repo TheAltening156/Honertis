@@ -184,10 +184,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
             e.setType(EventType.PRE);
             Honertis.event.onEvent(e);
             
-            for(ModuleBase m : Honertis.modulesManager.modules) {
-            	if (m.isEnabled()) 
-            		m.update();
-            }
+            
             
             if (this.isRiding())
             {
@@ -202,6 +199,10 @@ public class EntityPlayerSP extends AbstractClientPlayer
         EventUpdate e = new EventUpdate();
         e.setType(EventType.POST);
         Honertis.event.onEvent(e);
+        for(ModuleBase m : Honertis.modulesManager.modules) {
+            	if (m.isEnabled()) 
+            		m.update();
+            }
     }
 
     /**
