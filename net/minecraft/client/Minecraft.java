@@ -15,6 +15,7 @@ import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 
 import fr.honertis.Honertis;
+import fr.honertis.module.ModuleBase;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -1228,6 +1229,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     public void updateDisplay()
     {
         this.mcProfiler.startSection("display_update");
+        for (ModuleBase m : Honertis.modulesManager.modules) {
+        	m.update();
+        }
         Display.update();
         this.mcProfiler.endSection();
         this.checkWindowResize();

@@ -184,8 +184,6 @@ public class EntityPlayerSP extends AbstractClientPlayer
             e.setType(EventType.PRE);
             Honertis.event.onEvent(e);
             
-            
-            
             if (this.isRiding())
             {
                 this.sendQueue.addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(this.rotationYaw, this.rotationPitch, this.onGround));
@@ -199,10 +197,6 @@ public class EntityPlayerSP extends AbstractClientPlayer
         EventUpdate e = new EventUpdate();
         e.setType(EventType.POST);
         Honertis.event.onEvent(e);
-        for(ModuleBase m : Honertis.modulesManager.modules) {
-            	if (m.isEnabled()) 
-            		m.update();
-            }
     }
 
     /**
