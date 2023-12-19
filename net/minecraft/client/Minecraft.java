@@ -15,7 +15,9 @@ import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 
 import fr.honertis.Honertis;
+import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModuleBase;
+import fr.honertis.utils.TimeUtils;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -1058,6 +1060,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
      */
     public void shutdownMinecraftApplet()
     {
+    	FileManager.save();
         try
         {
             this.stream.shutdownStream();
@@ -1225,12 +1228,18 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         this.mcProfiler.endSection();
     }
+    TimeUtils time = new TimeUtils();
 
     public void updateDisplay()
     {
         this.mcProfiler.startSection("display_update");
         for (ModuleBase m : Honertis.modulesManager.modules) {
         	m.update();
+        }
+        if (time.hasTimeElapsed(2000000, true)) {
+        	FileManager.save();
+        	System.out.println("Fichier config sauvegardé.");
+        	time.reset();
         }
         Display.update();
         this.mcProfiler.endSection();

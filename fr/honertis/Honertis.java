@@ -1,6 +1,7 @@
 package fr.honertis;
 
 import fr.honertis.event.Event;
+import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModulesManager;
 
 public class Honertis {
@@ -13,5 +14,6 @@ public class Honertis {
 	public static void onStartup() {
 		modulesManager = new ModulesManager();
 		started = true;
+		FileManager.init();
 	}
 }

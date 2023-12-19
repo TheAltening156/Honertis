@@ -26,7 +26,22 @@ public class NumberSettings extends Settings{
 		double precision = 1.0 / this.increment;
 		this.defValue = Math.round(Math.max(this.min, Math.min(this.max, val)) * precision) / precision;
 	}
-	
+	@Override
+	public Double getValue() {
+		return defValue;
+	}
+
+	public int getIntValue() {
+		return (int) defValue;
+	}
+
+	public float getFloatValue() {
+		return (float) defValue;
+	}
+
+	public long getLongValue() {
+		return (long) defValue;
+	}
 	public double getDefValue() {
 		return defValue;
 	}
@@ -59,5 +74,12 @@ public class NumberSettings extends Settings{
 		this.increment = increment;
 	}
 	
-	
+	public void setValue(Object value) {
+		if (value instanceof Double) {
+			if ((double)value < this.min || (double)value > this.max) {
+				return;
+			}
+			this.defValue = (Double) value;
+		}
+	}
 }
