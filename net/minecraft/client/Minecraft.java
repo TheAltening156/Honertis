@@ -1236,7 +1236,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         for (ModuleBase m : Honertis.modulesManager.modules) {
         	m.update();
         }
-        if (time.hasTimeElapsed(2000000, true)) {
+        if (time.hasTimeElapsed(120000, true)) {
         	FileManager.save();
         	System.out.println("Fichier config sauvegardé.");
         	time.reset();
