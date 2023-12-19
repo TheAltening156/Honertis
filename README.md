@@ -11,7 +11,7 @@ Le mod rajoute 2 catégories (1.7 et Utilitaire).
   - Un FullBright
   - Le ping actuel
   - Le ParticleMod
-  - et un AutoGG
+  - Un AutoGG
   - Un LowFire
 
 La source du client est publique, vous pouvez l'utiliser si vous le souhaitez.
