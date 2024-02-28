@@ -23,6 +23,7 @@ import net.minecraft.util.ResourceLocation;
 public class GuiHonertisOptions extends GuiScreen {
 	public GuiScreen parent;
 	public boolean clicked;
+	private	int mouse = 0;
 	
 	public GuiHonertisOptions(GuiScreen parent) {
 		this.parent = parent;
@@ -41,12 +42,14 @@ public class GuiHonertisOptions extends GuiScreen {
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		int wheel = -Mouse.getDWheel();
-		if (wheel != 0)
-		System.out.println("t " + wheel);
+		int dwheel = Mouse.getDWheel();
+		if (dwheel != 0) {
+			int scrollDir = dwheel > 0 ? (dwheel/8) : (dwheel/8);
+			mouse += scrollDir;
+		}
 		drawDefaultBackground();
 		mc.fontRendererObj.drawCenteredStringWithShadow("Honertis Options", this.width / 2, 10, -1);
-		int posY = 50;
+		int posY = 50 + mouse;
 		for (Category c : Category.values()) {
 			mc.fontRendererObj.drawCenteredStringWithShadow(c.name, this.width / 2, posY, -1);
 			int modX = this.width / 2 + 60;
@@ -128,7 +131,7 @@ public class GuiHonertisOptions extends GuiScreen {
 	
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		int posY = 50;
+		int posY = 50 + mouse;
 		for (Category c : Category.values()) {
 			int modX = this.width / 2 + 60;
 			int modY = posY + 23;
