@@ -7,6 +7,10 @@ import com.mojang.authlib.GameProfile;
 import io.netty.buffer.Unpooled;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -1705,6 +1709,9 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
 
         if (s.startsWith("level://"))
         {
+        	if (!this.validateResourcePackUrl(s, s1)) {
+                return;
+            }
             String s2 = s.substring("level://".length());
             File file1 = new File(this.gameController.mcDataDir, "saves");
             File file2 = new File(file1, s2);
@@ -1802,7 +1809,33 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         }
     }
 
-    public void handleEntityNBT(S49PacketUpdateEntityNBT packetIn)
+    public boolean validateResourcePackUrl(String url, String hash) {
+        try {
+            URI uri = new URI(url);
+            String scheme = uri.getScheme();
+            boolean isLevelProtocol = "level".equals(scheme);
+            if (!("http".equals(scheme) || "https".equals(scheme) || isLevelProtocol)) {
+                this.getNetworkManager().sendPacket(new C19PacketResourcePackStatus(hash, C19PacketResourcePackStatus.Action.FAILED_DOWNLOAD));
+                throw new URISyntaxException(url, "Wrong protocol");
+            }
+            url = URLDecoder.decode(url.substring("level://".length()), StandardCharsets.UTF_8.toString());
+            if (isLevelProtocol && (url.contains("..") || !url.endsWith("/resources.zip"))) {
+                System.out.println("Malicious server tried to access " + url);
+                /*EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
+                if (player != null) {
+                    Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("Malicious server tried to access " + url));
+                }*/
+                throw new URISyntaxException(url, "Invalid levelstorage resourcepack path");
+            }
+            return true;
+        }
+        catch (Exception e) {
+            this.getNetworkManager().sendPacket(new C19PacketResourcePackStatus(hash, C19PacketResourcePackStatus.Action.FAILED_DOWNLOAD));
+            return false;
+        }
+    }
+
+	public void handleEntityNBT(S49PacketUpdateEntityNBT packetIn)
     {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
         Entity entity = packetIn.getEntity(this.clientWorldController);
