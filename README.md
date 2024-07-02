@@ -13,9 +13,9 @@ Le mod rajoute 2 catégories (1.7 et Utilitaire).
   - Le ParticleMod
   - Un AutoGG
   - Un LowFire
+  - Un ToggleSprint
 
 La source du client est publique, vous pouvez l'utiliser si vous le souhaitez.
-Il y Aura des rajouts "réguliers" aumoins une mise a jour par an XD.
 
 Contact:  
   - Discord: TheAltening#9143 ou thealtening
