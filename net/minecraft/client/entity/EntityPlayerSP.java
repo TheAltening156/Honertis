@@ -841,7 +841,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
             }
         }
 
-        if (!this.isSprinting() && this.movementInput.moveForward >= f && flag3 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness) && Honertis.modulesManager.getModuleByName("ToggleSprint").isEnabled() ? !this.mc.gameSettings.keyBindSprint.isKeyDown() : this.mc.gameSettings.keyBindSprint.isKeyDown())
+        if (!this.isSprinting() && this.movementInput.moveForward >= f && flag3 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness) && (Honertis.modulesManager.getModuleByName("ToggleSprint").isEnabled() ? Honertis.modulesManager.getModuleByName("ToggleSprint").isEnabled() : this.mc.gameSettings.keyBindSprint.isKeyDown()))
         {
             this.setSprinting(true);
         }
