@@ -14,6 +14,7 @@ import fr.honertis.module.modules.HitColor;
 import fr.honertis.module.modules.LowFire;
 import fr.honertis.module.modules.MoreParticles;
 import fr.honertis.module.modules.Ping;
+import fr.honertis.module.modules.ToggleSprint;
 import fr.honertis.settings.Settings;
 import fr.honertis.utils.YamlUtils.ConfigMod;
 
@@ -32,7 +33,8 @@ public class ModulesManager {
 			new Ping(),
 			new MoreParticles(),
 			new AutoGG(),
-			new LowFire());
+			new LowFire(),
+			new ToggleSprint());
 	}
 	
 	
