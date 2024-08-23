@@ -1274,7 +1274,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
     public int getLimitFramerate()
     {
-        return this.theWorld == null && this.currentScreen != null ? 60 : this.gameSettings.limitFramerate;
+        return this.theWorld == null && this.currentScreen != null ? 60 : Display.isActive() ? this.gameSettings.limitFramerate : 30;
     }
 
     public boolean isFramerateLimitBelowMax()
@@ -1522,7 +1522,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             this.leftClickCounter = 0;
         }
 
-        if (this.leftClickCounter <= 0 && Honertis.modulesManager.getModuleByName("BlockTap").isEnabled() ? Honertis.modulesManager.getModuleByName("BlockTap").isEnabled() : !this.thePlayer.isUsingItem())
+        if (this.leftClickCounter <= 0 && (Honertis.modulesManager.getModuleByName("BlockTap").isEnabled() || !this.thePlayer.isUsingItem()))
         {
             if (leftClick && this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {
