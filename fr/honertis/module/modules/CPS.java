@@ -22,7 +22,7 @@ public class CPS extends ModuleBase{
 	public int posY = 30;
 	
 	public CPS() {
-		super("CPS", "Montre combien de fps vous faites en 1 seconde", Category.UTILITIES);
+		super("CPS", "Montre combien de cps vous faites en 1 seconde", Category.UTILITIES);
 	}
 	
 	@Override

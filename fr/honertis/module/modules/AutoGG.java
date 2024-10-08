@@ -9,7 +9,7 @@ import net.minecraft.util.ChatComponentText;
 public class AutoGG extends ModuleBase{
 	public TimeUtils timer = new TimeUtils();
 	public AutoGG() {
-		super("AutoGG", "Dis GG ou GL dans le chat a chaque perdue perdu ou gagnée", Category.UTILITIES);
+		super("AutoGG", "Dis GG ou GL dans le chat a chaque game perdue ou gagnée", Category.UTILITIES);
 	}
 	
 	@Override
