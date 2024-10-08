@@ -6,7 +6,7 @@ import fr.honertis.module.ModuleBase;
 public class BlockHit extends ModuleBase{
 
 	public BlockHit() {
-		super("BlockHit", "Réajoute l'animation du blockhit 1.7", Category.OLD1_7);
+		super("BlockHit", "Remet l'animation du blockhit 1.7", Category.OLD1_7);
 	}
 	
 	
