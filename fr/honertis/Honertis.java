@@ -15,5 +15,6 @@ public class Honertis {
 		modulesManager = new ModulesManager();
 		started = true;
 		FileManager.init();
+		DiscordRPCInit.init();
 	}
 }
