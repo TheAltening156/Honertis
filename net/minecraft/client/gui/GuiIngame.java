@@ -1,5 +1,10 @@
 package net.minecraft.client.gui;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Random;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -7,10 +12,6 @@ import com.google.common.collect.Lists;
 import fr.honertis.Honertis;
 import fr.honertis.event.EventRenderGui;
 import fr.honertis.event.EventType;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Random;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -260,7 +261,7 @@ public class GuiIngame extends Gui
                     i1 = MathHelper.func_181758_c(f3 / 50.0F, 0.7F, 0.6F) & 16777215;
                 }
 
-                this.getFontRenderer().drawString(this.recordPlaying, -this.getFontRenderer().getStringWidth(this.recordPlaying) / 2, -4, i1 + (k1 << 24 & -16777216));
+                this.getFontRenderer().drawString(this.recordPlaying, -this.getFontRenderer().getStringWidth(this.recordPlaying) / 2, -4, i1 + (k1 << 24 & -16777216));//TODO: LA !!
                 GlStateManager.disableBlend();
                 GlStateManager.popMatrix();
             }
@@ -354,7 +355,7 @@ public class GuiIngame extends Gui
         EventRenderGui e = new EventRenderGui();
         e.setType(EventType.PRE);
         Honertis.event.onEvent(e);
-
+        
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
         GlStateManager.enableAlpha();
@@ -604,14 +605,33 @@ public class GuiIngame extends Gui
             int i1 = p_180475_2_.getScaledWidth() - b0 + 2;
             drawRect(j - 2, l, i1, l + this.getFontRenderer().FONT_HEIGHT, 1342177280);
             this.getFontRenderer().drawString(s1, j, l, 553648127);
+            this.getFontRenderer().drawString(s1, 80, 5, 553648127);
+
             this.getFontRenderer().drawString(s2, i1 - this.getFontRenderer().getStringWidth(s2), l, 553648127);
 
             if (k == arraylist1.size())
             {
+            	
                 String s3 = p_180475_1_.getDisplayName();
                 drawRect(j - 2, l - this.getFontRenderer().FONT_HEIGHT - 1, i1, l - 1, 1610612736);
                 drawRect(j - 2, l - 1, i1, l, 1342177280);
                 this.getFontRenderer().drawString(s3, j + i / 2 - this.getFontRenderer().getStringWidth(s3) / 2, l - this.getFontRenderer().FONT_HEIGHT, 553648127);
+                
+                
+                if (s3.equalsIgnoreCase(EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + "KITPVP")) {
+                	if (mc.currentScreen == null || mc.currentScreen != null || !s2.contains("Safe")) {
+                    	String name = (this.recordPlaying == null ? "" : this.recordPlaying);
+                		GlStateManager.pushMatrix();
+                		GlStateManager.scale(1, 1, 1);
+                		GlStateManager.translate(new ScaledResolution(mc).getScaledWidth() / 2, new ScaledResolution(mc).getScaledHeight() / 2 + 6, 0);
+                		//drawRect(-mc.fontRendererObj.getStringWidth(name)/2 - 3, 0, mc.fontRendererObj.getStringWidth(name)/2 + 3, 12, new Color(0,0,0,120).getRGB());
+                		this.getFontRenderer().drawCenteredStringWithShadow(name, 0, 2, -1);
+                		GlStateManager.popMatrix();
+                		//getFontRenderer().drawCenteredString(mc.thePlayer.getDisplayName().getFormattedText(), 50, 75, -1);
+                		
+                		//mc.displayGuiScreen(new GuiCraftokKitPVP());//TODO: YUIGFIOUH
+                	}
+                }
             }
         }
     }

@@ -3197,7 +3197,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     }
                     else if (i == this.gameSettings.keyBindScreenshot.getKeyCode())
                     {
-                        this.ingameGUI.getChatGUI().printChatMessage(ScreenShotHelper.saveScreenshot(this.mcDataDir, this.displayWidth, this.displayHeight, this.framebufferMc));
+                    	ScreenShotHelper.saveScreenshot(this.mcDataDir, null, this.displayWidth, this.displayHeight, this.framebufferMc);	
                     }
                 }
                 else if (i == this.gameSettings.keyBindStreamToggleMic.getKeyCode())

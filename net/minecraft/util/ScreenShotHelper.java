@@ -7,6 +7,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.imageio.ImageIO;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -31,22 +33,103 @@ public class ScreenShotHelper
      */
     private static int[] pixelValues;
 
-    /**
-     * Saves a screenshot in the game directory with a time-stamped filename.  Args: gameDirectory,
-     * requestedWidthInPixels, requestedHeightInPixels, frameBuffer
-     */
-    public static IChatComponent saveScreenshot(File gameDirectory, int width, int height, Framebuffer buffer)
-    {
-        return saveScreenshot(gameDirectory, (String)null, width, height, buffer);
-    }
-
+    
     /**
      * Saves a screenshot in the game directory with the given file name (or null to generate a time-stamped name).
      * Args: gameDirectory, fileName, requestedWidthInPixels, requestedHeightInPixels, frameBuffer
      */
-    public static IChatComponent saveScreenshot(File gameDirectory, String screenshotName, int width, int height, Framebuffer buffer)
+    public static void saveScreenshot(File gameDirectory, String screenshotName, int width, int height, Framebuffer buffer)
     {
-        try
+        
+    	File file1 = new File(gameDirectory, "screenshots");
+        file1.mkdir();
+        
+        otherThing(width, height, buffer, gameDirectory, file1);
+        new Thread() {
+        	@Override
+        	public void run() {
+	        	try {
+		            TextureUtil.processPixelValues(pixelValues, width, height);
+		            BufferedImage bufferedimage = null;
+		
+		            if (OpenGlHelper.isFramebufferEnabled())
+		            {
+		                bufferedimage = new BufferedImage(buffer.framebufferWidth, buffer.framebufferHeight, 1);
+		                int j = buffer.framebufferTextureHeight - buffer.framebufferHeight;
+		
+		                for (int k = j; k < buffer.framebufferTextureHeight; ++k)
+		                {
+		                    for (int l = 0; l < buffer.framebufferWidth; ++l)
+		                    {
+		                        bufferedimage.setRGB(l, k - j, pixelValues[k * buffer.framebufferTextureWidth + l]);
+		                    }
+		                }
+		            }
+		            else
+		            {
+		                bufferedimage = new BufferedImage(width, height, 1);
+		                bufferedimage.setRGB(0, 0, width, height, pixelValues, 0, width);
+		            }
+		
+		            File file2;
+		
+		            if (screenshotName == null)
+		            {
+		                file2 = getTimestampedPNGFileForDirectory(file1);
+		            }
+		            else
+		            {
+		                file2 = new File(file1, screenshotName);
+		            }
+		
+		            ImageIO.write(bufferedimage, "png", (File)file2);
+		            IChatComponent ichatcomponent = new ChatComponentText(file2.getName());
+		            ichatcomponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file2.getAbsolutePath()));
+		            ichatcomponent.getChatStyle().setUnderlined(Boolean.valueOf(true));
+		            Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentTranslation("screenshot.success", new Object[] {ichatcomponent})));
+		        }
+		        catch (Exception exception)
+		        {
+		            logger.warn((String)"Couldn\'t save screenshot", (Throwable)exception);
+		            Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentTranslation("screenshot.failure", new Object[] {exception.getMessage()})));
+		        }
+        	}
+        }.start();
+    }
+    private static void otherThing(int width, int height, Framebuffer buffer, File gameDirectory, File file1) {
+        if (OpenGlHelper.isFramebufferEnabled())
+        {
+            width = buffer.framebufferTextureWidth;
+            height = buffer.framebufferTextureHeight;
+        }
+
+        int i = width * height;
+
+        if (pixelBuffer == null || pixelBuffer.capacity() < i)
+        {
+            pixelBuffer = BufferUtils.createIntBuffer(i);
+            pixelValues = new int[i];
+        }
+
+        GL11.glPixelStorei(GL11.GL_PACK_ALIGNMENT, 1);
+        GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
+        pixelBuffer.clear();
+
+        if (OpenGlHelper.isFramebufferEnabled())
+        {
+            GlStateManager.bindTexture(buffer.framebufferTexture);
+            GL11.glGetTexImage(GL11.GL_TEXTURE_2D, 0, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, (IntBuffer)pixelBuffer);
+        }
+        else
+        {
+            GL11.glReadPixels(0, 0, width, height, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, (IntBuffer)pixelBuffer);
+        }
+
+        pixelBuffer.get(pixelValues);
+	}
+    /*public static IChatComponent saveScreenshot(File gameDirectory, String screenshotName, int width, int height, Framebuffer buffer)
+    {
+       	try
         {
             File file1 = new File(gameDirectory, "screenshots");
             file1.mkdir();
@@ -124,8 +207,9 @@ public class ScreenShotHelper
             logger.warn((String)"Couldn\'t save screenshot", (Throwable)exception);
             return new ChatComponentTranslation("screenshot.failure", new Object[] {exception.getMessage()});
         }
-    }
-
+    }*/
+   
+    
     /**
      * Creates a unique PNG file in the given directory named by a timestamp.  Handles cases where the timestamp alone
      * is not enough to create a uniquely named file, though it still might suffer from an unlikely race condition where

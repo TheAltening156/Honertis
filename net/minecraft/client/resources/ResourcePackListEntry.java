@@ -62,7 +62,7 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
                 s1 = field_183022_f.getFormattedText();
             }
 
-            if (this.func_148309_e())
+            if (this.dontHavePackEntry())
             {
                 if (j < 32)
                 {
@@ -75,7 +75,7 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
             }
             else
             {
-                if (this.func_148308_f())
+                if (this.hasPackEntry())
                 {
                     if (j < 16)
                     {
@@ -87,7 +87,7 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
                     }
                 }
 
-                if (this.func_148314_g())
+                if (this.getLastPack())
                 {
                     if (j < 32 && j > 16 && k < 16)
                     {
@@ -130,7 +130,7 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
     }
 
     protected abstract int func_183019_a();
-
+    
     protected abstract String func_148311_a();
 
     protected abstract String func_148312_b();
@@ -142,17 +142,17 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
         return true;
     }
 
-    protected boolean func_148309_e()
+    protected boolean dontHavePackEntry()
     {
         return !this.resourcePacksGUI.hasResourcePackEntry(this);
     }
 
-    protected boolean func_148308_f()
+    protected boolean hasPackEntry()
     {
         return this.resourcePacksGUI.hasResourcePackEntry(this);
     }
 
-    protected boolean func_148314_g()
+    protected boolean getLastPack()
     {
         List<ResourcePackListEntry> list = this.resourcePacksGUI.getListContaining(this);
         int i = list.indexOf(this);
@@ -173,7 +173,7 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
     {
         if (this.func_148310_d() && p_148278_5_ <= 32)
         {
-            if (this.func_148309_e())
+            if (this.dontHavePackEntry())
             {
                 this.resourcePacksGUI.markChanged();
                 int j = this.func_183019_a();
@@ -206,7 +206,7 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
                 return true;
             }
 
-            if (p_148278_5_ < 16 && this.func_148308_f())
+            if (p_148278_5_ < 16 && this.hasPackEntry())
             {
                 this.resourcePacksGUI.getListContaining(this).remove(this);
                 this.resourcePacksGUI.getAvailableResourcePacks().add(0, this);
@@ -214,7 +214,7 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
                 return true;
             }
 
-            if (p_148278_5_ > 16 && p_148278_6_ < 16 && this.func_148314_g())
+            if (p_148278_5_ > 16 && p_148278_6_ < 16 && this.getLastPack())
             {
                 List<ResourcePackListEntry> list1 = this.resourcePacksGUI.getListContaining(this);
                 int k = list1.indexOf(this);

@@ -1,5 +1,6 @@
 package fr.honertis.module;
 
+import java.awt.Color;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -9,6 +10,7 @@ import com.google.common.collect.Lists;
 import fr.honertis.event.Events;
 import fr.honertis.settings.*;
 import fr.honertis.settings.Settings;
+import fr.honertis.utils.AnimUtils;
 import net.minecraft.client.Minecraft;
 
 public class ModuleBase extends Events{

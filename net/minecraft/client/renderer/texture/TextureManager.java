@@ -34,7 +34,9 @@ public class TextureManager implements ITickable, IResourceManagerReloadListener
     {
         this.theResourceManager = resourceManager;
     }
-
+    
+    private int currentBoundTextureId = -1;//removable
+    
     public void bindTexture(ResourceLocation resource)
     {
         if (Config.isRandomMobs())
@@ -42,7 +44,24 @@ public class TextureManager implements ITickable, IResourceManagerReloadListener
             resource = RandomMobs.getTextureLocation(resource);
         }
 
-        Object object = (ITextureObject)this.mapTextureObjects.get(resource);
+        ITextureObject textureObject = (ITextureObject)this.mapTextureObjects.get(resource);
+
+        if (textureObject == null) {
+            textureObject = new SimpleTexture(resource);
+            this.loadTexture(resource, textureObject); 
+        }
+
+        int textureId = textureObject.getGlTextureId();
+        if (textureId != currentBoundTextureId) {
+            if (Config.isShaders()) {
+                ShadersTex.bindTexture(textureObject);
+            } else {
+                TextureUtil.bindTexture(textureId);
+            }
+            currentBoundTextureId = textureId;
+        }//may work idk
+        
+        /*Object object = (ITextureObject)this.mapTextureObjects.get(resource);
 
         if (object == null)
         {
@@ -57,7 +76,7 @@ public class TextureManager implements ITickable, IResourceManagerReloadListener
         else
         {
             TextureUtil.bindTexture(((ITextureObject)object).getGlTextureId());
-        }
+        }*/
     }
 
     public boolean loadTickableTexture(ResourceLocation textureLocation, ITickableTextureObject textureObj)

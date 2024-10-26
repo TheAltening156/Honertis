@@ -14,15 +14,18 @@ import fr.honertis.module.modules.HitColor;
 import fr.honertis.settings.BooleanSettings;
 import fr.honertis.settings.NumberSettings;
 import fr.honertis.settings.Settings;
+import fr.honertis.utils.AnimUtils;
 import fr.honertis.utils.DrawUtils;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiHonertisOptions extends GuiScreen {
 	public GuiScreen parent;
 	public boolean clicked;
+	public String currentDesc;
 	private	int mouse = 0;
 	
 	public GuiHonertisOptions(GuiScreen parent) {
@@ -49,6 +52,8 @@ public class GuiHonertisOptions extends GuiScreen {
 		}
 		drawDefaultBackground();
 		mc.fontRendererObj.drawCenteredStringWithShadow("Honertis Options", this.width / 2, 10, -1);
+		mc.fontRendererObj.drawCenteredStringWithShadow("Vous pouvez utiliser le scoll de la souris", this.width / 2, 24, -1);
+		mc.fontRendererObj.drawCenteredStringWithShadow("si vous ne voyez pas certains paramètres/modules", this.width / 2, 32, -1);
 		int posY = 50 + mouse;
 		for (Category c : Category.values()) {
 			mc.fontRendererObj.drawCenteredStringWithShadow(c.name, this.width / 2, posY, -1);
@@ -57,17 +62,22 @@ public class GuiHonertisOptions extends GuiScreen {
 			for (ModuleBase m : Honertis.modulesManager.modules) {
 				int settsX = modX - 95;
 				int settsY = modY + 25;
-				if (m.cat == c) {
+				if (m.cat == c) {					
 					mc.fontRendererObj.drawStringWithShadow(m.name, modX - 175, modY, -1);
+					GlStateManager.pushMatrix();
+					GlStateManager.scale(0.5, 0.5, 1);
+					GlStateManager.translate(modX - 175, modY, 1);
+					mc.fontRendererObj.drawStringWithShadow(m.desc, modX - 165, modY + 21, -1);
+					GlStateManager.popMatrix();
 					drawRect(modX + 35, modY - 4, modX + 65, modY + 11, m.isEnabled() ? new Color(0, 205, 0, 190).getRGB() : new Color(205, 0, 0, 190).getRGB() );
 					mc.fontRendererObj.drawCenteredString(m.isEnabled() ? "I" : "O", modX + 50, modY, -1);
-					drawRect(  modX + (m.isEnabled() ? 60 : 34), modY - 5, modX + (m.isEnabled() ? 66 : 40), modY + 12, -1);
-				
+					drawRect(  modX + (m.isEnabled() ? 60 : 34), modY - 5, modX + (m.isEnabled() ? 66 : 40), modY + 12, -1);					
+					
 					if (!m.settings.isEmpty()) {
 						boolean hover = isHovered(modX + 8, modY - 5, (modX + 8) + 18, (modY - 5) + 18, mouseX, mouseY);
 						DrawUtils.drawImage(modX + 8, modY - 5, 18, 18, new ResourceLocation("honertis/settings" + (hover ? (m.showSettings ? "OH" : "H") : m.showSettings ? "O" : "C") + ".png"));
 					}
-					
+			
 					if (m.showSettings) {
 						HitColor clr = (HitColor) Honertis.modulesManager.getModuleByName("HitColor");
 						if (m.name.equals(clr.name) && clr.custom.isToggled()) {
