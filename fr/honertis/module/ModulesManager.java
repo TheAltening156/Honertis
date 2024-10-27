@@ -11,6 +11,7 @@ import fr.honertis.module.modules.FPS;
 import fr.honertis.module.modules.FishingRod;
 import fr.honertis.module.modules.FullBright;
 import fr.honertis.module.modules.HitColor;
+import fr.honertis.module.modules.KeyStrokes;
 import fr.honertis.module.modules.LowFire;
 import fr.honertis.module.modules.MoreParticles;
 import fr.honertis.module.modules.Ping;
@@ -34,7 +35,8 @@ public class ModulesManager {
 			new MoreParticles(),
 			new AutoGG(),
 			new LowFire(),
-			new ToggleSprint());
+			new ToggleSprint(),
+			new KeyStrokes());
 	}
 	
 	

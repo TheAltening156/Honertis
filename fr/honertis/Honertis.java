@@ -6,7 +6,7 @@ import fr.honertis.module.ModulesManager;
 
 public class Honertis {
 	public static String name = "Honertis";
-	public static String version = "1.3";
+	public static String version = "1.4DEV";
 	public static ModulesManager modulesManager;
 	public static boolean started;
 	public static Event event = new Event();
