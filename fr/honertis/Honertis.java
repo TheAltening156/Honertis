@@ -10,11 +10,12 @@ public class Honertis {
 	public static ModulesManager modulesManager;
 	public static boolean started;
 	public static Event event = new Event();
+	public static DiscordRPCInit rpc = new DiscordRPCInit();
 	
 	public static void onStartup() {
 		modulesManager = new ModulesManager();
 		started = true;
 		FileManager.init();
-		DiscordRPCInit.init();
+		rpc.init();
 	}
 }

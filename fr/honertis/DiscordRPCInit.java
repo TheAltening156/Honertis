@@ -6,6 +6,9 @@ import net.arikia.dev.drpc.DiscordRichPresence;
 
 public class DiscordRPCInit {
 	public static String id = "1299778561762398209";
+	public static Thread rpcThread;
+	
+	
 	public static void init() {
 		 DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler((user) -> {
             DiscordRichPresence.Builder presence = new DiscordRichPresence.Builder("UWU !!1!!111!11!!1!");
@@ -17,14 +20,15 @@ public class DiscordRPCInit {
         }).build();
         DiscordRPC.discordInitialize(id, handlers, false);
         DiscordRPC.discordRegister(id, "");
-        new Thread(() -> {
+        rpcThread = new Thread(() -> {
 			while (!Thread.currentThread().isInterrupted()) {
 				DiscordRPC.discordRunCallbacks();
 				try {
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {}
 			}
-		}, "RPC-Callback").start();
+		}, "RPC-Callback");
+        rpcThread.start();
 		/*DiscordRPC rpc = DiscordRPC.INSTANCE;
 		DiscordEventHandlers h = new DiscordEventHandlers();
 		h.ready = (user) -> System.out.println("Ready !");

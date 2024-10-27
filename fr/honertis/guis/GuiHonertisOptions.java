@@ -141,6 +141,8 @@ public class GuiHonertisOptions extends GuiScreen {
 	
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+		super.mouseClicked(mouseX, mouseY, mouseButton);
+		if (isHovered(this.width / 2 - 100, this.height - 25, this.width / 2 + 100, this.height - 5, mouseX, mouseY)) return;
 		int posY = 50 + mouse;
 		for (Category c : Category.values()) {
 			int modX = this.width / 2 + 60;
@@ -181,7 +183,6 @@ public class GuiHonertisOptions extends GuiScreen {
 			}
 			posY += 25;
 		}
-		super.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 	
 	@Override
