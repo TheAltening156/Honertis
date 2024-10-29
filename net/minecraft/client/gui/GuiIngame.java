@@ -605,7 +605,6 @@ public class GuiIngame extends Gui
             int i1 = p_180475_2_.getScaledWidth() - b0 + 2;
             drawRect(j - 2, l, i1, l + this.getFontRenderer().FONT_HEIGHT, 1342177280);
             this.getFontRenderer().drawString(s1, j, l, 553648127);
-            this.getFontRenderer().drawString(s1, 80, 5, 553648127);
 
             this.getFontRenderer().drawString(s2, i1 - this.getFontRenderer().getStringWidth(s2), l, 553648127);
 
@@ -616,22 +615,7 @@ public class GuiIngame extends Gui
                 drawRect(j - 2, l - this.getFontRenderer().FONT_HEIGHT - 1, i1, l - 1, 1610612736);
                 drawRect(j - 2, l - 1, i1, l, 1342177280);
                 this.getFontRenderer().drawString(s3, j + i / 2 - this.getFontRenderer().getStringWidth(s3) / 2, l - this.getFontRenderer().FONT_HEIGHT, 553648127);
-                
-                
-                if (s3.equalsIgnoreCase(EnumChatFormatting.RED + "" + EnumChatFormatting.BOLD + "KITPVP")) {
-                	if (mc.currentScreen == null || mc.currentScreen != null || !s2.contains("Safe")) {
-                    	String name = (this.recordPlaying == null ? "" : this.recordPlaying);
-                		GlStateManager.pushMatrix();
-                		GlStateManager.scale(1, 1, 1);
-                		GlStateManager.translate(new ScaledResolution(mc).getScaledWidth() / 2, new ScaledResolution(mc).getScaledHeight() / 2 + 6, 0);
-                		//drawRect(-mc.fontRendererObj.getStringWidth(name)/2 - 3, 0, mc.fontRendererObj.getStringWidth(name)/2 + 3, 12, new Color(0,0,0,120).getRGB());
-                		this.getFontRenderer().drawCenteredStringWithShadow(name, 0, 2, -1);
-                		GlStateManager.popMatrix();
-                		//getFontRenderer().drawCenteredString(mc.thePlayer.getDisplayName().getFormattedText(), 50, 75, -1);
-                		
-                		//mc.displayGuiScreen(new GuiCraftokKitPVP());//TODO: YUIGFIOUH
-                	}
-                }
+
             }
         }
     }
