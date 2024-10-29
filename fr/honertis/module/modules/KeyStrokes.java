@@ -9,6 +9,8 @@ import fr.honertis.event.EventRenderGui;
 import fr.honertis.event.EventUpdate;
 import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
+import fr.honertis.settings.BooleanSettings;
+import fr.honertis.settings.NumberSettings;
 import fr.honertis.utils.MC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -16,16 +18,20 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.settings.KeyBinding;
 
 public class KeyStrokes extends ModuleBase{    
-    
-	public KeyStrokes() {
-		super("Keystrokes", "Affiche les touches de mouvement press�s", Category.UTILITIES);
+	public static BooleanSettings space = new BooleanSettings("Barre espace", true);
+    public static NumberSettings delay = new NumberSettings("Délai", 50, 1, 500, 1);
+	
+    public KeyStrokes() {
+		super("Keystrokes", "Affiche les touches de mouvement pressés", Category.UTILITIES);
+		this.addSettings(delay, space);
 	}
 	
 	public enum Keys implements MC{
-		W(mc.gameSettings.keyBindForward, 50, 50),
-		A(mc.gameSettings.keyBindLeft, 90, 90),
-		S(mc.gameSettings.keyBindBack, 120, 120),
-		D(mc.gameSettings.keyBindRight, 150, 150);
+		W(mc.gameSettings.keyBindForward, 23, 70),
+		A(mc.gameSettings.keyBindLeft, 0, 93),
+		S(mc.gameSettings.keyBindBack, 23, 93),
+		D(mc.gameSettings.keyBindRight, 46, 93),
+		JUMP(mc.gameSettings.keyBindJump, 0, 116);
 		public KeyBinding key;
 		public int posX;
 		public int posY;
@@ -43,16 +49,21 @@ public class KeyStrokes extends ModuleBase{
 			float colorValue = progress / 255.0f;
 			int color = new Color(colorValue, colorValue, colorValue, colorValue / 2f).getRGB();
 			FontRenderer fr = mc.fontRendererObj;
-			Gui.drawRect(x, y, x + 22, y + 22, new Color(0,0,0, 125).getRGB());
-			Gui.drawRect(x, y, x + 22, y + 22, color);
-			Gui.drawRect(x, y, x + 22, y + 22, color);
-
+			if (this == Keys.JUMP) {
+				Gui.drawRect(x, y, x + 68, y + 13, new Color(0,0,0, 125).getRGB());
+				Gui.drawRect(x, y, x + 68, y + 13, color);
+				Gui.drawRect(x, y, x + 68, y + 13, color);
+			} else {
+				Gui.drawRect(x, y, x + 22, y + 22, new Color(0,0,0, 125).getRGB());
+				Gui.drawRect(x, y, x + 22, y + 22, color);
+				Gui.drawRect(x, y, x + 22, y + 22, color);
+			}
 			
 			int textColorValue = 255 - progress;
 	        int colorCode = new Color(textColorValue, textColorValue, textColorValue).getRGB();
 	        //fr.drawCenteredString(Keyboard.getKeyName(keyCode), 63, 59, colorCode);
 	        //x, y, x + 25, y + 25
-	        fr.drawString(Keyboard.getKeyName(keyCode), x + 8, y + 7, colorCode);
+	        fr.drawString(this == Keys.JUMP ? "Jump" : Keyboard.getKeyName(keyCode), x + (this == Keys.JUMP ? 21 : 8), y + (this == Keys.JUMP ? 3 : 7), colorCode);
 		}
 		
 		
@@ -65,7 +76,7 @@ public class KeyStrokes extends ModuleBase{
 		private void updateAnimation() {
 			if (animating) {
 		        long currentTime = System.currentTimeMillis();
-		        float deltaTime = (currentTime - lastTime) / 50.0f;
+		        float deltaTime = (currentTime - lastTime) / delay.getFloatValue();//50.0f
 		        lastTime = currentTime;
 
 		        if (toWhite) {
@@ -86,25 +97,11 @@ public class KeyStrokes extends ModuleBase{
 		for (Keys k : Keys.values()) {
 			int posX = k.posX;
 			int posY = k.posY;
-			if (k == k.W) {
-				posX = 23;
-				posY = 70;
-			}
-			if (k == k.A) {
-				posX = 0;
-				posY = 93;
-			}
-			if (k == k.S) {
-				posX = 23;
-				posY = 93;
-			}
-			if (k == k.D) {
-				posX = 46;
-				posY = 93;
-			}
+			
 			//mc.gameSettings.keyBindAttack = null; 
 			//mc.gameSettings.keyBindPickBlock = null;
 			//mc.gameSettings.keyBindUseItem = null;
+			if (!space.isToggled() && k == Keys.JUMP )return;
 			KeyBinding keys = k.key;
 			k.updateAnimation();		
 			k.drawRect((int) k.colorProgress, keys.getKeyCode(), posX, posY);
