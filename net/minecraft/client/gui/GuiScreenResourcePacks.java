@@ -34,6 +34,7 @@ public class GuiScreenResourcePacks extends GuiScreen
     {
         this.parentScreen = parentScreenIn;
     }
+    List<ResourcePackRepository.Entry> list = null;
 
     /**
      * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
@@ -46,24 +47,22 @@ public class GuiScreenResourcePacks extends GuiScreen
 
         if (!this.changed)
         {
-            this.availableResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
-            this.selectedResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
+        	this.availableResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
+        	this.selectedResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
             ResourcePackRepository resourcepackrepository = this.mc.getResourcePackRepository();
-            resourcepackrepository.updateRepositoryEntriesAll();
-            List<ResourcePackRepository.Entry> list = Lists.newArrayList(resourcepackrepository.getRepositoryEntriesAll());
+            resourcepackrepository.updateRepositoryEntriesAll();    
+            list = Lists.newArrayList(resourcepackrepository.getRepositoryEntriesAll());
             list.removeAll(resourcepackrepository.getRepositoryEntries());
-
-            for (ResourcePackRepository.Entry resourcepackrepository$entry : list)
-            {
-                this.availableResourcePacks.add(new ResourcePackListEntryFound(this, resourcepackrepository$entry));
-            }
-
-            for (ResourcePackRepository.Entry resourcepackrepository$entry1 : Lists.reverse(resourcepackrepository.getRepositoryEntries()))
-            {
-                this.selectedResourcePacks.add(new ResourcePackListEntryFound(this, resourcepackrepository$entry1));
-            }
-
-            this.selectedResourcePacks.add(new ResourcePackListEntryDefault(this));
+	            for (ResourcePackRepository.Entry resourcepackrepository$entry : list)
+	            {
+	                this.availableResourcePacks.add(new ResourcePackListEntryFound(this, resourcepackrepository$entry));
+	            }
+	            for (ResourcePackRepository.Entry resourcepackrepository$entry1 : Lists.reverse(resourcepackrepository.getRepositoryEntries()))
+	            {
+	                this.selectedResourcePacks.add(new ResourcePackListEntryFound(this, resourcepackrepository$entry1));
+	            }
+            
+        	this.selectedResourcePacks.add(new ResourcePackListEntryDefault(this));
         }
 
         this.availableResourcePacksList = new GuiResourcePackAvailable(this.mc, 200, this.height, this.availableResourcePacks);
@@ -174,7 +173,7 @@ public class GuiScreenResourcePacks extends GuiScreen
                     {
                         if (resourcepacklistentry instanceof ResourcePackListEntryFound)
                         {
-                            list.add(((ResourcePackListEntryFound)resourcepacklistentry).func_148318_i());
+                            list.add(((ResourcePackListEntryFound)resourcepacklistentry).getPackEntry());
                         }
                     }
 
@@ -187,7 +186,7 @@ public class GuiScreenResourcePacks extends GuiScreen
                     {
                         this.mc.gameSettings.resourcePacks.add(resourcepackrepository$entry.getResourcePackName());
 
-                        if (resourcepackrepository$entry.func_183027_f() != 1)
+                        if (resourcepackrepository$entry.getPackFormat() != 1)
                         {
                             this.mc.gameSettings.field_183018_l.add(resourcepackrepository$entry.getResourcePackName());
                         }

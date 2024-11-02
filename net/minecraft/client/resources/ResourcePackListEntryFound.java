@@ -4,36 +4,36 @@ import net.minecraft.client.gui.GuiScreenResourcePacks;
 
 public class ResourcePackListEntryFound extends ResourcePackListEntry
 {
-    private final ResourcePackRepository.Entry field_148319_c;
+    private final ResourcePackRepository.Entry packEntry;
 
-    public ResourcePackListEntryFound(GuiScreenResourcePacks resourcePacksGUIIn, ResourcePackRepository.Entry p_i45053_2_)
+    public ResourcePackListEntryFound(GuiScreenResourcePacks resourcePacksGUIIn, ResourcePackRepository.Entry packEntry)
     {
         super(resourcePacksGUIIn);
-        this.field_148319_c = p_i45053_2_;
+        this.packEntry = packEntry;
     }
 
-    protected void func_148313_c()
+    protected void bindTexture()
     {
-        this.field_148319_c.bindTexturePackIcon(this.mc.getTextureManager());
+        this.packEntry.bindTexturePackIcon(this.mc.getTextureManager());
     }
 
-    protected int func_183019_a()
+    protected int getPackFormat()
     {
-        return this.field_148319_c.func_183027_f();
+        return this.packEntry.getPackFormat();
     }
 
-    protected String func_148311_a()
+    protected String getPackDescription()
     {
-        return this.field_148319_c.getTexturePackDescription();
+        return this.packEntry.getTexturePackDescription();
     }
 
-    protected String func_148312_b()
+    protected String getPackName()
     {
-        return this.field_148319_c.getResourcePackName();
+        return this.packEntry.getResourcePackName();
     }
 
-    public ResourcePackRepository.Entry func_148318_i()
+    public ResourcePackRepository.Entry getPackEntry()
     {
-        return this.field_148319_c;
+        return this.packEntry;
     }
 }

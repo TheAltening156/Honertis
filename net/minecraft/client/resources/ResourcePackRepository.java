@@ -77,7 +77,7 @@ public class ResourcePackRepository
             {
                 if (resourcepackrepository$entry.getResourcePackName().equals(s))
                 {
-                    if (resourcepackrepository$entry.func_183027_f() == 1 || settings.field_183018_l.contains(resourcepackrepository$entry.getResourcePackName()))
+                    if (resourcepackrepository$entry.getPackFormat() == 1 || settings.field_183018_l.contains(resourcepackrepository$entry.getResourcePackName()))
                     {
                         this.repositoryEntries.add(resourcepackrepository$entry);
                         break;
@@ -371,7 +371,7 @@ public class ResourcePackRepository
             return this.rePackMetadataSection == null ? EnumChatFormatting.RED + "Invalid pack.mcmeta (or missing \'pack\' section)" : this.rePackMetadataSection.getPackDescription().getFormattedText();
         }
 
-        public int func_183027_f()
+        public int getPackFormat()
         {
             return this.rePackMetadataSection.getPackFormat();
         }

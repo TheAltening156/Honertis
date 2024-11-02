@@ -3,6 +3,7 @@ package fr.honertis;
 import fr.honertis.event.Event;
 import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModulesManager;
+import fr.honertis.utils.WebUtils;
 
 public class Honertis {
 	public static String name = "Honertis";
@@ -17,5 +18,8 @@ public class Honertis {
 		started = true;
 		FileManager.init();
 		rpc.init();
+		if (WebUtils.update()) {
+			System.out.println("Nouvelle version de Honertis disponible ! https://bit.ly/honertis");
+		}
 	}
 }
