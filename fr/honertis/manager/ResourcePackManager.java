@@ -9,8 +9,6 @@ import net.minecraft.client.resources.ResourcePackListEntry;
 public class ResourcePackManager {
 	public List<ResourcePackListEntry> availableResourcePacks = null;
     public List<ResourcePackListEntry> selectedResourcePacks = null;
-    public List<ResourcePackListEntry> lastSelectedResourcePacks = null;
-
 
     public ResourcePackManager() {}
 
@@ -22,10 +20,6 @@ public class ResourcePackManager {
         return selectedResourcePacks;
     }
     
-    public List<ResourcePackListEntry> getLastSelectedResourcePacks() {
-        return lastSelectedResourcePacks;
-    }
-
     public void setAvailableResourcePacks(List<ResourcePackListEntry> packs) {
         this.availableResourcePacks = packs;
     }
@@ -34,7 +28,4 @@ public class ResourcePackManager {
         this.selectedResourcePacks = packs;
     } 
     
-    public void setLastSelectedResourcePacks(List<ResourcePackListEntry> packs) {
-        this.lastSelectedResourcePacks = packs;
-    }
 }

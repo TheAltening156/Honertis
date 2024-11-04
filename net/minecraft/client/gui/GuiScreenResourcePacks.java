@@ -42,6 +42,8 @@ public class GuiScreenResourcePacks extends GuiScreen
     }
     
     private List<ResourcePackRepository.Entry> list = null;
+    private List<ResourcePackListEntry> lastSelectedResourcePacks;
+
 
     /**
      * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
@@ -49,45 +51,29 @@ public class GuiScreenResourcePacks extends GuiScreen
      */
     public void initGui()
     {
+    	lastSelectedResourcePacks = manager.getSelectedResourcePacks();
     	this.buttonList.add(new GuiOptionButton(2, this.width / 2 - 154, this.height - 48, I18n.format("resourcePack.openFolder", new Object[0])));
         this.buttonList.add(new GuiOptionButton(1, this.width / 2 + 4, this.height - 48, I18n.format("gui.done", new Object[0])));
-        if (manager.getAvailableResourcePacks() != null && manager.getSelectedResourcePacks() != null) {
-        	//manager.getAvailableResourcePacks().removeAll(manager.getAvailableResourcePacks());
-        	
-        }
-    	if (!this.changed) {
-    		if (manager.getAvailableResourcePacks() == null && manager.getSelectedResourcePacks() == null) {
-				ResourcePackRepository resourcepackrepository = this.mc.getResourcePackRepository();
-                resourcepackrepository.updateRepositoryEntriesAll();    
-                manager.selectedResourcePacks = Lists.newArrayList();
-                manager.availableResourcePacks = Lists.newArrayList();
-	            list = Lists.newArrayList(resourcepackrepository.getRepositoryEntriesAll());
-	            list.removeAll(resourcepackrepository.getRepositoryEntries());
-	            
-	            for (ResourcePackRepository.Entry resourcepackrepository$entry : list)
-	            {
-	            	manager.getAvailableResourcePacks().add(new ResourcePackListEntryFound(this, resourcepackrepository$entry));
-	            }
-	            
-	            for (ResourcePackRepository.Entry resourcepackrepository$entry1 : Lists.reverse(resourcepackrepository.getRepositoryEntries()))
-	            {
-	            	manager.getSelectedResourcePacks().add(new ResourcePackListEntryFound(this, resourcepackrepository$entry1));
-	            } 	
-	        	this.manager.getSelectedResourcePacks().add(new ResourcePackListEntryDefault(this));
-    		}
-    	}
+		if (manager.getAvailableResourcePacks() == null && manager.getSelectedResourcePacks() == null) {
+			ResourcePackRepository resourcepackrepository = this.mc.getResourcePackRepository();
+            resourcepackrepository.updateRepositoryEntriesAll();    
+            manager.selectedResourcePacks = Lists.newArrayList();//TODO: fix le packmanager
+            manager.availableResourcePacks = Lists.newArrayList();
+            list = Lists.newArrayList(resourcepackrepository.getRepositoryEntriesAll());
+            list.removeAll(resourcepackrepository.getRepositoryEntries());
+            
+            for (ResourcePackRepository.Entry resourcepackrepository$entry : list)
+            {
+            	manager.getAvailableResourcePacks().add(new ResourcePackListEntryFound(this, resourcepackrepository$entry));
+            }
+            
+            for (ResourcePackRepository.Entry resourcepackrepository$entry1 : Lists.reverse(resourcepackrepository.getRepositoryEntries()))
+            {
+            	manager.getSelectedResourcePacks().add(new ResourcePackListEntryFound(this, resourcepackrepository$entry1));
+            } 	
+        	manager.getSelectedResourcePacks().add(new ResourcePackListEntryDefault(this));
+		}
     	
-    	if (manager.getSelectedResourcePacks() != manager.lastSelectedResourcePacks) { 
-    		this.changed = true;
-    		System.out.println("Sele" + manager.getSelectedResourcePacks());
-    		System.out.println("Last" + manager.getLastSelectedResourcePacks());
-    		manager.setLastSelectedResourcePacks(manager.getSelectedResourcePacks());
-    	} else {
-    		System.out.println("NIFGIUFG");
-    		System.out.println("Sele" + manager.getSelectedResourcePacks());
-    		System.out.println("Last" + manager.getLastSelectedResourcePacks());
-
-    	}
         this.availableResourcePacksList = new GuiResourcePackAvailable(this.mc, 200, this.height, manager.getAvailableResourcePacks());
         this.availableResourcePacksList.setSlotXBoundsFromLeft(this.width / 2 - 4 - 200);
         this.availableResourcePacksList.registerScrollButtons(7, 8);
@@ -187,7 +173,7 @@ public class GuiScreenResourcePacks extends GuiScreen
                 }
             }
             else if (button.id == 1)
-            {
+            {	
                 if (this.changed)
                 {
                     List<ResourcePackRepository.Entry> list = Lists.<ResourcePackRepository.Entry>newArrayList();
@@ -218,7 +204,7 @@ public class GuiScreenResourcePacks extends GuiScreen
                     this.mc.gameSettings.saveOptions();
                     this.mc.refreshResources();
                 }
-
+            
                 this.mc.displayGuiScreen(this.parentScreen);
             }
         }
