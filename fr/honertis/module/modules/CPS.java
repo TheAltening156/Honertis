@@ -47,8 +47,9 @@ public class CPS extends ModuleBase{
 		}
 		String lmb = "LMB: " + getLCps();
 		String rmb = "RMB: " + getRCps();
-		Gui.drawRect(posX - 4, posY - 4, posX + mc.fontRendererObj.getStringWidth(lmb + " " + rmb) + 4, posY + 11, 0x90000000);
-		mc.fontRendererObj.drawStringWithShadow(lmb + " " + rmb, posX, posY, -1);
+		String text = lmb + " " + rmb;
+		Gui.drawRect(posX - 4, posY - 4, posX + mc.fontRendererObj.getStringWidth(text) + 4, posY + 11, 0x90000000);
+		mc.fontRendererObj.drawStringWithShadow(text, posX, posY, -1);
 	}
 	
 	public int getLCps() {
