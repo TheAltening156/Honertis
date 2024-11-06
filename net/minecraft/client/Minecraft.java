@@ -1238,7 +1238,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         }
         if (time.hasTimeElapsed(120000, true)) {
         	FileManager.save();
-        	System.out.println("Fichier config sauvegardé.");
         	time.reset();
         }
         Display.update();
