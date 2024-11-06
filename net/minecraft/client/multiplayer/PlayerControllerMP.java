@@ -480,7 +480,7 @@ public class PlayerControllerMP
         }
     }
 
-    public EntityPlayerSP func_178892_a(World worldIn, StatFileWriter p_178892_2_)
+    public EntityPlayerSP createPlayer(World worldIn, StatFileWriter p_178892_2_)
     {
         return new EntityPlayerSP(this.mc, worldIn, this.netClientHandler, p_178892_2_);
     }
