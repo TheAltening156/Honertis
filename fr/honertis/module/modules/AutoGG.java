@@ -18,7 +18,7 @@ public class AutoGG extends ModuleBase{
 	
 	@Override
 	public void onUpdate(EventUpdate e) {
-		boolean gg = eq(mc.ingameGUI.title, "Victoire") || eq(mc.ingameGUI.title, "Défaite") || eq(mc.ingameGUI.title, "GG");
+		boolean gg = eq(mc.ingameGUI.title, "Victoire") || eq(mc.ingameGUI.title, "Défaite") || eq(mc.ingameGUI.title, "GG") || eq(mc.ingameGUI.title, "VICTORY") || eq(mc.ingameGUI.title, "DEFEAT");
 		boolean gl = eq(mc.ingameGUI.title, "Bonne chance") || eq(mc.ingameGUI.title, "c'est parti");
 		if (timer.hasTimeElapsed(3200, gg || gl))
 		if (gg) {
