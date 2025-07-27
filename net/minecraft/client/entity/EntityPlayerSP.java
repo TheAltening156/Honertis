@@ -8,6 +8,7 @@ import fr.honertis.event.EventType;
 import fr.honertis.event.EventUpdate;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.utils.TimeUtils;
+import fr.honertis.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -179,7 +180,6 @@ public class EntityPlayerSP extends AbstractClientPlayer
         if (this.worldObj.isBlockLoaded(new BlockPos(this.posX, 0.0D, this.posZ)))
         {
             super.onUpdate();
-            
             EventUpdate e = new EventUpdate();
             e.setType(EventType.PRE);
             Honertis.event.onEvent(e);
@@ -321,9 +321,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     		}
     	}
     	
-    	if (var) {
-			this.mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("§c§lBloqué."));
-    	} else {
+    	if (!var) {
 	        this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
     	}
 

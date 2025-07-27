@@ -21,7 +21,7 @@ public class CPS extends ModuleBase {
     private PressState rightButtonState;
     
     public CPS() {
-        super("CPS", "Montre combien de cps vous faites en 1 seconde", Category.UTILITIES);
+        super("CPS", "Montre combien de cps vous faites en 1 seconde", Category.ANCIEN_MODULES);
         leftButtonState = new PressState(lCps);
         rightButtonState = new PressState(rCps);
     }
