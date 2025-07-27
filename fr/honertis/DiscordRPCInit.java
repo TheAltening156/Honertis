@@ -10,7 +10,7 @@ public class DiscordRPCInit {
 	
 	
 	public static void init() {
-		 DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler((user) -> {
+		DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler((user) -> {
             DiscordRichPresence.Builder presence = new DiscordRichPresence.Builder("https://bit.ly/honertis");            
             presence.setSmallImage("png", "hehe");
             presence.setDetails(Honertis.name + " v" + Honertis.version);

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.Timer;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import fr.honertis.event.EventRenderGui;
 import fr.honertis.event.EventUpdate;
@@ -15,6 +16,7 @@ import fr.honertis.utils.MC;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.KeyBinding;
 
 public class KeyStrokes extends ModuleBase{    
@@ -31,7 +33,9 @@ public class KeyStrokes extends ModuleBase{
 		A(mc.gameSettings.keyBindLeft, 0, 93),
 		S(mc.gameSettings.keyBindBack, 23, 93),
 		D(mc.gameSettings.keyBindRight, 46, 93),
-		JUMP(mc.gameSettings.keyBindJump, 0, 116);
+		JUMP(mc.gameSettings.keyBindJump, 0, 116),
+		LMB(mc.gameSettings.keyBindAttack, 0, 130),
+		RMB(mc.gameSettings.keyBindUseItem, 34, 130);
 		public KeyBinding key;
 		public int posX;
 		public int posY;
@@ -39,6 +43,7 @@ public class KeyStrokes extends ModuleBase{
 	    private boolean animating = false;
 	    private boolean toWhite = true;
 	    private long lastTime;
+	    
 		Keys(KeyBinding key, int posX, int posY) {
 			this.key = key;
 			this.posX = posX;
@@ -49,21 +54,39 @@ public class KeyStrokes extends ModuleBase{
 			float colorValue = progress / 255.0f;
 			int color = new Color(colorValue, colorValue, colorValue, colorValue / 2f).getRGB();
 			FontRenderer fr = mc.fontRendererObj;
+			int x1 = 22;
+			int y1 = 22;
 			if (this == Keys.JUMP) {
-				Gui.drawRect(x, y, x + 68, y + 13, new Color(0,0,0, 125).getRGB());
-				Gui.drawRect(x, y, x + 68, y + 13, color);
-				Gui.drawRect(x, y, x + 68, y + 13, color);
-			} else {
-				Gui.drawRect(x, y, x + 22, y + 22, new Color(0,0,0, 125).getRGB());
-				Gui.drawRect(x, y, x + 22, y + 22, color);
-				Gui.drawRect(x, y, x + 22, y + 22, color);
+				x1 = 68;
+				y1 = 13;
+			}else if (this == Keys.LMB || this == Keys.RMB) {
+				x1 = 33;
+				y1 = 24;
 			}
+			Gui.drawRect(x, y, x + x1, y + y1, new Color(0,0,0, 125).getRGB());
+			Gui.drawRect(x, y, x + x1, y + y1, color);
+			Gui.drawRect(x, y, x + x1, y + y1, color);
 			
 			int textColorValue = 255 - progress;
 	        int colorCode = new Color(textColorValue, textColorValue, textColorValue).getRGB();
 	        //fr.drawCenteredString(Keyboard.getKeyName(keyCode), 63, 59, colorCode);
 	        //x, y, x + 25, y + 25
-	        fr.drawString(this == Keys.JUMP ? "Jump" : Keyboard.getKeyName(keyCode), x + (this == Keys.JUMP ? 21 : 8), y + (this == Keys.JUMP ? 3 : 7), colorCode);
+	        String name = this == Keys.JUMP ? "Jump" : this == Keys.LMB ? "LMB" : this == Keys.RMB ? "RMB" : Keyboard.getKeyName(keyCode);
+	        x+=8;
+	        y+=7;
+	        if (this == Keys.JUMP) {
+	        	x+=14;
+	        	y-=4;
+	        } else if (this == Keys.LMB || this == Keys.RMB) {
+	        	y-=2;
+	        	GlStateManager.pushMatrix();
+				GlStateManager.scale(0.5, 0.5, 1);
+				GlStateManager.translate(x, y, 1);
+		        fr.drawString("Test", x + 7, y +20, colorCode);
+				GlStateManager.popMatrix();
+	        }
+	        fr.drawString(name, x, y, colorCode);
+	        
 		}
 		
 		

@@ -4,6 +4,7 @@ import fr.honertis.event.Event;
 import fr.honertis.manager.FileManager;
 import fr.honertis.manager.ResourcePackManager;
 import fr.honertis.module.ModulesManager;
+import fr.honertis.utils.MC;
 import fr.honertis.utils.WebUtils;
 
 public class Honertis {
@@ -25,6 +26,7 @@ public class Honertis {
 		rpc.init();
 		if (WebUtils.update()) {
 			System.out.println("Nouvelle version de Honertis disponible ! https://bit.ly/honertis");
+			//MC.mc.displayGuiScreen(new UpdateScreen()); à ajouter après
 		}
 	}
 

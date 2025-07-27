@@ -52,7 +52,7 @@ public class GuiHonertisOptions extends GuiScreen {
 		}
 		drawDefaultBackground();
 		mc.fontRendererObj.drawCenteredStringWithShadow("Honertis Options", this.width / 2, 10, -1);
-		mc.fontRendererObj.drawCenteredStringWithShadow("Vous pouvez utiliser le scoll de la souris", this.width / 2, 24, -1);
+		mc.fontRendererObj.drawCenteredStringWithShadow("Vous pouvez utiliser le scroll de la souris", this.width / 2, 24, -1);
 		mc.fontRendererObj.drawCenteredStringWithShadow("si vous ne voyez pas certains paramètres/modules", this.width / 2, 32, -1);
 		int posY = 50 + mouse;
 		for (Category c : Category.values()) {
