@@ -25,10 +25,10 @@ import net.minecraft.client.settings.KeyBinding;
 
 public class KeyStrokes extends ModuleBase{    
 	public static BooleanSettings space = new BooleanSettings("Barre espace", true);
-    public static NumberSettings delay = new NumberSettings("Délai", 50, 1, 500, 1);
+    public static NumberSettings delay = new NumberSettings("D�lai", 50, 1, 500, 1);
     
     public KeyStrokes() {
-		super("Keystrokes", "Affiche les touches de mouvement pressés", Category.UTILITIES);
+		super("Keystrokes", "Affiche les touches de mouvement press�s", Category.UTILITIES);
 		this.addSettings(delay, space);
 	}
 	
@@ -87,7 +87,7 @@ public class KeyStrokes extends ModuleBase{
 			int alpha = (int)(125 - colorProgress); 
 			alpha = Math.max(0, Math.min(125, alpha)); 
 			Color animatedColor = new Color(0, 0, 0, alpha);
-			x += 50;
+			//x += 50;
 			Gui.drawRect(x, y, x + x1, y + y1, animatedColor.getRGB());
 			Gui.drawRect(x, y, x + x1, y + y1, color);
 
@@ -169,7 +169,6 @@ public class KeyStrokes extends ModuleBase{
 	        KeyBinding keys = k.key;
 	        boolean isDown = keys.isKeyDown();
 
-	        // Si l'état a changé (pressé ou relâché), relance l'animation
 	        if (k.wasKeyDown != isDown) {
 	            k.startAnimation(isDown);
 	        }
