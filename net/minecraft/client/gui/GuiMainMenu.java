@@ -7,6 +7,7 @@ import fr.honertis.utils.WebUtils;
 
 public class GuiMainMenu extends GuiScreen {
 	public Honertis instance = Honertis.INSTANCE;
+	public boolean update;
 	
 	public GuiMainMenu() {
 	}
@@ -29,13 +30,16 @@ public class GuiMainMenu extends GuiScreen {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 		mc.fontRendererObj.drawCenteredString("Nouvelle version de Honertis disponible !", this.width / 2, this.height / 2 - 50, -1);
 		mc.fontRendererObj.drawCenteredString("Vous êtes toujours en " + instance.version + ", la version actuelle est la " + WebUtils.currentVersion, this.width / 2, this.height / 2 - 50 + mc.fontRendererObj.FONT_HEIGHT, -1);
-
+		if (update) mc.fontRendererObj.drawCenteredString("Ouverture de la page web ...", this.width / 2, this.height / 2 + 1, -1);
 	}
 	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button.id == 0) {
-			WebUtils.browseWebsite("https://bit.ly/honertis");
+		if (!update) {
+			if (button.id == 0) {
+				update = true;
+				WebUtils.browseWebsite("https://bit.ly/honertis");	
+			}
 		}
 		if (button.id == 1) {
 			instance.update = false;
