@@ -410,8 +410,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
             try
             {
-                inputstream = this.mcDefaultResourcePack.getClass().getResourceAsStream("/assets/minecraft/textures/items/wood_sword.png");
-                inputstream1 = this.mcDefaultResourcePack.getClass().getResourceAsStream("/assets/minecraft/textures/items/wood_sword.png");
+                inputstream = this.mcDefaultResourcePack.getClass().getResourceAsStream("/assets/minecraft/honertis/icon16.png");
+                inputstream1 = this.mcDefaultResourcePack.getClass().getResourceAsStream("/assets/minecraft/honertis/icon32.png");
 
                 if (inputstream != null && inputstream1 != null)
                 {
