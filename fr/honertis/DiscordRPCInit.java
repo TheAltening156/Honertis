@@ -12,7 +12,8 @@ public class DiscordRPCInit {
 	public static void init() {
 		DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler((user) -> {
             DiscordRichPresence.Builder presence = new DiscordRichPresence.Builder("https://bit.ly/honertis");            
-            presence.setSmallImage("png", "hehe");
+            presence.setSmallImage("512", "hehe");
+            presence.setBigImage("1024", "heh");
             presence.setDetails(Honertis.INSTANCE.name + " v" + Honertis.INSTANCE.version);
             presence.setStartTimestamps(System.currentTimeMillis() / 1000);
             DiscordRPC.discordUpdatePresence(presence.build());
