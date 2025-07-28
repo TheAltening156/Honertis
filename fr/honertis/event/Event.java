@@ -8,7 +8,7 @@ public class Event<T> {
 	public EventType type;
 	
 	public void onEvent(T e) {
-		for (ModuleBase m : Honertis.modulesManager.modules) {
+		for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
 			if (m.isEnabled()) {
 				if (e instanceof EventUpdate) {
 					m.onUpdate((EventUpdate) e);

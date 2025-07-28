@@ -358,7 +358,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
             if (flag1)
             {
-            	HitColor h = (HitColor) Honertis.modulesManager.getModuleByName("HitColor");
+            	HitColor h = (HitColor) Honertis.INSTANCE.modulesManager.getModuleByName("HitColor");
             	boolean toggled = h.isEnabled();
             	boolean t1 = h.custom.isToggled();
             	float r = toggled ? (t1 ? (float)h.r.getDefValue()/255f : 0.77f) : 0.77F,
@@ -515,7 +515,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
         for (LayerRenderer<T> layerrenderer : this.layerRenderers)
         {
         	boolean flagg = layerrenderer.shouldCombineTextures();
-        	HitColor h = (HitColor) Honertis.modulesManager.getModuleByName("HitColor");
+        	HitColor h = (HitColor) Honertis.INSTANCE.modulesManager.getModuleByName("HitColor");
         	if ((h.isEnabled() && h.bypass.isToggled()) && layerrenderer instanceof LayerBipedArmor) {
         		flagg = true;
         	}

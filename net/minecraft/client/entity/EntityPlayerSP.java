@@ -182,7 +182,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
             super.onUpdate();
             EventUpdate e = new EventUpdate();
             e.setType(EventType.PRE);
-            Honertis.event.onEvent(e);
+            Honertis.INSTANCE.event.onEvent(e);
             
             if (this.isRiding())
             {
@@ -196,7 +196,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
         }
         EventUpdate e = new EventUpdate();
         e.setType(EventType.POST);
-        Honertis.event.onEvent(e);
+        Honertis.INSTANCE.event.onEvent(e);
     }
 
     /**
@@ -839,7 +839,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
             }
         }
 
-        if (!this.isSprinting() && this.movementInput.moveForward >= f && flag3 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness) && (Honertis.modulesManager.getModuleByName("ToggleSprint").isEnabled() || this.mc.gameSettings.keyBindSprint.isKeyDown()))
+        if (!this.isSprinting() && this.movementInput.moveForward >= f && flag3 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness) && (Honertis.INSTANCE.modulesManager.getModuleByName("ToggleSprint").isEnabled() || this.mc.gameSettings.keyBindSprint.isKeyDown()))
         {
             this.setSprinting(true);
         }

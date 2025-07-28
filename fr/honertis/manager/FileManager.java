@@ -55,7 +55,7 @@ public class FileManager {
 			}
 		} else {
 			for (ConfigMod m : YamlUtils.getModSetts()) {
-				Honertis.modulesManager.loadModSett(m);
+				Honertis.INSTANCE.modulesManager.loadModSett(m);
 			}
 			save();
 		}

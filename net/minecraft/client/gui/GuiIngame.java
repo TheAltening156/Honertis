@@ -354,7 +354,7 @@ public class GuiIngame extends Gui
         
         EventRenderGui e = new EventRenderGui();
         e.setType(EventType.PRE);
-        Honertis.event.onEvent(e);
+        Honertis.INSTANCE.event.onEvent(e);
         
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();

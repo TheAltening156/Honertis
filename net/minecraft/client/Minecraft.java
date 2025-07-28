@@ -18,6 +18,7 @@ import fr.honertis.Honertis;
 import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.utils.TimeUtils;
+import fr.honertis.utils.WebUtils;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -59,6 +60,7 @@ import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.achievement.GuiAchievement;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.gui.stream.GuiStreamUnavailable;
@@ -592,7 +594,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.effectRenderer = new EffectRenderer(this.theWorld, this.renderEngine);
         this.checkGLError("Post startup");
         this.ingameGUI = new GuiIngame(this);
-        Honertis.onStartup();
+        Honertis.INSTANCE.onStartup();
 
         if (this.serverName != null)
         {
@@ -1233,7 +1235,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     public void updateDisplay()
     {
         this.mcProfiler.startSection("display_update");
-        for (ModuleBase m : Honertis.modulesManager.modules) {
+        for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
         	m.update();
         }
         if (time.hasTimeElapsed(120000, true)) {
@@ -1521,7 +1523,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             this.leftClickCounter = 0;
         }
 
-        if (this.leftClickCounter <= 0 && (Honertis.modulesManager.getModuleByName("BlockTap").isEnabled() || !this.thePlayer.isUsingItem()))
+        if (this.leftClickCounter <= 0 && (Honertis.INSTANCE.modulesManager.getModuleByName("BlockTap").isEnabled() || !this.thePlayer.isUsingItem()))
         {
             if (leftClick && this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {

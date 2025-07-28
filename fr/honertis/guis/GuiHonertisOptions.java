@@ -59,7 +59,7 @@ public class GuiHonertisOptions extends GuiScreen {
 			mc.fontRendererObj.drawCenteredStringWithShadow(c.name, this.width / 2, posY, -1);
 			int modX = this.width / 2 + 60;
 			int modY = posY + 23;
-			for (ModuleBase m : Honertis.modulesManager.modules) {
+			for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
 				int settsX = modX - 95;
 				int settsY = modY + 25;
 				if (m.cat == c) {					
@@ -79,7 +79,7 @@ public class GuiHonertisOptions extends GuiScreen {
 					}
 			
 					if (m.showSettings) {
-						HitColor clr = (HitColor) Honertis.modulesManager.getModuleByName("HitColor");
+						HitColor clr = (HitColor) Honertis.INSTANCE.modulesManager.getModuleByName("HitColor");
 						if (m.name.equals(clr.name) && clr.custom.isToggled()) {
 							drawRect(settsX + 165, settsY + 15, settsX + 190, settsY + 40, new Color((int)clr.r.getDefValue(), (int)clr.g.getDefValue(), (int)clr.b.getDefValue(), (int)clr.a.getDefValue()).getRGB());
 							mc.fontRendererObj.drawString("rendu :", settsX + 160, settsY, -1);
@@ -147,7 +147,7 @@ public class GuiHonertisOptions extends GuiScreen {
 		for (Category c : Category.values()) {
 			int modX = this.width / 2 + 60;
 			int modY = posY + 23;
-			for (ModuleBase m : Honertis.modulesManager.modules) {
+			for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
 				int settsX = modX - 95;
 				int settsY = modY + 25;
 				if (m.cat == c) {

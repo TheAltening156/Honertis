@@ -36,7 +36,7 @@ public class YamlUtils {
 		public ConfigMod(String modName, Map<String, Object> mod) throws InvalidConfig{
 			this.setts = Maps.newHashMap();
 			if (!(mod.get("enabled") instanceof Boolean) || !(mod.get("settings") instanceof Map)) throw new InvalidConfig();
-			this.module = Honertis.modulesManager.getModuleByName(modName);
+			this.module = Honertis.INSTANCE.modulesManager.getModuleByName(modName);
 			if (this.module == null) throw new InvalidConfig();
 			this.toggled = (boolean) mod.get("enabled");
 			Map<String, Object> setts = (Map<String, Object>) mod.get("settings");

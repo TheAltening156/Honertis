@@ -27,7 +27,7 @@ public class GuiScreenResourcePacks extends GuiScreen
     /*private List<ResourcePackListEntry> availableResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
     private List<ResourcePackListEntry> selectedResourcePacks = Lists.<ResourcePackListEntry>newArrayList();*/
 
-    public ResourcePackManager manager = Honertis.getPackManager();
+    public ResourcePackManager manager = Honertis.INSTANCE.getPackManager();
     
     /** List component that contains the available resource packs */
     private GuiResourcePackAvailable availableResourcePacksList;

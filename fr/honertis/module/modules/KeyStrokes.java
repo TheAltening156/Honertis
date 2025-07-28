@@ -73,7 +73,7 @@ public class KeyStrokes extends ModuleBase{
 			leftButtonState.isKeyPressed(Mouse.isButtonDown(0));
 			rightButtonState.isKeyPressed(Mouse.isButtonDown(1));
 			float colorValue = progress / 255.0f;
-			int color = new Color(colorValue, colorValue, colorValue, colorValue / 2f).getRGB();
+			int color = new Color(colorValue, colorValue, colorValue, colorValue).getRGB();
 			FontRenderer fr = mc.fontRendererObj;
 			int x1 = 22;
 			int y1 = 22;
@@ -87,6 +87,7 @@ public class KeyStrokes extends ModuleBase{
 			int alpha = (int)(125 - colorProgress); 
 			alpha = Math.max(0, Math.min(125, alpha)); 
 			Color animatedColor = new Color(0, 0, 0, alpha);
+			x += 50;
 			Gui.drawRect(x, y, x + x1, y + y1, animatedColor.getRGB());
 			Gui.drawRect(x, y, x + x1, y + y1, color);
 
@@ -105,7 +106,7 @@ public class KeyStrokes extends ModuleBase{
 	        	GlStateManager.pushMatrix();
 				GlStateManager.scale(0.5, 0.5, 1);
 				GlStateManager.translate(x, y, 1);
-		        fr.drawCenteredString(((this == Keys.LMB) ? lCps.size() : rCps.size()) + " " + this.name(), x + 16, y +21, colorCode);
+		        fr.drawCenteredString(((this == Keys.LMB) ? lCps.size() : rCps.size()) + " CPS", x + 16, y +21, colorCode);
 				GlStateManager.popMatrix();
 	        }
 	        fr.drawString(name, x, y, colorCode);

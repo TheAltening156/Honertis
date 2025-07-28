@@ -1,9 +1,12 @@
 package fr.honertis.utils;
 
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +16,20 @@ import fr.honertis.Honertis;
 public class WebUtils implements MC{
 	public 	static String i = "";
 
+	
+	public static void browseWebsite(String url) {
+		if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+		    try {
+				Desktop.getDesktop().browse(new URI(url));
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static String currentVersion = Honertis.INSTANCE.version;
 	
 	public static boolean update() {
 	    BufferedReader in = null;
@@ -28,8 +45,9 @@ public class WebUtils implements MC{
 	    	for (String line = in.readLine(); line != null; line = in.readLine()) 
 	    	    lines.add(line);
 		    for (String s : lines)
-		    	i += s; 	
-		    if ( i.contains(Honertis.version) )  {
+		    	i += s; 
+		    currentVersion = i;
+		    if ( i.contains(Honertis.INSTANCE.version) )  {
 		    	return false;
 		    } else {
 		    	return true;
