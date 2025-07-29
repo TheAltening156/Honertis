@@ -5,6 +5,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import fr.honertis.event.EventRenderGui;
+import fr.honertis.event.EventUpdate;
 import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.settings.BooleanSettings;
@@ -29,7 +30,10 @@ public class FPS extends ModuleBase{
 		String name = "FPS : " + (realTime.isToggled() ? list.size() : mc.getDebugFPS());
 		Gui.drawRect(posX - 4, posY - 4, posX + mc.fontRendererObj.getStringWidth(name) + 4, posY + 11, 0x90000000);
 		mc.fontRendererObj.drawStringWithShadow(name, posX, posY, -1);
-		
+	}
+	
+	@Override
+	public void update() {
 		list.add(System.currentTimeMillis());
 		list.removeIf(aLong -> aLong + 1000 < System.currentTimeMillis());
 	}
