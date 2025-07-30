@@ -1,9 +1,12 @@
 package net.minecraft.client.resources;
 
 import java.util.List;
+
+import fr.honertis.guis.resourcePacks.GuiScreenPackManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiListExtended;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiScreenResourcePacks;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
@@ -19,11 +22,11 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
     private static final IChatComponent iold = new ChatComponentTranslation("resourcePack.incompatible.old", new Object[0]);
     private static final IChatComponent inew = new ChatComponentTranslation("resourcePack.incompatible.new", new Object[0]);
     protected final Minecraft mc;
-    protected final GuiScreenResourcePacks resourcePacksGUI;
+    protected final GuiScreenPackManager resourcePacksGUI;
 
-    public ResourcePackListEntry(GuiScreenResourcePacks resourcePacksGUIIn)
+    public ResourcePackListEntry(GuiScreen resourcePacksGUIIn)
     {
-        this.resourcePacksGUI = resourcePacksGUIIn;
+        this.resourcePacksGUI = (GuiScreenPackManager) resourcePacksGUIIn;
         this.mc = Minecraft.getMinecraft();
     }
 

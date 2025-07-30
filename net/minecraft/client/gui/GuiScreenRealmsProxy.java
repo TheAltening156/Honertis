@@ -10,7 +10,7 @@ import net.minecraft.realms.RealmsScreen;
 
 public class GuiScreenRealmsProxy extends GuiScreen
 {
-    private RealmsScreen field_154330_a;
+    private static RealmsScreen field_154330_a;
 
     public GuiScreenRealmsProxy(RealmsScreen p_i1087_1_)
     {
@@ -46,10 +46,10 @@ public class GuiScreenRealmsProxy extends GuiScreen
     /**
      * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
      */
-    public void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height)
+    public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height)
     {
-        this.field_154330_a.blit(x, y, textureX, textureY, width, height);
-        super.drawTexturedModalRect(x, y, textureX, textureY, width, height);
+        field_154330_a.blit(x, y, textureX, textureY, width, height);
+        Gui.drawTexturedModalRect(x, y, textureX, textureY, width, height);
     }
 
     /**

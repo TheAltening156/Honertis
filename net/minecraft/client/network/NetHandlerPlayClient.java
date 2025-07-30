@@ -4,6 +4,10 @@ import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.mojang.authlib.GameProfile;
+
+import fr.honertis.Honertis;
+import fr.honertis.module.ModulesManager;
+import fr.honertis.module.modules.CustomTime;
 import io.netty.buffer.Unpooled;
 import java.io.File;
 import java.io.IOException;
@@ -957,7 +961,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
     {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
         this.gameController.theWorld.setTotalWorldTime(packetIn.getTotalWorldTime());
-        this.gameController.theWorld.setWorldTime(packetIn.getWorldTime());
+        this.gameController.theWorld.setWorldTime(Honertis.INSTANCE.modulesManager.getModuleByName("CustomTime").isEnabled() ? CustomTime.time.getLongValue() : packetIn.getWorldTime());
     }
 
     public void handleSpawnPosition(S05PacketSpawnPosition packetIn)

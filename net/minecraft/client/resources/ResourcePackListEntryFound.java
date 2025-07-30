@@ -1,12 +1,12 @@
 package net.minecraft.client.resources;
 
-import net.minecraft.client.gui.GuiScreenResourcePacks;
+import net.minecraft.client.gui.GuiScreen;
 
 public class ResourcePackListEntryFound extends ResourcePackListEntry
 {
     private final ResourcePackRepository.Entry packEntry;
 
-    public ResourcePackListEntryFound(GuiScreenResourcePacks resourcePacksGUIIn, ResourcePackRepository.Entry packEntry)
+    public ResourcePackListEntryFound(GuiScreen resourcePacksGUIIn, ResourcePackRepository.Entry packEntry)
     {
         super(resourcePacksGUIIn);
         this.packEntry = packEntry;

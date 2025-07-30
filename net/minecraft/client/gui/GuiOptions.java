@@ -1,6 +1,8 @@
 package net.minecraft.client.gui;
 
 import java.io.IOException;
+
+import fr.honertis.guis.resourcePacks.GuiScreenPackManager;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundEventAccessorComposite;
@@ -198,7 +200,8 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback
             if (button.id == 105)
             {
                 this.mc.gameSettings.saveOptions();
-                this.mc.displayGuiScreen(new GuiScreenResourcePacks(this));
+                //this.mc.displayGuiScreen(new GuiScreen(this));
+                mc.displayGuiScreen(new GuiScreenPackManager(this));
             }
 
             if (button.id == 106)

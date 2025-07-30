@@ -3,7 +3,6 @@ package net.minecraft.client.gui;
 import com.google.common.collect.Lists;
 
 import fr.honertis.Honertis;
-import fr.honertis.manager.ResourcePackManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,10 +23,10 @@ public class GuiScreenResourcePacks extends GuiScreen
 {
     private static final Logger logger = LogManager.getLogger();
     private final GuiScreen parentScreen;
-    /*private List<ResourcePackListEntry> availableResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
-    private List<ResourcePackListEntry> selectedResourcePacks = Lists.<ResourcePackListEntry>newArrayList();*/
+    private List<ResourcePackListEntry> availableResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
+    private List<ResourcePackListEntry> selectedResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
 
-    public ResourcePackManager manager = Honertis.INSTANCE.getPackManager();
+   // public ResourcePackManager manager = Honertis.INSTANCE.getPackManager();
     
     /** List component that contains the available resource packs */
     private GuiResourcePackAvailable availableResourcePacksList;
@@ -41,9 +40,6 @@ public class GuiScreenResourcePacks extends GuiScreen
         this.parentScreen = parentScreenIn;
     }
     
-    private List<ResourcePackRepository.Entry> list = null;
-    private List<ResourcePackListEntry> lastSelectedResourcePacks;
-
 
     /**
      * Adds the buttons (and other controls) to the screen in question. Called when the GUI is displayed and when the
@@ -51,33 +47,35 @@ public class GuiScreenResourcePacks extends GuiScreen
      */
     public void initGui()
     {
-    	lastSelectedResourcePacks = manager.getSelectedResourcePacks();
     	this.buttonList.add(new GuiOptionButton(2, this.width / 2 - 154, this.height - 48, I18n.format("resourcePack.openFolder", new Object[0])));
         this.buttonList.add(new GuiOptionButton(1, this.width / 2 + 4, this.height - 48, I18n.format("gui.done", new Object[0])));
-		if (manager.getAvailableResourcePacks() == null && manager.getSelectedResourcePacks() == null) {
-			ResourcePackRepository resourcepackrepository = this.mc.getResourcePackRepository();
-            resourcepackrepository.updateRepositoryEntriesAll();    
-            manager.selectedResourcePacks = Lists.newArrayList();//TODO: fix le packmanager
-            manager.availableResourcePacks = Lists.newArrayList();
-            list = Lists.newArrayList(resourcepackrepository.getRepositoryEntriesAll());
+
+        if (!this.changed)
+        {
+            this.availableResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
+            this.selectedResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
+            ResourcePackRepository resourcepackrepository = this.mc.getResourcePackRepository();
+            resourcepackrepository.updateRepositoryEntriesAll();
+            List<ResourcePackRepository.Entry> list = mc.getResourcePackRepository().getRepositoryEntriesAll();
             list.removeAll(resourcepackrepository.getRepositoryEntries());
-            
+
             for (ResourcePackRepository.Entry resourcepackrepository$entry : list)
             {
-            	manager.getAvailableResourcePacks().add(new ResourcePackListEntryFound(this, resourcepackrepository$entry));
+                this.availableResourcePacks.add(new ResourcePackListEntryFound(this, resourcepackrepository$entry));
             }
-            
+
             for (ResourcePackRepository.Entry resourcepackrepository$entry1 : Lists.reverse(resourcepackrepository.getRepositoryEntries()))
             {
-            	manager.getSelectedResourcePacks().add(new ResourcePackListEntryFound(this, resourcepackrepository$entry1));
-            } 	
-        	manager.getSelectedResourcePacks().add(new ResourcePackListEntryDefault(this));
-		}
-    	
-        this.availableResourcePacksList = new GuiResourcePackAvailable(this.mc, 200, this.height, manager.getAvailableResourcePacks());
+                this.selectedResourcePacks.add(new ResourcePackListEntryFound(this, resourcepackrepository$entry1));
+            }
+
+            this.selectedResourcePacks.add(new ResourcePackListEntryDefault(this));
+        }
+
+        this.availableResourcePacksList = new GuiResourcePackAvailable(this.mc, 200, this.height, this.availableResourcePacks);
         this.availableResourcePacksList.setSlotXBoundsFromLeft(this.width / 2 - 4 - 200);
         this.availableResourcePacksList.registerScrollButtons(7, 8);
-        this.selectedResourcePacksList = new GuiResourcePackSelected(this.mc, 200, this.height, manager.getSelectedResourcePacks());
+        this.selectedResourcePacksList = new GuiResourcePackSelected(this.mc, 200, this.height, this.selectedResourcePacks);
         this.selectedResourcePacksList.setSlotXBoundsFromLeft(this.width / 2 + 4);
         this.selectedResourcePacksList.registerScrollButtons(7, 8);
     }
@@ -94,22 +92,22 @@ public class GuiScreenResourcePacks extends GuiScreen
 
     public boolean hasResourcePackEntry(ResourcePackListEntry p_146961_1_)
     {
-        return manager.getSelectedResourcePacks().contains(p_146961_1_);
+        return getSelectedResourcePacks().contains(p_146961_1_);
     }
 
     public List<ResourcePackListEntry> getListContaining(ResourcePackListEntry p_146962_1_)
     {
-        return this.hasResourcePackEntry(p_146962_1_) ? manager.getSelectedResourcePacks() : manager.getAvailableResourcePacks();
+        return this.hasResourcePackEntry(p_146962_1_) ? getSelectedResourcePacks() : getAvailableResourcePacks();
     }
 
     public List<ResourcePackListEntry> getAvailableResourcePacks()
     {
-        return manager.getAvailableResourcePacks();
+        return getAvailableResourcePacks();
     }
 
     public List<ResourcePackListEntry> getSelectedResourcePacks()
     {
-        return manager.getSelectedResourcePacks();
+        return getSelectedResourcePacks();
     }
 
     /**
@@ -178,7 +176,7 @@ public class GuiScreenResourcePacks extends GuiScreen
                 {
                     List<ResourcePackRepository.Entry> list = Lists.<ResourcePackRepository.Entry>newArrayList();
 
-                    for (ResourcePackListEntry resourcepacklistentry : manager.getSelectedResourcePacks())
+                    for (ResourcePackListEntry resourcepacklistentry : getSelectedResourcePacks())
                     {
                         if (resourcepacklistentry instanceof ResourcePackListEntryFound)
                         {
