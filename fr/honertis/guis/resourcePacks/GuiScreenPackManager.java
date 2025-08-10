@@ -201,7 +201,8 @@ public class GuiScreenPackManager extends GuiScreen {
 		}
 		if (button.id == 99) {
 		    cachedPackList = null;
-		    this.initGui(); // Reinit the screen with fresh data
+		    changed = false;
+		    mc.displayGuiScreen(this);
 		}
 	}
 

@@ -17,6 +17,8 @@ import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import fr.honertis.Honertis;
 import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModuleBase;
+import fr.honertis.module.ModulesManager;
+import fr.honertis.module.modules.FreeLook;
 import fr.honertis.utils.TimeUtils;
 import fr.honertis.utils.WebUtils;
 
@@ -583,6 +585,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.renderManager = new RenderManager(this.renderEngine, this.renderItem);
         this.itemRenderer = new ItemRenderer(this);
         this.mcResourceManager.registerReloadListener(this.renderItem);
+        Honertis.INSTANCE.onStartup();
         this.entityRenderer = new EntityRenderer(this, this.mcResourceManager);
         this.mcResourceManager.registerReloadListener(this.entityRenderer);
         this.blockRenderDispatcher = new BlockRendererDispatcher(this.modelManager.getBlockModelShapes(), this.gameSettings);
@@ -594,7 +597,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.effectRenderer = new EffectRenderer(this.theWorld, this.renderEngine);
         this.checkGLError("Post startup");
         this.ingameGUI = new GuiIngame(this);
-        Honertis.INSTANCE.onStartup();
 
         if (this.serverName != null)
         {
@@ -1237,6 +1239,22 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.mcProfiler.startSection("display_update");
         for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
         	m.update();
+        	FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook");
+            
+    		if (mod.hold.isToggled()) {
+    			mod.key.key = Keyboard.KEY_F;
+    			if (Keyboard.getEventKey() == mod.key.getKey()) {
+    				if (Keyboard.getEventKeyState()) {
+    					if (!mod.isEnabled())
+    						mod.toggle();
+    				} else {
+    					if (mod.isEnabled())
+    						mod.toggle();
+    				}
+    			}
+    		} /*else if (!mod.hold.isToggled() && mod.cta.isEnabled()){
+    			if (Keyboard.getEventKey() == mod.key.getKey()) mod.toggle();
+    		}*/
         }
         if (time.hasTimeElapsed(120000, true)) {
         	FileManager.save();
@@ -1963,6 +1981,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     }
                     else
                     {
+                    	/*FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook");
+                    	mod.key.setKey(Keyboard.KEY_F);
+                    	if (k == mod.key.getKey()) {
+                    		if (!mod.hold.isToggled()) 
+		            			mod.toggle();
+
+                    	}*/
+                    	
                         if (k == 1)
                         {
                             this.displayInGameMenu();

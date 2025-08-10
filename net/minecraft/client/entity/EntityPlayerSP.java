@@ -3,10 +3,14 @@ package net.minecraft.client.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
+
 import fr.honertis.Honertis;
 import fr.honertis.event.EventType;
 import fr.honertis.event.EventUpdate;
 import fr.honertis.module.ModuleBase;
+import fr.honertis.module.modules.FreeLook;
+import fr.honertis.module.modules.MoreParticles;
 import fr.honertis.utils.TimeUtils;
 import fr.honertis.utils.Utils;
 import net.minecraft.client.Minecraft;
@@ -197,6 +201,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
         EventUpdate e = new EventUpdate();
         e.setType(EventType.POST);
         Honertis.INSTANCE.event.onEvent(e);
+        
     }
 
     /**
@@ -699,11 +704,15 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void onCriticalHit(Entity entityHit)
     {
+    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.modulesManager.getModuleByName("MoreParticles");
+        for (int integer : new int[p.isEnabled() ? (int) p.particles.getDefValue() : 1])
         this.mc.effectRenderer.emitParticleAtEntity(entityHit, EnumParticleTypes.CRIT);
     }
 
     public void onEnchantmentCritical(Entity entityHit)
     {
+    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.modulesManager.getModuleByName("MoreParticles");
+        for (int integer : new int[p.isEnabled() ? (int) p.particles.getDefValue() : 1])
         this.mc.effectRenderer.emitParticleAtEntity(entityHit, EnumParticleTypes.CRIT_MAGIC);
     }
 

@@ -2,6 +2,11 @@ package net.minecraft.client.renderer;
 
 import com.google.common.base.Predicates;
 import com.google.gson.JsonSyntaxException;
+
+import fr.honertis.Honertis;
+import fr.honertis.event.EventRender2D;
+import fr.honertis.module.modules.FreeLook;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.FloatBuffer;
@@ -78,6 +83,7 @@ import optifine.TextureUtils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -827,7 +833,11 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
         else if (!this.mc.gameSettings.debugCamEnable)
         {
-            GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 1.0F, 0.0F, 0.0F);
+		    float newYaw = mod.isEnabled() ? mod.rotYaw : entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks;
+		    float newPitch = mod.isEnabled() ? mod.rotPitch : entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
+        	//Pitch cam
+            //GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotate(newPitch, 1.0F, 0.0F, 0.0F);
 
             if (entity instanceof EntityAnimal)
             {
@@ -836,7 +846,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
             }
             else
             {
-                GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F, 0.0F, 1.0F, 0.0F);
+            	//Yaw cam
+                //GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F, 0.0F, 1.0F, 0.0F);
+                GlStateManager.rotate(newYaw + 180.0F, 0.0F, 1.0F, 0.0F);
             }
         }
 
@@ -1244,6 +1256,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
         return i > 200 ? 1.0F : 0.7F + MathHelper.sin(((float)i - partialTicks) * (float)Math.PI * 0.2F) * 0.3F;
     }
 
+	public FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook");
+    
     public void func_181560_a(float p_181560_1_, long p_181560_2_)
     {
         this.frameInit();
@@ -1292,13 +1306,21 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 this.smoothCamPartialTicks = p_181560_1_;
                 f2 = this.smoothCamFilterX * f4;
                 f3 = this.smoothCamFilterY * f4;
-                this.mc.thePlayer.setAngles(f2, f3 * (float)b0);
+                //this.mc.thePlayer.setAngles(f2, f3 * (float)b0);
             }
             else
             {
                 this.smoothCamYaw = 0.0F;
                 this.smoothCamPitch = 0.0F;
-                this.mc.thePlayer.setAngles(f2, f3 * (float)b0);
+                //this.mc.thePlayer.setAngles(f2, f3 * (float)b0);
+            }
+           
+            if (!mod.isEnabled())
+            	this.mc.thePlayer.setAngles(f2, f3 * (float)b0);
+            else {
+            	mod.rotYaw += f2 * 0.25F;
+                mod.rotPitch -= (f3 * 0.25F) * b0;
+                mod.rotPitch = MathHelper.clamp_float(mod.rotPitch, -90.0F, 90.0F);
             }
         }
 
@@ -1347,6 +1369,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
                     GlStateManager.alphaFunc(516, 0.1F);
                     this.mc.ingameGUI.renderGameOverlay(p_181560_1_);
 
+                    Honertis.INSTANCE.event.onEvent(new EventRender2D());
+
+                    
                     if (this.mc.gameSettings.ofShowFps && !this.mc.gameSettings.showDebugInfo)
                     {
                         Config.drawFps();
@@ -1701,6 +1726,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
         {
             GlStateManager.matrixMode(5888);
             GlStateManager.popMatrix();
+            
+            
             GlStateManager.pushMatrix();
             RenderHelper.enableStandardItemLighting();
             this.mc.mcProfiler.endStartSection("entities");

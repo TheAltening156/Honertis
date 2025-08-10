@@ -12,6 +12,7 @@ import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.module.modules.HitColor;
 import fr.honertis.settings.BooleanSettings;
+import fr.honertis.settings.KeyBindSettings;
 import fr.honertis.settings.NumberSettings;
 import fr.honertis.settings.Settings;
 import fr.honertis.utils.AnimUtils;
@@ -115,8 +116,13 @@ public class GuiHonertisOptions extends GuiScreen {
 								drawRect(settsX + 118, settsY - 4, settsX + 147, settsY + 11, ss.isToggled() ? new Color(0, 205, 0, 190).getRGB() : new Color(205, 0, 0, 190).getRGB() );
 								mc.fontRendererObj.drawCenteredString(ss.isToggled() ? "I" : "O", settsX + 132, settsY, -1);
 								drawRect(  settsX + 95 - 12 + (ss.isToggled() ? 60 : 34), settsY - 5, settsX + 95 - 12 + (ss.isToggled() ? 66 : 40), settsY + 12, -1);
-							
 							}
+							/*if (s instanceof KeyBindSettings) {
+								KeyBindSettings ss = (KeyBindSettings) s;
+								drawRect(settsX + 118, settsY - 4, settsX + 147, settsY + 11, ss.isToggled() ? new Color(0, 205, 0, 190).getRGB() : new Color(205, 0, 0, 190).getRGB() );
+								mc.fontRendererObj.drawCenteredString(ss.isToggled() ? "I" : "O", settsX + 132, settsY, -1);
+								drawRect(  settsX + 95 - 12 + (ss.isToggled() ? 60 : 34), settsY - 5, settsX + 95 - 12 + (ss.isToggled() ? 66 : 40), settsY + 12, -1);
+							}*/
 		                    mc.fontRendererObj.drawString(s.name, settsX - 70, settsY, -1);
 		                    posY += 25;
 							modY += 25;

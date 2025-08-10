@@ -16,6 +16,9 @@ public class Event<T> {
 				if (e instanceof EventRenderGui) {
 					m.onGuiRender((EventRenderGui) e);
 				}
+				if (e instanceof EventRender2D) {
+					m.onRender2D((EventRender2D) e);
+				}
 			}
 		}
 	}

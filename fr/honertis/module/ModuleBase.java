@@ -32,7 +32,7 @@ public class ModuleBase extends Events{
 		settings.addAll(Arrays.asList(s));
 		settings.sort(Comparator.comparingInt(ss -> ss instanceof BooleanSettings ? 1 : -1));
 		settings.sort(Comparator.comparingInt(ss -> ss instanceof NumberSettings ? 1 : -1));
-		
+		settings.sort(Comparator.comparingInt(ss -> ss instanceof KeyBindSettings ? 1 : -1));
 	}
 	
 	public String getName() {
@@ -61,7 +61,7 @@ public class ModuleBase extends Events{
 	}
 	
 	public void toggle() {
-		setEnabled(!enabled);
+		enabled = !enabled;
 		if (enabled) {
 			onEnable(); 
 		} else {

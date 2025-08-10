@@ -1375,8 +1375,7 @@ public abstract class EntityPlayer extends EntityLivingBase
                             targetEntity.motionY = d1;
                             targetEntity.motionZ = d2;
                         }
-                        MoreParticles p = (MoreParticles)Honertis.INSTANCE.modulesManager.getModuleByName("MoreParticles");
-                        for (int integer : new int[p.isEnabled() ? (int) p.particles.getDefValue() : 1]) {
+
                         	 if (flag)
                              {
                                  this.onCriticalHit(targetEntity);
@@ -1386,7 +1385,7 @@ public abstract class EntityPlayer extends EntityLivingBase
                              {
                                  this.onEnchantmentCritical(targetEntity);
                              }
-                        }
+                        
 
                         if (f >= 18.0F)
                         {
