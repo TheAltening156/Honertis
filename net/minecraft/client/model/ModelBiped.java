@@ -1,5 +1,6 @@
 package net.minecraft.client.model;
 
+import fr.honertis.Honertis;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
@@ -170,7 +171,8 @@ public class ModelBiped extends ModelBase
 
             case 3:
                 this.bipedRightArm.rotateAngleX = this.bipedRightArm.rotateAngleX * 0.5F - ((float)Math.PI / 10F) * (float)this.heldItemRight;
-                this.bipedRightArm.rotateAngleY = -0.5235988F;
+                if (!Honertis.INSTANCE.modulesManager.getModuleByName("BlockHit").isEnabled())
+                	this.bipedRightArm.rotateAngleY = -0.5235988F;
         }
 
         this.bipedLeftArm.rotateAngleY = 0.0F;

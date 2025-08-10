@@ -1241,7 +1241,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         	m.update();
         	FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook");
             
-    		if (mod.hold.isToggled()) {
+    		if (mod.hold.isToggled() && currentScreen == null) {
     			mod.key.key = Keyboard.KEY_F;
     			if (Keyboard.getEventKey() == mod.key.getKey()) {
     				if (Keyboard.getEventKeyState()) {
