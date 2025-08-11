@@ -135,6 +135,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Bootstrap;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -1241,7 +1242,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         	m.update();
         	FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook");
             
-    		if (mod.hold.isToggled() && currentScreen == null) {
+    		if (mod.hold.isToggled()) {
     			mod.key.key = Keyboard.KEY_F;
     			if (Keyboard.getEventKey() == mod.key.getKey()) {
     				if (Keyboard.getEventKeyState()) {
@@ -1252,6 +1253,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     						mod.toggle();
     				}
     			}
+    			if (currentScreen != null && mod.isEnabled()) mod.toggle();
     		} /*else if (!mod.hold.isToggled() && mod.cta.isEnabled()){
     			if (Keyboard.getEventKey() == mod.key.getKey()) mod.toggle();
     		}*/

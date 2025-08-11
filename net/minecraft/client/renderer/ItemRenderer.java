@@ -21,6 +21,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemFishingRod;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MathHelper;
@@ -86,8 +87,14 @@ public class ItemRenderer
                     GlStateManager.depthMask(false);
                 }
             }
-
-            this.itemRenderer.renderItemModelForEntity(heldStack, entityIn, transform);
+            
+            if (Honertis.INSTANCE.modulesManager.getModuleByName("BlockHit").isEnabled()) {
+	            if (itemToRender.getItem() instanceof ItemSword) {
+	            	GlStateManager.rotate(90, 0, -45, -90);
+	            	GlStateManager.translate(-0.1, 0, 0);
+	            }
+            }
+            	this.itemRenderer.renderItemModelForEntity(heldStack, entityIn, transform);
 
             if (this.isBlockTranslucent(block))
             {
