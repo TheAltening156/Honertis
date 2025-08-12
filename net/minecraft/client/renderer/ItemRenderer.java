@@ -87,14 +87,7 @@ public class ItemRenderer
                     GlStateManager.depthMask(false);
                 }
             }
-            
-            if (Honertis.INSTANCE.modulesManager.getModuleByName("BlockHit").isEnabled()) {
-	            if (itemToRender.getItem() instanceof ItemSword) {
-	            	GlStateManager.rotate(90, 0, -45, -90);
-	            	GlStateManager.translate(-0.1, 0, 0);
-	            }
-            }
-            	this.itemRenderer.renderItemModelForEntity(heldStack, entityIn, transform);
+            this.itemRenderer.renderItemModelForEntity(heldStack, entityIn, transform);
 
             if (this.isBlockTranslucent(block))
             {
@@ -382,7 +375,6 @@ public class ItemRenderer
                         	GlStateManager.scale(0.71, 0.71, 0.81);
                         	GlStateManager.translate(0, 0.02, 0);
                         	this.transformFirstPersonItem(0, f1);
-
                         } else
                         	this.transformFirstPersonItem(f, 0.0F);
                         this.func_178103_d();

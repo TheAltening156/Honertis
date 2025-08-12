@@ -171,7 +171,6 @@ public class ModelBiped extends ModelBase
 
             case 3:
                 this.bipedRightArm.rotateAngleX = this.bipedRightArm.rotateAngleX * 0.5F - ((float)Math.PI / 10F) * (float)this.heldItemRight;
-                if (!Honertis.INSTANCE.modulesManager.getModuleByName("BlockHit").isEnabled())
                 	this.bipedRightArm.rotateAngleY = -0.5235988F;
         }
 
