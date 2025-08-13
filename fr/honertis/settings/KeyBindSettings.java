@@ -21,9 +21,9 @@ public class KeyBindSettings extends Settings{
 	public Integer getValue() {
 		return getKey();
 	}
-	
+	@Override
 	public void setValue(Object o) {
-		if (o instanceof Boolean) {
+		if (o instanceof Integer) {
 			this.key = (int) o;
 		}
 	}

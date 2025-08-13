@@ -27,7 +27,7 @@ public class BooleanSettings extends Settings{
 	public void setValue(Object o) {
 		if (o instanceof String) {
 			String s = (String) o;
-			if(s.equalsIgnoreCase("true")){
+			if(s.equalsIgnoreCase("true")) {
 				this.toggled = true;
 			} else if (s.equalsIgnoreCase("false")) {
 				this.toggled = false;
