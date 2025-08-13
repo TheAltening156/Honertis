@@ -1243,7 +1243,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         	FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook");
             
     		if (mod.hold.isToggled()) {
-    			mod.key.key = Keyboard.KEY_F;
     			if (Keyboard.getEventKey() == mod.key.getKey()) {
     				if (Keyboard.getEventKeyState()) {
     					if (!mod.isEnabled())
@@ -1254,9 +1253,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     				}
     			}
     			if (currentScreen != null && mod.isEnabled()) mod.toggle();
-    		} /*else if (!mod.hold.isToggled() && mod.cta.isEnabled()){
-    			if (Keyboard.getEventKey() == mod.key.getKey()) mod.toggle();
-    		}*/
+    		} 
         }
         if (time.hasTimeElapsed(120000, true)) {
         	FileManager.save();
@@ -1983,14 +1980,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     }
                     else
                     {
-                    	/*FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook");
-                    	mod.key.setKey(Keyboard.KEY_F);
-                    	if (k == mod.key.getKey()) {
-                    		if (!mod.hold.isToggled()) 
-		            			mod.toggle();
-
-                    	}*/
-                    	
                         if (k == 1)
                         {
                             this.displayInGameMenu();

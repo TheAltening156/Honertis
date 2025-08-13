@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import fr.honertis.Honertis;
@@ -117,13 +118,16 @@ public class GuiHonertisOptions extends GuiScreen {
 								mc.fontRendererObj.drawCenteredString(ss.isToggled() ? "I" : "O", settsX + 132, settsY, -1);
 								drawRect(  settsX + 95 - 12 + (ss.isToggled() ? 60 : 34), settsY - 5, settsX + 95 - 12 + (ss.isToggled() ? 66 : 40), settsY + 12, -1);
 							}
-							/*if (s instanceof KeyBindSettings) {
+							if (s instanceof KeyBindSettings) {
 								KeyBindSettings ss = (KeyBindSettings) s;
-								drawRect(settsX + 118, settsY - 4, settsX + 147, settsY + 11, ss.isToggled() ? new Color(0, 205, 0, 190).getRGB() : new Color(205, 0, 0, 190).getRGB() );
-								mc.fontRendererObj.drawCenteredString(ss.isToggled() ? "I" : "O", settsX + 132, settsY, -1);
-								drawRect(  settsX + 95 - 12 + (ss.isToggled() ? 60 : 34), settsY - 5, settsX + 95 - 12 + (ss.isToggled() ? 66 : 40), settsY + 12, -1);
-							}*/
-		                    mc.fontRendererObj.drawString(s.name, settsX - 70, settsY, -1);
+								String sn = ss.name + "  :  " + (ss.isChanging() ? "..." : Keyboard.getKeyName(ss.getKey()));
+								int sx = settsX + 36;
+								int sy = settsY;
+								mc.fontRendererObj.drawCenteredString(sn ,sx, sy, -1);
+								
+							}
+		                    if (!(s instanceof KeyBindSettings))
+							mc.fontRendererObj.drawString(s.name, settsX - 70, settsY, -1);
 		                    posY += 25;
 							modY += 25;
 		                    settsY += 25;
@@ -178,6 +182,15 @@ public class GuiHonertisOptions extends GuiScreen {
 									ss.toggle();
 								}
 							}
+							if (s instanceof KeyBindSettings) {
+								KeyBindSettings ss = (KeyBindSettings) s;
+								String sn = ss.name + "  :  " + Keyboard.getKeyName(ss.getKey());
+								int sx = settsX + 36;
+								int sy = settsY;
+								if (isHovered(sx - 31, sy, sx + mc.fontRendererObj.getStringWidth(ss.name + "  :  " + Keyboard.getKeyName(ss.getKey())) - 26, sy + 10, mouseX, mouseY)) {
+									ss.change();
+								}
+							}
 							posY += 25;
 							modY += 25;
 		                    settsY += 25;
@@ -199,6 +212,38 @@ public class GuiHonertisOptions extends GuiScreen {
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		super.keyTyped(typedChar, keyCode);
-		
+		int posY = 50 + mouse;
+		for (Category c : Category.values()) {
+			int modX = this.width / 2 + 60;
+			int modY = posY + 23;
+			for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
+				int settsX = modX - 95;
+				int settsY = modY + 25;
+				if (m.cat == c) {
+					for (Settings s : m.settings) {
+						if (!m.settings.isEmpty() && m.showSettings && s.show) {
+							
+							if (s instanceof KeyBindSettings) {
+								KeyBindSettings ss = (KeyBindSettings) s;
+								if (ss.isChanging()) {
+									if (keyCode == Keyboard.KEY_ESCAPE) {
+										ss.key = 0;
+									} else {
+										ss.key = keyCode;
+									}
+									ss.change();
+								}
+							}
+							posY += 25;
+							modY += 25;
+		                    settsY += 25;
+						}
+					}
+					modY += 25;
+					posY += 25;
+				}
+			}
+			posY += 25;
+		}
 	}
 }

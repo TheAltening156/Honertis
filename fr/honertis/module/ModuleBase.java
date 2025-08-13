@@ -8,6 +8,7 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 import fr.honertis.event.Events;
+import fr.honertis.module.modules.FreeLook;
 import fr.honertis.settings.*;
 import fr.honertis.settings.Settings;
 import fr.honertis.utils.AnimUtils;
@@ -61,6 +62,7 @@ public class ModuleBase extends Events{
 	}
 	
 	public void toggle() {
+		if (this instanceof FreeLook && mc.currentScreen != null) return;
 		enabled = !enabled;
 		if (enabled) {
 			onEnable(); 

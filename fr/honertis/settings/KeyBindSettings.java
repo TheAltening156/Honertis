@@ -2,6 +2,7 @@ package fr.honertis.settings;
 
 public class KeyBindSettings extends Settings{
 	public int key;
+	public boolean change;
 	
 	public KeyBindSettings(String name, int key) {
 		this.name = name;
@@ -25,5 +26,12 @@ public class KeyBindSettings extends Settings{
 		if (o instanceof Boolean) {
 			this.key = (int) o;
 		}
+	}
+
+	public void change() {
+		change = !change;
+	}
+	public boolean isChanging() {
+		return change;
 	}
 }
