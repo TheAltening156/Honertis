@@ -9,7 +9,7 @@ import fr.honertis.utils.WebUtils;
 public class Honertis {
 	public static Honertis INSTANCE = new Honertis();
 	public String name = "Honertis";
-	public String version = "1.6";
+	public String version = "1.6U1";
 	public boolean started;
 	public ModulesManager modulesManager;
 	public Event event;
