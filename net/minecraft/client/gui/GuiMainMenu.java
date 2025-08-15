@@ -34,12 +34,7 @@ public class GuiMainMenu extends GuiScreen {
 		mc.fontRendererObj.drawCenteredString("Vous êtes toujours en " + instance.version + ", la version actuelle est la " + WebUtils.currentVersion, this.width / 2, this.height / 2 - 50 + mc.fontRendererObj.FONT_HEIGHT, -1);
 		if (update) {
 			mc.fontRendererObj.drawCenteredString("Ouverture de la page web ...", this.width / 2, this.height / 2 + 1, -1);
-			try {
-				Thread.sleep(1500L);
-				update = false;
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			
 		}
 	}
 	
@@ -53,6 +48,12 @@ public class GuiMainMenu extends GuiScreen {
 			if (button.id == 2) {
 				update = true;
 				WebUtils.browseWebsite("https://github.com/TheAltening156/HonertisLauncher/releases/");
+			}
+			try {
+				Thread.sleep(1500L);
+				update = false;
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 		if (button.id == 1) {
