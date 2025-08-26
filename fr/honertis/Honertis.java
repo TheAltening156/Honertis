@@ -8,8 +8,8 @@ import fr.honertis.utils.WebUtils;
 
 public class Honertis {
 	public static Honertis INSTANCE = new Honertis();
-	public String name = "Honertis";
-	public String version = "1.6U1";
+	public String name;
+	public String version;
 	public boolean started;
 	public ModulesManager modulesManager;
 	public Event event;
@@ -17,7 +17,9 @@ public class Honertis {
 	public ResourcePackManager packManager;
 	public boolean update;
 	
-	public void onStartup() {
+	public void start() {
+		name = "Honertis";
+		version = "1.6U1";
 		modulesManager = new ModulesManager();
 		event = new Event();
 		rpc = new DiscordRPCInit();

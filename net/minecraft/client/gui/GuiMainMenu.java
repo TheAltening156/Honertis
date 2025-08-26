@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import fr.honertis.Honertis;
 import fr.honertis.utils.WebUtils;
+import net.minecraft.client.resources.I18n;
 
 public class GuiMainMenu extends GuiScreen {
 	public Honertis instance = Honertis.INSTANCE;
