@@ -18,10 +18,12 @@ import fr.honertis.settings.NumberSettings;
 import fr.honertis.settings.Settings;
 import fr.honertis.utils.AnimUtils;
 import fr.honertis.utils.DrawUtils;
+import fr.honertis.utils.LangManager;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiHonertisOptions extends GuiScreen {
@@ -36,7 +38,7 @@ public class GuiHonertisOptions extends GuiScreen {
 	
 	@Override
 	public void initGui() {
-		buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height - 25, "Retour"));
+		buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height - 25, I18n.format("gui.back", new Object[0])));
 		super.initGui();
 	}
 	
@@ -53,9 +55,9 @@ public class GuiHonertisOptions extends GuiScreen {
 			mouse += scrollDir;
 		}
 		drawDefaultBackground();
-		mc.fontRendererObj.drawCenteredStringWithShadow("Honertis Options", this.width / 2, 10, -1);
-		mc.fontRendererObj.drawCenteredStringWithShadow("Vous pouvez utiliser le scroll de la souris", this.width / 2, 24, -1);
-		mc.fontRendererObj.drawCenteredStringWithShadow("si vous ne voyez pas certains paramètres/modules", this.width / 2, 32, -1);
+		mc.fontRendererObj.drawCenteredStringWithShadow(LangManager.format("gui.honertis.options.name"), this.width / 2, 10, -1);
+		mc.fontRendererObj.drawCenteredStringWithShadow(LangManager.format("gui.honertis.options.scroll"), this.width / 2, 24, -1);
+		mc.fontRendererObj.drawCenteredStringWithShadow(LangManager.format("gui.honertis.options.scroll1"), this.width / 2, 32, -1);
 		int posY = 50 + mouse;
 		for (Category c : Category.values()) {
 			mc.fontRendererObj.drawCenteredStringWithShadow(c.name, this.width / 2, posY, -1);
