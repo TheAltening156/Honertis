@@ -3,6 +3,7 @@ package net.minecraft.client.gui;
 import java.io.IOException;
 
 import fr.honertis.Honertis;
+import fr.honertis.utils.LangManager;
 import fr.honertis.utils.WebUtils;
 import net.minecraft.client.resources.I18n;
 
@@ -17,10 +18,9 @@ public class GuiMainMenu extends GuiScreen {
 	public void initGui() {
 		super.initGui();
 		if (instance.update) {
-			System.out.println("Nouvelle version de Honertis disponible ! https://bit.ly/honertis");
-			this.buttonList.add(new GuiButton(0, this.width / 2 - 105, this.height / 2 + 40, 100, 20, "Mettre à jour"));
-			this.buttonList.add(new GuiButton(1, this.width / 2 + 5, this.height / 2 + 40, 100, 20, "Ignorer"));
-			this.buttonList.add(new GuiButton(2, this.width / 2 - 105, this.height / 2 + 62, 210, 20, "Vous pouvez aussi utiliser le launcher !"));
+			this.buttonList.add(new GuiButton(0, this.width / 2 - 105, this.height / 2 + 40, 100, 20, LangManager.format("gui.update")));
+			this.buttonList.add(new GuiButton(1, this.width / 2 + 5, this.height / 2 + 40, 100, 20, LangManager.format("gui.ignore")));
+			this.buttonList.add(new GuiButton(2, this.width / 2 - 105, this.height / 2 + 62, 210, 20, LangManager.format("gui.launcher")));
 		} else {
 			this.mc.displayGuiScreen(new McMainMenu());
 		}
@@ -31,8 +31,8 @@ public class GuiMainMenu extends GuiScreen {
 		drawBackground(0);
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
-		mc.fontRendererObj.drawCenteredString("Nouvelle version de Honertis disponible !", this.width / 2, this.height / 2 - 50, -1);
-		mc.fontRendererObj.drawCenteredString("Vous êtes toujours en " + instance.version + ", la version actuelle est la " + WebUtils.currentVersion, this.width / 2, this.height / 2 - 50 + mc.fontRendererObj.FONT_HEIGHT, -1);
+		mc.fontRendererObj.drawCenteredString(LangManager.format("gui.new"), this.width / 2, this.height / 2 - 50, -1);
+		mc.fontRendererObj.drawCenteredString(LangManager.format("gui.still") + " " + instance.version + ", " + LangManager.format("gui.current") + " " + WebUtils.currentVersion, this.width / 2, this.height / 2 - 50 + mc.fontRendererObj.FONT_HEIGHT, -1);
 		if (update) {
 			mc.fontRendererObj.drawCenteredString("Ouverture de la page web ...", this.width / 2, this.height / 2 + 1, -1);
 			

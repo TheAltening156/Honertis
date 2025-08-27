@@ -3,6 +3,12 @@ gui.refresh=Refresh
 gui.1_7=Old 1.7
 gui.utilities=Utilities
 gui.old=Old module
+gui.update=Update
+gui.ignore=Ignore
+gui.launcher=You can use the launcher !
+gui.new=A new version of Honertis is available !
+gui.still=You're still on
+gui.current=the current version is
 
 # Other
 color.red=Red
