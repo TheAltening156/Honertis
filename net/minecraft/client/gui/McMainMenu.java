@@ -19,6 +19,7 @@ import org.lwjgl.util.glu.Project;
 
 import com.google.common.collect.Lists;
 
+import fr.honertis.Honertis;
 import fr.honertis.guis.GuiHonertisOptions;
 import fr.honertis.utils.MC;
 import fr.honertis.utils.WebUtils;
@@ -534,7 +535,7 @@ public class McMainMenu extends GuiScreen implements GuiYesNoCallback
         GlStateManager.scale(f, f, f);
         this.drawCenteredString(this.fontRendererObj, this.splashText, 0, -8, -256);
         GlStateManager.popMatrix();
-        String s = "Minecraft 1.8.8";
+        String s = Honertis.INSTANCE.title;
 
         if (this.mc.isDemo())
         {

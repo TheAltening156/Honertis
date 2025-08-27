@@ -10,6 +10,7 @@ public class Honertis {
 	public static Honertis INSTANCE = new Honertis();
 	public String name;
 	public String version;
+	public String title;
 	public boolean started;
 	public ModulesManager modulesManager;
 	public Event event;
@@ -20,6 +21,7 @@ public class Honertis {
 	public void start() {
 		name = "Honertis";
 		version = "1.7";
+		title = "Minecraft 1.8.8 | Honertis v" + version;
 		modulesManager = new ModulesManager();
 		event = new Event();
 		rpc = new DiscordRPCInit();

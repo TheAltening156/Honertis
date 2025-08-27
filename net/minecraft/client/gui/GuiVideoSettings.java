@@ -1,6 +1,8 @@
 package net.minecraft.client.gui;
 
 import java.io.IOException;
+
+import fr.honertis.Honertis;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import optifine.Config;
@@ -198,7 +200,7 @@ public class GuiVideoSettings extends GuiScreen
         }
 
         this.drawString(this.fontRendererObj, s, 2, this.height - 10, 8421504);
-        String s2 = "Minecraft 1.8.8";
+        String s2 = Honertis.INSTANCE.title;
         int i = this.fontRendererObj.getStringWidth(s2);
         this.drawString(this.fontRendererObj, s2, this.width - i - 2, this.height - 10, 8421504);
         super.drawScreen(mouseX, mouseY, partialTicks);
