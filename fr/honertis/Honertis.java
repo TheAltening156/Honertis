@@ -19,7 +19,7 @@ public class Honertis {
 	
 	public void start() {
 		name = "Honertis";
-		version = "1.6U2";
+		version = "1.7";
 		modulesManager = new ModulesManager();
 		event = new Event();
 		rpc = new DiscordRPCInit();
