@@ -44,7 +44,10 @@ public class LangManager implements MC{
         
         if (file == null) file = LangManager.class.getResourceAsStream(langPath);
         
-        if (file == null) System.out.println("Fichier introuvable :" + fileName);
+        if (file == null) {
+        	System.out.println("Fichier introuvable :" + fileName);
+        	return;
+        }
         
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file, StandardCharsets.UTF_8))) {
             String line;

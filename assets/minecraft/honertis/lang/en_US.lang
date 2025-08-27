@@ -1,3 +1,57 @@
+# Menus
+gui.refresh=Refresh
+gui.1_7=Old 1.7
+gui.utilities=Utilities
+gui.old=Old module
+
+# Other
+color.red=Red
+color.green=Green
+color.blue=Blue
+color.alpha=Alpha
+
+#Module
+module.gg=Say GG or GL when a game starts, when winning or loosing
+
+module.blockhit=Restore the old block-hit animation from before 1.8
+
+module.blocktap=Bring back possibility to break blocks when blocking
+
+module.cps=Show you how many clicks you do in 1 second
+
+module.customtime=Allow you to set the world time from a parameter
+module.customtime.time=Time
+
+module.fishingrod=Change fishing rod size
+
+module.fps=Show your FPS
+module.fps.realtime=Real Time
+
+module.freelook=Allows you to look around you in third person 
+module.freelook.key=Key
+module.freelook.keyhold=Key holding
+
+module.bright=Remove obscurity
+
+module.hitcolor=Allows you to change the hit color from a value
+module.hitcolor.bypass=Armor bypass
+module.hitcolor.custom=Custom value
+
+module.keystrokes=Show pressed movement key
+module.keystrokes.delay=Delay
+module.keystrokes.spacebar=Space bar
+
+module.lowfire=Lower the fire overlay
+
+module.particles=Multiply particles from a value
+module.particles.multiply=Particles
+
+module.ping=Show your current ping
+
+module.sneak=Automatically sneak when sneak key is pressed under 1 second
+
+module.sprint=Automatically sprints
+
 # Honertis Menu
 gui.honertis.options.name=Honertis Options
 gui.honertis.options.scroll=You can use mouse scroll

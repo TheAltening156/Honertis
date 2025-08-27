@@ -9,7 +9,7 @@ public class ToggleSneak extends ModuleBase {
 	public boolean toggledSneak;
     
     public ToggleSneak() {
-		super("ToggleSneak", "Sneak automatiquement quand le sneak est appuyé moins d'une seconde", Category.UTILITIES);
+		super("ToggleSneak", "module.sneak", Category.UTILITIES);
 	}
 
 	@Override

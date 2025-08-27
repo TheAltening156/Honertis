@@ -18,9 +18,9 @@ public class FPS extends ModuleBase{
 			   oldY;
 	public List<Long> list = Lists.newArrayList();
 	
-	public BooleanSettings realTime = new BooleanSettings("Temps Réel", false);
+	public BooleanSettings realTime = new BooleanSettings("module.fps.realtime", false);
 	public FPS() {
-		super("FPS", "Montrer vos FPS actuels", Category.UTILITIES);
+		super("FPS", "module.fps", Category.UTILITIES);
 		this.addSettings(realTime);
 	}
 	

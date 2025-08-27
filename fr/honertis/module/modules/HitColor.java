@@ -7,15 +7,15 @@ import fr.honertis.settings.BooleanSettings;
 import fr.honertis.settings.NumberSettings;
 
 public class HitColor extends ModuleBase{
-	public NumberSettings r = new NumberSettings("Rouge", 180, 0, 255, 1),
-						  g = new NumberSettings("Vert", 0, 0, 255, 1),
-						  b = new NumberSettings("Bleu", 0, 0, 255, 1),
-						  a = new NumberSettings("Alpha", 153, 0, 255, 1);
-	public BooleanSettings bypass = new BooleanSettings("Bypass armure", true),
-						   custom = new BooleanSettings("Valeur Personalisée", true);
+	public NumberSettings r = new NumberSettings("color.red", 180, 0, 255, 1),
+						  g = new NumberSettings("color.green", 0, 0, 255, 1),
+						  b = new NumberSettings("color.blue", 0, 0, 255, 1),
+						  a = new NumberSettings("color.alpha", 153, 0, 255, 1);
+	public BooleanSettings bypass = new BooleanSettings("module.hitcolor.bypass", true),
+						   custom = new BooleanSettings("module.hitcolor.custom", true);
 	
 	public HitColor() {
-		super("HitColor", "Réajoute la couleur de coups d'une valeur personalisée", Category.OLD1_7);
+		super("HitColor", "module.hitcolor", Category.UTILITIES);
 		this.addSettings(r,g,b,a, custom,bypass);
 	}
 	@Override

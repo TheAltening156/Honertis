@@ -74,7 +74,7 @@ public class FileManager {
 					setts.put(s.name, s.getValue());
 				}
 				module.put("settings", setts);
-				data.put(m.name, module);
+				data.put(m.getName(), module);
 			}
 			out.write(new Yaml().dump(data).getBytes(StandardCharsets.UTF_8));
 		} catch (Exception e) {

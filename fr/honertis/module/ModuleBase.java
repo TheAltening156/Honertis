@@ -12,16 +12,17 @@ import fr.honertis.module.modules.FreeLook;
 import fr.honertis.settings.*;
 import fr.honertis.settings.Settings;
 import fr.honertis.utils.AnimUtils;
+import fr.honertis.utils.LangManager;
 import net.minecraft.client.Minecraft;
 
 public class ModuleBase extends Events{
-	public String name,
+	private String name,
 				  desc;
-	public boolean enabled;
-	public Category cat;
+	protected boolean enabled;
+	private Category cat;
 	public Minecraft mc = Minecraft.getMinecraft();
 	public List<Settings> settings = Lists.newArrayList();
-	public boolean showSettings;
+	private boolean showSettings;
 	
 	public ModuleBase(String name, String desc, Category cat) {
 		this.name = name;
@@ -43,10 +44,7 @@ public class ModuleBase extends Events{
 		this.name = name;
 	}
 	public String getDesc() {
-		return desc;
-	}
-	public void setDesc(String desc) {
-		this.desc = desc;
+		return LangManager.format(desc);
 	}
 	public Category getCat() {
 		return cat;
@@ -74,4 +72,12 @@ public class ModuleBase extends Events{
 	public void onEnable() {}
 	public void onDisable() {}
 	public void update() {}
+
+	public boolean showSettings() {
+		return showSettings;
+	}
+
+	public void toggleShowSettings() {
+		showSettings = !showSettings;
+	}
 }

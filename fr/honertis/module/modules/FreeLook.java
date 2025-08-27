@@ -15,11 +15,11 @@ import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.util.MathHelper;
 
 public class FreeLook extends ModuleBase {
-	public KeyBindSettings key = new KeyBindSettings("Touche", 0);
-	public BooleanSettings hold = new BooleanSettings("Maintient de la touche", true);
+	public KeyBindSettings key = new KeyBindSettings("module.freelook.key", 0);
+	public BooleanSettings hold = new BooleanSettings("module.freelook.keyhold", true);
 
 	public FreeLook() {
-		super("FreeLook", "Permet de regarder autour de soi en 3eme personne", Category.UTILITIES);
+		super("FreeLook", "module.freelook", Category.UTILITIES);
 		this.addSettings(hold, key);
 		this.enabled = false;
 	}

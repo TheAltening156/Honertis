@@ -24,11 +24,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.KeyBinding;
 
 public class KeyStrokes extends ModuleBase{    
-	public static BooleanSettings space = new BooleanSettings("Barre espace", true);
-    public static NumberSettings delay = new NumberSettings("Délai", 50, 1, 500, 1);
+	public static BooleanSettings space = new BooleanSettings("module.keystrokes.spacebar", true);
+    public static NumberSettings delay = new NumberSettings("module.keystrokes.delay", 50, 1, 500, 1);
     
     public KeyStrokes() {
-		super("Keystrokes", "Affiche les touches de mouvement pressés", Category.UTILITIES);
+		super("Keystrokes", "module.keystrokes", Category.UTILITIES);
 		this.addSettings(delay, space);
 	}
 	

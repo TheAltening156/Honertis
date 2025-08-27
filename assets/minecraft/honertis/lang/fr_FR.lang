@@ -1,3 +1,57 @@
+# Menus
+gui.refresh=Actualiser
+gui.1_7=Ancien 1.7
+gui.utilities=Utilitaires
+gui.old=Ancien module
+
+# Other
+color.red=Rouge
+color.green=Vert
+color.blue=Bleu
+color.alpha=Alpha
+
+#Module
+module.gg=Dis GG ou GL à chaque debut de game commençant, perdue ou gagnée
+
+module.blockhit=Remet l'animation du blockhit d'avant la 1.8
+
+module.blocktap=Remet la possibilité de casser des blocks pendans le blockHit
+
+module.cps=Montre combien de cps vous faites en 1 seconde
+
+module.customtime=Permet de personnaliser le cycle jour/nuit depuis un paramètre
+module.customtime.time=Heure
+
+module.fishingrod=Modifie la taille de la canne a pêche
+
+module.fps=Montre vos FPS 
+module.fps.realtime=Temps réel
+
+module.freelook=Permet de regarder autour de soi en 3eme personne
+module.freelook.key=Touche
+module.freelook.keyhold=Maintient de la touche
+
+module.bright=Enleve l'obscurité
+
+module.hitcolor=Permet de changer la couleur des coups depuis une valeur
+module.hitcolor.bypass=Bypass armure
+module.hitcolor.custom=Valeur Personalisée
+
+module.keystrokes=Affiche les touches de mouvement pressés
+module.keystrokes.delay=Délai
+module.keystrokes.spacebar=Barre espace
+
+module.lowfire=Baisse l'overlay du feu
+
+module.particles=Multiplie les particules par une valeur
+module.particles.multiply=Particules
+
+module.ping=Affiche le ping actuel
+
+module.sneak=Sneak automatiquement quand le sneak est appuyé moins d'une seconde
+
+module.sprint=Sprint automatiquement
+
 # Honertis Menu
 gui.honertis.options.name=Options Honertis
 gui.honertis.options.scroll=Vous pouvez utiliser le scroll de la souris

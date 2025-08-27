@@ -6,7 +6,7 @@ import fr.honertis.module.ModuleBase;
 public class FishingRod extends ModuleBase{
 
 	public FishingRod() {
-		super("FishingRod", "Réajoute la taille de la canne a pêche", Category.OLD1_7);
+		super("FishingRod", "module.fishingrod", Category.OLD1_7);
 	}
 	
 	

@@ -5,10 +5,10 @@ import fr.honertis.module.ModuleBase;
 import fr.honertis.settings.NumberSettings;
 
 public class MoreParticles extends ModuleBase{
-	public NumberSettings particles = new NumberSettings("Particules", 2, 2, 20, 1);
+	public NumberSettings particles = new NumberSettings("module.particles.multiply", 2, 2, 20, 1);
 	
 	public MoreParticles() {
-		super("MoreParticles", "Multiplie les particules par la valeur demandée", Category.UTILITIES);
+		super("MoreParticles", "module.particles", Category.UTILITIES);
 		this.addSettings(particles);
 	}
 	

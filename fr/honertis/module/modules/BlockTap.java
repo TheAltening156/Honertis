@@ -6,7 +6,7 @@ import fr.honertis.module.ModuleBase;
 public class BlockTap extends ModuleBase {
 
 	public BlockTap() {
-		super("BlockTap", "Remet la possibilité de casser des blocks pendans le blockHit", Category.OLD1_7);
+		super("BlockTap", "module.blocktap", Category.OLD1_7);
 	}
 
 }
