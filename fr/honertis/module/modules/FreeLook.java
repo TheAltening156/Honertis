@@ -30,9 +30,11 @@ public class FreeLook extends ModuleBase {
 	public float lastYaw = 0.0F;
 	public float lastPitch = 0.0F;
 
-
+	public int lastView;
+	
 	@Override
 	public void onEnable() {
+		lastView = mc.gameSettings.thirdPersonView;
 	    this.rotYaw = lastYaw = mc.thePlayer.rotationYaw;
 	    this.rotPitch = lastPitch = mc.thePlayer.rotationPitch;
 	    mc.gameSettings.thirdPersonView = 1;
@@ -43,7 +45,7 @@ public class FreeLook extends ModuleBase {
 	public void onDisable() {
 		mc.thePlayer.rotationYaw = this.lastYaw;
 		mc.thePlayer.rotationPitch = this.lastPitch;
-	    mc.gameSettings.thirdPersonView = 0;
+	    mc.gameSettings.thirdPersonView = lastView;
 
 	}
 

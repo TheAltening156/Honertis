@@ -1243,17 +1243,25 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         	FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook");
             
     		if (mod.hold.isToggled()) {
-    			if (Keyboard.getEventKey() == mod.key.getKey()) {
-    				if (Keyboard.getEventKeyState()) {
-    					if (!mod.isEnabled())
-    						mod.toggle();
-    				} else {
-    					if (mod.isEnabled())
-    						mod.toggle();
-    				}
-    			}
-    			if (currentScreen != null && mod.isEnabled()) mod.toggle();
-    		} 
+    			if (currentScreen == null) {
+	    			if (Keyboard.getEventKey() == mod.key.getKey()) {
+	    				if (Keyboard.getEventKeyState()) {
+	    					if (!mod.isEnabled())
+	    						mod.toggle();
+	    				} else {
+	    					if (mod.isEnabled()) {
+	   							mod.toggle();
+	    					}
+	    				}
+	    			}
+	
+	    		} else {
+	    			if (mod.isEnabled()) {
+	    				mod.setEnabled(false);
+	    				mod.onDisable();
+	    			}
+	    		}
+    		}
         }
         if (time.hasTimeElapsed(120000, true)) {
         	FileManager.save();
@@ -1540,16 +1548,27 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             this.leftClickCounter = 0;
         }
 
-        if (this.leftClickCounter <= 0 && (Honertis.INSTANCE.modulesManager.getModuleByName("BlockTap").isEnabled() || !this.thePlayer.isUsingItem()))
+        if (this.leftClickCounter <= 0)
         {
+        	boolean useItem = thePlayer.isUsingItem();
+        	if (useItem && !Honertis.INSTANCE.modulesManager.getModuleByName("BlockTap").isEnabled()) {
+        		useItem = !thePlayer.isUsingItem();
+        	} else if (useItem) {
+        		useItem = thePlayer.isUsingItem();
+        	}
             if (leftClick && this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {
                 BlockPos blockpos = this.objectMouseOver.getBlockPos();
 
-                if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air && this.playerController.onPlayerDamageBlock(blockpos, this.objectMouseOver.sideHit))
+                if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air /*&& this.playerController.onPlayerDamageBlock(blockpos, this.objectMouseOver.sideHit)*/)
                 {
-                    this.effectRenderer.addBlockHitEffects(blockpos, this.objectMouseOver.sideHit);
-                    this.thePlayer.swingItem();
+                	if (!thePlayer.isUsingItem()) {
+                		this.playerController.onPlayerDamageBlock(blockpos, this.objectMouseOver.sideHit);
+                	}
+                	if (useItem || !thePlayer.isUsingItem()) {
+                		this.effectRenderer.addBlockHitEffects(blockpos, this.objectMouseOver.sideHit);
+                        this.thePlayer.swingItem();
+                	}
                 }
             }
             else

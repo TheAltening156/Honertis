@@ -21,7 +21,7 @@ module.gg=Dis GG ou GL à chaque debut de game commençant, perdue ou gagnée
 
 module.blockhit=Remet l'animation du blockhit d'avant la 1.8
 
-module.blocktap=Remet la possibilité de casser des blocks pendans le blockHit
+module.blocktap=Remet la possibilité de tapper des blocs pendans le blockHit
 
 module.cps=Montre combien de cps vous faites en 1 seconde
 
