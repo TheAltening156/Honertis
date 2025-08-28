@@ -58,6 +58,9 @@ module.sneak=Automatically sneak when sneak key is pressed under 1 second
 
 module.sprint=Automatically sprints
 
+module.dropSwing=Bring back the arm swing when dropping an item (1.15)
+
+
 # Honertis Menu
 gui.honertis.options.name=Honertis Options
 gui.honertis.options.scroll=You can use mouse scroll

@@ -19,6 +19,7 @@ import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.module.ModulesManager;
 import fr.honertis.module.modules.FreeLook;
+import fr.honertis.utils.MC;
 import fr.honertis.utils.TimeUtils;
 import fr.honertis.utils.WebUtils;
 
@@ -1234,6 +1235,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.mcProfiler.endSection();
     }
     TimeUtils time = new TimeUtils();
+    TimeUtils dropTime = new TimeUtils();
+
+    TimeUtils dropTime1 = new TimeUtils();
+    private boolean autoDrop = false;
 
     public void updateDisplay()
     {
@@ -1262,6 +1267,29 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 	    			}
 	    		}
     		}
+        }
+        if (MC.mc.currentScreen == null && Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop").isEnabled()) {
+            boolean delayResetDone = false;
+	        if (Keyboard.getEventKey() == gameSettings.keyBindDrop.getKeyCode() && Keyboard.getEventKeyState()) {
+		        if (gameSettings.keyBindDrop.isPressed() &&!this.thePlayer.isSpectator()) {
+		            this.thePlayer.dropOneItem(GuiScreen.isCtrlKeyDown());
+		
+		            autoDrop = true;
+		            if (!delayResetDone) {
+		                dropTime1.reset();
+		                delayResetDone = true;
+		            }
+		
+		            dropTime.reset();
+		        } 
+		        if (autoDrop) {
+		            if (dropTime1.hasTimeElapsed(1000, false)) {
+		                if (dropTime.hasTimeElapsed(25, true)) {
+		                    this.thePlayer.dropOneItem(GuiScreen.isCtrlKeyDown());
+		                }
+		            }
+		        }
+		    }
         }
         if (time.hasTimeElapsed(120000, true)) {
         	FileManager.save();
@@ -2157,15 +2185,15 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     this.displayGuiScreen(new GuiInventory(this.thePlayer));
                 }
             }
-
-            while (this.gameSettings.keyBindDrop.isPressed())
+    		while (this.gameSettings.keyBindDrop.isPressed())
             {
-                if (!this.thePlayer.isSpectator())
-                {
-                    this.thePlayer.dropOneItem(GuiScreen.isCtrlKeyDown());
-                }
-            }
-
+	            if (!this.thePlayer.isSpectator())
+	            {
+	            	if (!Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop").isEnabled())
+	                this.thePlayer.dropOneItem(GuiScreen.isCtrlKeyDown());
+	            }
+                
+        	}
             while (this.gameSettings.keyBindChat.isPressed() && flag)
             {
                 this.displayGuiScreen(new GuiChat());

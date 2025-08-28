@@ -8,6 +8,7 @@ import fr.honertis.module.modules.BlockHit;
 import fr.honertis.module.modules.BlockTap;
 import fr.honertis.module.modules.CPS;
 import fr.honertis.module.modules.CustomTime;
+import fr.honertis.module.modules.DropSwing;
 import fr.honertis.module.modules.FPS;
 import fr.honertis.module.modules.FishingRod;
 import fr.honertis.module.modules.FreeLook;
@@ -40,7 +41,8 @@ public class ModulesManager {
 			new ToggleSprint(),
 			new KeyStrokes(),
 			new CustomTime(),
-			new FreeLook()
+			new FreeLook(),
+			new DropSwing()
 			/*new ToggleSneak()*/);
 	}
 	

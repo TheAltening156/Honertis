@@ -299,8 +299,13 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public EntityItem dropOneItem(boolean dropAll)
     {
-        C07PacketPlayerDigging.Action c07packetplayerdigging$action = dropAll ? C07PacketPlayerDigging.Action.DROP_ALL_ITEMS : C07PacketPlayerDigging.Action.DROP_ITEM;
-        this.sendQueue.addToSendQueue(new C07PacketPlayerDigging(c07packetplayerdigging$action, BlockPos.ORIGIN, EnumFacing.DOWN));
+    	if (getCurrentEquippedItem() != null) {
+	        C07PacketPlayerDigging.Action c07packetplayerdigging$action = dropAll ? C07PacketPlayerDigging.Action.DROP_ALL_ITEMS : C07PacketPlayerDigging.Action.DROP_ITEM;
+	        if (Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop").isEnabled()) {
+	        	swingItem();
+	        }
+	        this.sendQueue.addToSendQueue(new C07PacketPlayerDigging(c07packetplayerdigging$action, BlockPos.ORIGIN, EnumFacing.DOWN));
+    	}
         return null;
     }
 
@@ -317,7 +322,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     public void sendChatMessage(String message)
     {
     	boolean var = false;
-    	String[] messages = new String[] {"fdp", "f d p", "fd p", "f dp", "connard", "c0nnard", "c o n n a r d", "test"};
+    	String[] messages = new String[] {"fdp", "f d p", "fd p", "f dp", "connard", "c0nnard", "c o n n a r d"};
     	
     	for (String msgs : messages) {
     		if (message.equalsIgnoreCase(msgs)) {
