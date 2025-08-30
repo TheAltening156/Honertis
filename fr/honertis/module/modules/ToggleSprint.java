@@ -7,7 +7,7 @@ import fr.honertis.module.ModuleBase;
 public class ToggleSprint extends ModuleBase{
 
 	public ToggleSprint() {
-		super("ToggleSprint", "module.spring", Category.UTILITIES);
+		super("ToggleSprint", "module.sprint", Category.UTILITIES);
 	}
 	
 }

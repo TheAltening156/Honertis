@@ -1268,10 +1268,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 	    		}
     		}
         }
+        
         if (MC.mc.currentScreen == null && Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop").isEnabled()) {
-            boolean delayResetDone = false;
 	        if (Keyboard.getEventKey() == gameSettings.keyBindDrop.getKeyCode() && Keyboard.getEventKeyState()) {
-		        if (gameSettings.keyBindDrop.isPressed() &&!this.thePlayer.isSpectator()) {
+	        	if (gameSettings.keyBindDrop.isPressed() && !this.thePlayer.isSpectator()) {
+		            boolean delayResetDone = false;
 		            this.thePlayer.dropOneItem(GuiScreen.isCtrlKeyDown());
 		
 		            autoDrop = true;
@@ -1291,6 +1292,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 		        }
 		    }
         }
+        
         if (time.hasTimeElapsed(120000, true)) {
         	FileManager.save();
         	time.reset();
@@ -2185,15 +2187,16 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     this.displayGuiScreen(new GuiInventory(this.thePlayer));
                 }
             }
-    		while (this.gameSettings.keyBindDrop.isPressed())
-            {
-	            if (!this.thePlayer.isSpectator())
-	            {
-	            	if (!Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop").isEnabled())
-	                this.thePlayer.dropOneItem(GuiScreen.isCtrlKeyDown());
-	            }
-                
-        	}
+            if (!Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop").isEnabled()) {
+            	while (this.gameSettings.keyBindDrop.isPressed())
+            	{
+	            	if (!this.thePlayer.isSpectator())
+	            	{
+	                	this.thePlayer.dropOneItem(GuiScreen.isCtrlKeyDown());
+	            	}	
+        		}
+            }
+
             while (this.gameSettings.keyBindChat.isPressed() && flag)
             {
                 this.displayGuiScreen(new GuiChat());

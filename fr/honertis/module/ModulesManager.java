@@ -18,6 +18,7 @@ import fr.honertis.module.modules.KeyStrokes;
 import fr.honertis.module.modules.LowFire;
 import fr.honertis.module.modules.MoreParticles;
 import fr.honertis.module.modules.Ping;
+import fr.honertis.module.modules.ToggleSneak;
 import fr.honertis.module.modules.ToggleSprint;
 import fr.honertis.settings.Settings;
 import fr.honertis.utils.YamlUtils.ConfigMod;
@@ -42,8 +43,8 @@ public class ModulesManager {
 			new KeyStrokes(),
 			new CustomTime(),
 			new FreeLook(),
-			new DropSwing()
-			/*new ToggleSneak()*/);
+			new DropSwing(),
+			new ToggleSneak());
 	}
 	
 	

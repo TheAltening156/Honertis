@@ -4,7 +4,7 @@ public class TimeUtils {
 	public long lastMs = System.currentTimeMillis();
 	
 	public boolean check(float ms) {
-		return lastMs >= ms;
+		return System.currentTimeMillis() - lastMs >= ms;
 	}
 	
 	public void reset() {
@@ -12,7 +12,7 @@ public class TimeUtils {
 	}
 	
 	public boolean hasTimeElapsed(long time, boolean reset) {
-		if (System.currentTimeMillis() - lastMs > time) {
+		if (System.currentTimeMillis() - lastMs >= time) {
 			if (reset) reset();
 			return true;
 		}
