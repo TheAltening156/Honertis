@@ -3,6 +3,7 @@ package fr.honertis.guis.music;
 import java.io.File;
 import java.io.IOException;
 
+import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -17,38 +18,56 @@ public class MusicPlayer {
 	private Thread playThread;
 	boolean paused = false;
 	private Object pauseLock = new Object();
+	public long durationMillis = 0;
+	public long currentStateMillis = 0;
 
 	public void play(File file) throws Exception {
 		stop();
 
-		audioStream = AudioSystem.getAudioInputStream(file);
-		AudioFormat baseFormat = audioStream.getFormat();
-		AudioFormat targetFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, 4, 44100, false);
-		audioStream = AudioSystem.getAudioInputStream(targetFormat, audioStream);
+	    audioStream = AudioSystem.getAudioInputStream(file);
 
-		DataLine.Info info = new DataLine.Info(SourceDataLine.class, targetFormat);
-		line = (SourceDataLine) AudioSystem.getLine(info);
-		line.open(targetFormat);
-		line.start();
+	    AudioFormat targetFormat = new AudioFormat(
+	            AudioFormat.Encoding.PCM_SIGNED,
+	            44100, 16, 2, 4, 44100, false
+	    );
+	    audioStream = AudioSystem.getAudioInputStream(targetFormat, audioStream);
 
-		playThread = new Thread(() -> {
-			try {
-				byte[] buffer = new byte[4096];
-				int bytesRead;
-				while ((bytesRead = audioStream.read(buffer, 0, buffer.length)) != -1) {
-					synchronized (pauseLock) {
-						while (paused)
-							pauseLock.wait();
-					}
-					line.write(buffer, 0, bytesRead);
-				}
-				line.drain();
-				stop();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-		playThread.start();
+	    DataLine.Info info = new DataLine.Info(SourceDataLine.class, targetFormat);
+	    line = (SourceDataLine) AudioSystem.getLine(info);
+	    line.open(targetFormat);
+	    line.start();
+	    
+	    AudioFileFormat fileFormat = AudioSystem.getAudioFileFormat(file);
+	    long frameLength = fileFormat.getFrameLength();
+	    if (frameLength > 0 && targetFormat.getFrameRate() > 0) {
+	        double durationSeconds = (double) frameLength / targetFormat.getFrameRate();
+	        durationMillis = (long) (durationSeconds * 1000);
+	    } else {
+	        durationMillis = -1;
+	    }
+
+	    playThread = new Thread(() -> {
+	        try {
+	            byte[] buffer = new byte[4096];
+	            int bytesRead;
+	            while ((bytesRead = audioStream.read(buffer, 0, buffer.length)) != -1) {
+	                synchronized (pauseLock) {
+	                    while (paused) pauseLock.wait();
+	                }
+	                line.write(buffer, 0, bytesRead);
+
+	                long frames = line.getLongFramePosition();
+	                double seconds = (double) frames / targetFormat.getFrameRate();
+	                currentStateMillis = (long) (seconds * 1000);
+	            }
+
+	            line.drain();
+	            stop();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    });
+	    playThread.start();
 	}
 
 	public void stop() {

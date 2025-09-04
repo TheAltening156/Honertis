@@ -133,22 +133,26 @@ public class MusicPlayerGui extends GuiScreen {
             
         }
         
-        boolean hoverPlay = isHovered(posX + 155, posY + 225, posX + 155 + 18, posY + 225 + 18, mouseX, mouseY);
+        boolean hoverPlay = isHovered(posX + 165, posY + 225, posX + 165 + 18, posY + 225 + 18, mouseX, mouseY);
         
-        drawImage(posX + 155 + (hoverPlay ? -1 : 0), posY + 225+ (hoverPlay ? -1 : 0), 18+ (hoverPlay ? 2 : 0), 18 + (hoverPlay ? 2 : 0), new ResourceLocation("honertis/music/" + (Honertis.INSTANCE.musicPlayer.paused ? "play" : "pause") + ".png"));
-        drawImage(posX + 130, posY + 225, 18, 18, new ResourceLocation("honertis/music/back.png"));
-        drawImage(posX + 180, posY + 225, 18, 18, new ResourceLocation("honertis/music/ff.png"));
+        drawImage(posX + 165 + (hoverPlay ? -1 : 0), posY + 225+ (hoverPlay ? -1 : 0), 18+ (hoverPlay ? 2 : 0), 18 + (hoverPlay ? 2 : 0), new ResourceLocation("honertis/music/" + (Honertis.INSTANCE.musicPlayer.paused ? "play" : "pause") + ".png"));
+        drawImage(posX + 140, posY + 225, 18, 18, new ResourceLocation("honertis/music/back.png"));
+        drawImage(posX + 190, posY + 225, 18, 18, new ResourceLocation("honertis/music/ff.png"));
 
         if (!Honertis.INSTANCE.songName.equals("") || !Honertis.INSTANCE.thumbnail.equals("")) {
             mc.fontRendererObj.drawCenteredStringWithShadow(StringEscapeUtils.unescapeHtml4(Honertis.INSTANCE.songName), (int)posX + 165, (int)posY + 215, -1);	
             
-	        drawImageFromYoutubeURL(posX + 15, posY + 215, 45, 35, Honertis.INSTANCE.thumbnail);
+	        drawImageFromYoutubeURL(posX + 12, posY + 215, 51, 31, Honertis.INSTANCE.thumbnail);
 	        
 	    }
+        
+        float progress = Honertis.INSTANCE.musicPlayer.currentStateMillis / (float) Honertis.INSTANCE.musicPlayer.durationMillis;
+        int barWidth = 245 - 95;
+        int filledWidth = (int)(barWidth * progress);
         drawRoundedRect(posX+95, posY + 246, posX + 245, posY + 248, 2, new Color(255,255,255,125).getRGB());
-        drawRoundedRect(posX+95, posY + 246, posX + 165, posY + 248, 2, -1);
-        mc.fontRendererObj.drawStringWithShadow("--:--", (int)posX + 65, (int)posY + 243, -1);
-        mc.fontRendererObj.drawStringWithShadow("--:--", (int)posX + 250, (int)posY + 243, -1);
+        drawRoundedRect(posX+95, posY + 246, posX + 95 + filledWidth, posY + 248, 2, -1);
+        mc.fontRendererObj.drawStringWithShadow(millisecToTime(Honertis.INSTANCE.musicPlayer.currentStateMillis), (int)posX + 65, (int)posY + 243, -1);
+        mc.fontRendererObj.drawStringWithShadow(millisecToTime(Honertis.INSTANCE.musicPlayer.durationMillis), (int)posX + 250, (int)posY + 243, -1);
         //Honertis.INSTANCE.musicPlayer.stop();
 		oldX = mouseX;
 		oldY = mouseY;
@@ -234,7 +238,7 @@ public class MusicPlayerGui extends GuiScreen {
             if (isHovered(posX + 5, posY + 28, posX + 280, posY + 207, mouseX, mouseY)) {
 	            for (SongItem song : songs) {
 	            	song.mouseClicked(songPosX, songPosY, imageWidth, imageHeight, lineSpacing, mouseX, mouseY);
-	            	if (song.hover) {
+	            	if (song.hover && mouseButton == 0) {
 	            		try {
 							downloadAndPlaySong(song.getVideoId(), "down" + song.getVideoId() + ".wav", song);
 						} catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
@@ -255,7 +259,7 @@ public class MusicPlayerGui extends GuiScreen {
             GlStateManager.popMatrix();
 			
         }
-		if (isHovered(posX + 155, posY + 225, posX + 155 + 18, posY + 225 + 18, mouseX, mouseY)) {
+		if (isHovered(posX + 165, posY + 225, posX + 165 + 18, posY + 225 + 18, mouseX, mouseY)) {
 			if (!Honertis.INSTANCE.musicPlayer.paused)
 				Honertis.INSTANCE.musicPlayer.pause();
 			else 
