@@ -33,7 +33,6 @@ public class Honertis {
 		started = true;
 		FileManager.init();
 		rpc.init();
-		update = WebUtils.update();
 		musicPlayer = new MusicPlayer();
 	}
 

@@ -31,37 +31,13 @@ public class WebUtils implements MC{
 		}
 	}
 	
-	public static String currentVersion = Honertis.INSTANCE.version;
+	public static String newVersion = Honertis.INSTANCE.version;
 	
 	public static boolean update() {
-	    BufferedReader in = null;
-		try {
-		    List<String> lines = new ArrayList<>();
-		    String link = "https://raw.githubusercontent.com/TheAltening156/idk/main/hver.txt";
-		    URL url = new URL(link);
-		    HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-		    connection.addRequestProperty(agent1, agent2);
-		    in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-	    	for (String line = in.readLine(); line != null; line = in.readLine()) 
-	    	    lines.add(line);
-		    for (String s : lines)
-		    	i += s; 
-		    currentVersion = i;
-		    if ( i.contains(Honertis.INSTANCE.version) )  {
-		    	return false;
-		    } else {
-		    	return true;
-		    }
-		} catch (Exception e) {
-	    	System.out.println(e);
-	    } finally {
-	    	if (in != null)
-				try {
-					in.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-	    }
+		newVersion = visitSite("https://raw.githubusercontent.com/TheAltening156/idk/refs/heads/main/hver.txt");
+		if (Honertis.INSTANCE.version != newVersion) {
+			return true;
+		}
 		return false;
 	}
 	

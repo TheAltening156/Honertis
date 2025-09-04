@@ -32,7 +32,7 @@ public class GuiMainMenu extends GuiScreen {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		mc.fontRendererObj.drawCenteredString(LangManager.format("gui.new"), this.width / 2, this.height / 2 - 50, -1);
-		mc.fontRendererObj.drawCenteredString(LangManager.format("gui.still") + " " + instance.version + ", " + LangManager.format("gui.current") + " " + WebUtils.currentVersion, this.width / 2, this.height / 2 - 50 + mc.fontRendererObj.FONT_HEIGHT, -1);
+		mc.fontRendererObj.drawCenteredString(LangManager.format("gui.still") + " " + instance.version + ", " + LangManager.format("gui.current") + " " + WebUtils.newVersion, this.width / 2, this.height / 2 - 50 + mc.fontRendererObj.FONT_HEIGHT, -1);
 		if (update) {
 			mc.fontRendererObj.drawCenteredString("Ouverture de la page web ...", this.width / 2, this.height / 2 + 1, -1);
 			
