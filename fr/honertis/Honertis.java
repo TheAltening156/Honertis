@@ -24,7 +24,7 @@ public class Honertis {
 	
 	public void start() {
 		name = "Honertis";
-		version = "1.7";
+		version = "1.7U1";
 		title = "Minecraft 1.8.8 | Honertis v" + version;
 		modulesManager = new ModulesManager();
 		event = new Event();

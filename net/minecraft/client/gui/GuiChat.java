@@ -65,8 +65,9 @@ public class GuiChat extends GuiScreen
         this.inputField.setFocused(true);
         this.inputField.setText(this.defaultInputFieldText);
         this.inputField.setCanLoseFocus(false);
-        
-        this.buttonList.add(new GuiButton(10, width - 125, height - 35, 120, 20, LangManager.format("gui.musicPlayer.name")));
+        GuiButton musicPlayer = new GuiButton(10, width - 125, height - 35, 120, 20, LangManager.format("gui.musicPlayer.name"));
+        musicPlayer.enabled = false;
+        this.buttonList.add(musicPlayer);
     }
 
     @Override

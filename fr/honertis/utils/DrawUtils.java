@@ -12,6 +12,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,13 +49,13 @@ public class DrawUtils{
 	
 	private static Map<String, ResourceLocation> thumbnailCache = new HashMap<>();
 
+	private static BufferedImage image;
     public static void drawImageFromYoutubeURL(double x, double y, double width, double height, String urlString) {
         pushMatrix();
         try {
 	    	ResourceLocation resource = thumbnailCache.get(urlString);
-	
+	    	
 	        if (resource == null) {
-	    		BufferedImage image = null;
 	    		try {
 	            	image = ImageIO.read(new URL(urlString));
 		        	
@@ -69,11 +70,10 @@ public class DrawUtils{
 			        }
 	        		
 	        	}
-	        	if (image != null) {
+		    	if (image != null) {
 	        		DynamicTexture dynamicTexture = new DynamicTexture(image);
 		            ResourceLocation res = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("thumb_" + urlString.hashCode(), dynamicTexture);
 		            thumbnailCache.put(urlString, res);
-		            System.out.println("url: " + urlString);
 	        	}
 	            return;
 	        }

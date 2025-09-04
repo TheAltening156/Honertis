@@ -2,6 +2,10 @@ package fr.honertis.guis.music;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioFormat;
@@ -10,6 +14,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class MusicPlayer {
 
@@ -20,12 +25,12 @@ public class MusicPlayer {
 	private Object pauseLock = new Object();
 	public long durationMillis = 0;
 	public long currentStateMillis = 0;
-
+	
 	public void play(File file) throws Exception {
 		stop();
 
 	    audioStream = AudioSystem.getAudioInputStream(file);
-
+	    AudioFormat format = audioStream.getFormat();
 	    AudioFormat targetFormat = new AudioFormat(
 	            AudioFormat.Encoding.PCM_SIGNED,
 	            44100, 16, 2, 4, 44100, false
@@ -36,16 +41,16 @@ public class MusicPlayer {
 	    line = (SourceDataLine) AudioSystem.getLine(info);
 	    line.open(targetFormat);
 	    line.start();
-	    
+
 	    AudioFileFormat fileFormat = AudioSystem.getAudioFileFormat(file);
 	    long frameLength = fileFormat.getFrameLength();
-	    if (frameLength > 0 && targetFormat.getFrameRate() > 0) {
-	        double durationSeconds = (double) frameLength / targetFormat.getFrameRate();
+	    if (frameLength > 0 && format.getFrameRate() > 0) {
+	        double durationSeconds = (double) frameLength / format.getFrameRate();
 	        durationMillis = (long) (durationSeconds * 1000);
 	    } else {
 	        durationMillis = -1;
 	    }
-
+	    
 	    playThread = new Thread(() -> {
 	        try {
 	            byte[] buffer = new byte[4096];
@@ -63,6 +68,7 @@ public class MusicPlayer {
 
 	            line.drain();
 	            stop();
+	            Files.delete(file.toPath());
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }
@@ -90,7 +96,7 @@ public class MusicPlayer {
 		playThread = null;
 		paused = false;
 	}
-
+	
 	public void pause() {
 		paused = true;
 	}

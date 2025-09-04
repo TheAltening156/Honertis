@@ -53,6 +53,8 @@ public class MusicPlayerGui extends GuiScreen {
 	public CustomTextField text;
 	public String currentSearch;
 	
+	public String ytState = "";
+	
 	public int scrollOffset = 0;
     public int maxScroll = 0;
     
@@ -118,7 +120,7 @@ public class MusicPlayerGui extends GuiScreen {
             double songPosY = contentY + 5 - scrollOffset;
             int count = 0;
             for (SongItem song : songs) {
-            	song.drawImageAndText(songPosX, songPosY, imageWidth, imageHeight, lineSpacing, mouseX, mouseY);
+            	song.drawImageAndText(songPosX, songPosY, imageWidth, imageHeight, lineSpacing, posX, posY, mouseX, mouseY);
             	
                 count++;
                 if (count % imagesPerRow == 0) {
@@ -128,6 +130,7 @@ public class MusicPlayerGui extends GuiScreen {
                     songPosX += imageWidth + gap;
                 }
             }
+            
             GL11.glDisable(GL11.GL_SCISSOR_TEST);
             GlStateManager.popMatrix();
             
@@ -150,10 +153,15 @@ public class MusicPlayerGui extends GuiScreen {
         int barWidth = 245 - 95;
         int filledWidth = (int)(barWidth * progress);
         drawRoundedRect(posX+95, posY + 246, posX + 245, posY + 248, 2, new Color(255,255,255,125).getRGB());
-        drawRoundedRect(posX+95, posY + 246, posX + 95 + filledWidth, posY + 248, 2, -1);
-        mc.fontRendererObj.drawStringWithShadow(millisecToTime(Honertis.INSTANCE.musicPlayer.currentStateMillis), (int)posX + 65, (int)posY + 243, -1);
-        mc.fontRendererObj.drawStringWithShadow(millisecToTime(Honertis.INSTANCE.musicPlayer.durationMillis), (int)posX + 250, (int)posY + 243, -1);
+        drawRoundedRect(posX+95, posY + 246, posX + 96 + filledWidth, posY + 248, 2, -1);
+                
+        mc.fontRendererObj.drawStringWithShadow(millisecToTime(Honertis.INSTANCE.musicPlayer.currentStateMillis), (int)posX + 93 - mc.fontRendererObj.getStringWidth(millisecToTime(Honertis.INSTANCE.musicPlayer.currentStateMillis)), (int)posY + 243, -1);
+        mc.fontRendererObj.drawStringWithShadow(millisecToTime(Honertis.INSTANCE.musicPlayer.durationMillis), (int)posX + 277 - mc.fontRendererObj.getStringWidth(millisecToTime(Honertis.INSTANCE.musicPlayer.durationMillis)), (int)posY + 243, -1);
         //Honertis.INSTANCE.musicPlayer.stop();
+        if (!ytState.isEmpty() || !ytState.equals("")) {
+        	drawRoundedRect((double)width - mc.fontRendererObj.getStringWidth(ytState + "    "), (double)height-30D,(double) width - 2D, (double)height -12D, 5D, Color.DARK_GRAY.getRGB());
+        	mc.fontRendererObj.drawString(ytState, width - mc.fontRendererObj.getStringWidth(ytState + "  "), height - 25, -1);
+        }
 		oldX = mouseX;
 		oldY = mouseY;
 	}
@@ -265,6 +273,19 @@ public class MusicPlayerGui extends GuiScreen {
 			else 
 				Honertis.INSTANCE.musicPlayer.resume();
 		}
+		/*double barWidth = 245 - 95;
+		if (isHovered(posX+95, posY + 246, posX + 245, posY + 248, mouseX, mouseY) && Mouse.isButtonDown(0)) {
+			double relativeX = mouseX - (posX + 95);
+			if(relativeX < 0) relativeX = 0;
+			if(relativeX > 245) relativeX = barWidth;
+			double progress = relativeX / barWidth;
+			Honertis.INSTANCE.musicPlayer.currentStateMillis = (long) (progress * Honertis.INSTANCE.musicPlayer.durationMillis);
+			try {
+				Honertis.INSTANCE.musicPlayer.setState(progress);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}*/
 	}
 	
 	@Override
@@ -350,12 +371,13 @@ public class MusicPlayerGui extends GuiScreen {
 		            String line;
 		            while ((line = reader.readLine()) != null) {
 		                System.out.println(line);
+		                ytState = line;
 		            }
 		        }
 	        } catch (IOException e) {
 	        	e.printStackTrace();
 	        }
-
+	        ytState = "";
 	        try {
 				Honertis.INSTANCE.musicPlayer.play(new File(songDir + "/" + outputName));
 				Honertis.INSTANCE.songName = song.getTitle();

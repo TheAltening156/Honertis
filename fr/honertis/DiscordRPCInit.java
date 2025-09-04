@@ -29,23 +29,5 @@ public class DiscordRPCInit {
 			}
 		}, "RPC-Callback");
         rpcThread.start();
-		/*DiscordRPC rpc = DiscordRPC.INSTANCE;
-		DiscordEventHandlers h = new DiscordEventHandlers();
-		h.ready = (user) -> System.out.println("Ready !");
-		rpc.Discord_Initialize(id, h, true, "");
-		DiscordRichPresence drpc = new DiscordRichPresence();
-		drpc.startTimestamp = System.currentTimeMillis() / 1000;
-		drpc.details = "Test";
-		drpc.state = "Test 2";
-		rpc.Discord_UpdatePresence(drpc);
-		
-		new Thread(() -> {
-			while (!Thread.currentThread().isInterrupted()) {
-				rpc.Discord_RunCallbacks();
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {}
-			}
-		}, "RPC-Callback").start();*/
 	}
 }
