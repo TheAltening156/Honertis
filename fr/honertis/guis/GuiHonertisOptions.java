@@ -79,7 +79,7 @@ public class GuiHonertisOptions extends GuiScreen {
 					
 					if (!m.settings.isEmpty()) {
 						boolean hover = isHovered(modX + 8, modY - 5, (modX + 8) + 18, (modY - 5) + 18, mouseX, mouseY);
-						DrawUtils.drawImage(modX + 8, modY - 5, 18, 18, new ResourceLocation("honertis/settings" + (hover ? (m.showSettings() ? "OH" : "H") : m.showSettings() ? "O" : "C") + ".png"));
+						drawImage(modX + 8, modY - 5, 18, 18, new ResourceLocation("honertis/settings" + (hover ? (m.showSettings() ? "OH" : "H") : m.showSettings() ? "O" : "C") + ".png"));
 					}
 			
 					if (m.showSettings()) {

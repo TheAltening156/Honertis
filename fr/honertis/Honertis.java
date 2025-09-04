@@ -1,6 +1,7 @@
 package fr.honertis;
 
 import fr.honertis.event.Event;
+import fr.honertis.guis.music.MusicPlayer;
 import fr.honertis.manager.FileManager;
 import fr.honertis.manager.ResourcePackManager;
 import fr.honertis.module.ModulesManager;
@@ -17,6 +18,9 @@ public class Honertis {
 	public DiscordRPCInit rpc;
 	public ResourcePackManager packManager;
 	public boolean update;
+	public MusicPlayer musicPlayer;
+	public String songName = "";
+    public String thumbnail = "";
 	
 	public void start() {
 		name = "Honertis";
@@ -30,6 +34,7 @@ public class Honertis {
 		FileManager.init();
 		rpc.init();
 		update = WebUtils.update();
+		musicPlayer = new MusicPlayer();
 	}
 
 	public ResourcePackManager getPackManager() {

@@ -64,3 +64,6 @@ module.dropSwing=Réajoute le mouvement du bras quand on jette un objet (comme e
 gui.honertis.options.name=Options Honertis
 gui.honertis.options.scroll=Vous pouvez utiliser le scroll de la souris
 gui.honertis.options.scroll1=si vous ne voyez pas certain paramètre / module
+
+gui.musicPlayer.name=Lecteur de musique
+gui.musicPlayer.search=Recherche...

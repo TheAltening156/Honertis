@@ -1,0 +1,114 @@
+package fr.honertis.guis.music;
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.SourceDataLine;
+
+public class MusicPlayer {
+
+	private SourceDataLine line;
+	private AudioInputStream audioStream;
+	private Thread playThread;
+	boolean paused = false;
+	private Object pauseLock = new Object();
+
+	public void play(File file) throws Exception {
+		stop();
+
+		audioStream = AudioSystem.getAudioInputStream(file);
+		AudioFormat baseFormat = audioStream.getFormat();
+		AudioFormat targetFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, 4, 44100, false);
+		audioStream = AudioSystem.getAudioInputStream(targetFormat, audioStream);
+
+		DataLine.Info info = new DataLine.Info(SourceDataLine.class, targetFormat);
+		line = (SourceDataLine) AudioSystem.getLine(info);
+		line.open(targetFormat);
+		line.start();
+
+		playThread = new Thread(() -> {
+			try {
+				byte[] buffer = new byte[4096];
+				int bytesRead;
+				while ((bytesRead = audioStream.read(buffer, 0, buffer.length)) != -1) {
+					synchronized (pauseLock) {
+						while (paused)
+							pauseLock.wait();
+					}
+					line.write(buffer, 0, bytesRead);
+				}
+				line.drain();
+				stop();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		playThread.start();
+	}
+
+	public void stop() {
+		//paused = true;
+		try {
+			if (playThread != null && playThread.isAlive()) {
+				playThread.interrupt();
+			}
+			if (line != null) {
+				line.stop();
+				line.close();
+			}
+			if (audioStream != null) {
+				audioStream.close();
+			}
+		} catch (IOException ignored) {
+		}
+		line = null;
+		audioStream = null;
+		playThread = null;
+		paused = false;
+	}
+
+	public void pause() {
+		paused = true;
+	}
+
+	public void resume() {
+		synchronized (pauseLock) {
+			paused = false;
+			pauseLock.notifyAll();
+		}
+	}
+
+	public void setVolume(int percent) {
+		if (line == null)
+			return;
+		if (!line.isControlSupported(FloatControl.Type.MASTER_GAIN))
+			return;
+
+		FloatControl volumeControl = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+		if (percent < 0)
+			percent = 0;
+		if (percent > 100)
+			percent = 100;
+
+		double linear = percent / 100.0;
+		float dB;
+		if (linear == 0.0)
+			dB = volumeControl.getMinimum();
+		else
+			dB = (float) (20.0 * Math.log10(linear));
+
+		if (dB < volumeControl.getMinimum())
+			dB = volumeControl.getMinimum();
+		if (dB > volumeControl.getMaximum())
+			dB = volumeControl.getMaximum();
+
+		volumeControl.setValue(dB);
+		System.out.println("Volume Set to " + percent + "% (" + dB + " dB)");
+	}
+
+}

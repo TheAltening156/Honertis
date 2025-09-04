@@ -1,5 +1,6 @@
 package fr.honertis.module.modules;
 
+import fr.honertis.event.EventUpdate;
 import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
 
@@ -14,6 +15,14 @@ public class FullBright extends ModuleBase{
 	public void onEnable() {
 		currentGamma = mc.gameSettings.gammaSetting;
 		mc.gameSettings.gammaSetting = 100;
+	}
+	
+	@Override
+	public void onUpdate(EventUpdate e) {
+		if (mc.gameSettings.gammaSetting != 100) {
+			currentGamma = mc.gameSettings.gammaSetting;
+			mc.gameSettings.gammaSetting = 100;
+		}
 	}
 	
 	@Override

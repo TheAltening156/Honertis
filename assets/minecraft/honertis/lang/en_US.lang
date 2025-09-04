@@ -65,3 +65,6 @@ module.dropSwing=Bring back the arm swing when dropping an item (1.15)
 gui.honertis.options.name=Honertis Options
 gui.honertis.options.scroll=You can use mouse scroll
 gui.honertis.options.scroll1=if you can't see some parameter / module
+
+gui.musicPlayer.name=Music player
+gui.musicPlayer.search=Search...

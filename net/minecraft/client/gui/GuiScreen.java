@@ -770,7 +770,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
         this.setWorldAndResolution(mcIn, p_175273_2_, p_175273_3_);
     }
     
-    public static boolean isHovered(int x, int y, int x1, int y1, int mouseX, int mouseY) {
+    public static boolean isHovered(double x, double y, double x1, double y1, int mouseX, int mouseY) {
     	return mouseX >= x && mouseY >= y && mouseX <= x1 && mouseY <= y1;
     }
     

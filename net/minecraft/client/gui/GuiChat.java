@@ -1,6 +1,10 @@
 package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
+
+import fr.honertis.guis.music.MusicPlayerGui;
+import fr.honertis.utils.LangManager;
+
 import java.io.IOException;
 import java.util.List;
 import net.minecraft.network.play.client.C14PacketTabComplete;
@@ -61,8 +65,17 @@ public class GuiChat extends GuiScreen
         this.inputField.setFocused(true);
         this.inputField.setText(this.defaultInputFieldText);
         this.inputField.setCanLoseFocus(false);
+        
+        this.buttonList.add(new GuiButton(10, width - 125, height - 35, 120, 20, LangManager.format("gui.musicPlayer.name")));
     }
 
+    @Override
+    protected void actionPerformed(GuiButton button) throws IOException {
+    	if (button.id == 10) {
+    		mc.displayGuiScreen(new MusicPlayerGui());
+    	}
+    }
+    
     /**
      * Called when the screen is unloaded. Used to disable keyboard repeat events
      */
@@ -308,7 +321,7 @@ public class GuiChat extends GuiScreen
         {
             this.handleComponentHover(ichatcomponent, mouseX, mouseY);
         }
-
+        
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

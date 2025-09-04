@@ -15,6 +15,8 @@ import fr.honertis.Honertis;
 
 public class WebUtils implements MC{
 	public 	static String i = "";
+	private static String agent1 = "User-Agent";
+    private static String agent2 = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36";
 
 	
 	public static void browseWebsite(String url) {
@@ -35,8 +37,6 @@ public class WebUtils implements MC{
 	    BufferedReader in = null;
 		try {
 		    List<String> lines = new ArrayList<>();
-		    String agent1 = "User-Agent";
-		    String agent2 = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36";
 		    String link = "https://raw.githubusercontent.com/TheAltening156/idk/main/hver.txt";
 		    URL url = new URL(link);
 		    HttpURLConnection connection = (HttpURLConnection)url.openConnection();
@@ -63,6 +63,24 @@ public class WebUtils implements MC{
 				}
 	    }
 		return false;
+	}
+	
+	public static String visitSite(String urly) {
+	    ArrayList<String> lines = new ArrayList<>();
+	    String stuff = "";
+	    try {
+	      URL url = new URL(urly);
+	      HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+	      connection.addRequestProperty(agent1, agent2);
+	      BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+	      String line;
+	      while ((line = in.readLine()) != null)
+	        lines.add(line); 
+	    } catch (Exception line) {}
+	    for (String s : lines)
+	      stuff = String.valueOf(stuff) + s; 
+	    return stuff;
+		  
 	}
 	
 }
