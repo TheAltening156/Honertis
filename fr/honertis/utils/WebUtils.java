@@ -14,7 +14,6 @@ import java.util.List;
 import fr.honertis.Honertis;
 
 public class WebUtils implements MC{
-	public 	static String i = "";
 	private static String agent1 = "User-Agent";
     private static String agent2 = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36";
 
@@ -34,11 +33,7 @@ public class WebUtils implements MC{
 	public static String newVersion = Honertis.INSTANCE.version;
 	
 	public static boolean update() {
-		newVersion = visitSite("https://raw.githubusercontent.com/TheAltening156/idk/refs/heads/main/hver.txt");
-		if (Honertis.INSTANCE.version != newVersion) {
-			return true;
-		}
-		return false;
+		return Honertis.INSTANCE.version.equals(newVersion = visitSite("https://raw.githubusercontent.com/TheAltening156/idk/refs/heads/main/hver.txt")) ? false : true;
 	}
 	
 	public static String visitSite(String urly) {
