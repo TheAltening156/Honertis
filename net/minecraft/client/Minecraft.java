@@ -1962,7 +1962,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                         else
                         {
                         	Zoom zoom = (Zoom) Honertis.INSTANCE.modulesManager.getModuleByName("Zoom");
-                        	if (!zoom.isZooming && !Config.zoomMode)
+                        	if (!zoom.isZooming)
                             this.thePlayer.inventory.changeCurrentItem(j);
                         }
                     }
