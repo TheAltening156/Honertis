@@ -2,6 +2,7 @@ package fr.honertis;
 
 import fr.honertis.event.Event;
 import fr.honertis.guis.music.MusicPlayer;
+import fr.honertis.guis.music.MusicPlayerGui;
 import fr.honertis.manager.FileManager;
 import fr.honertis.manager.ResourcePackManager;
 import fr.honertis.module.ModulesManager;
@@ -18,13 +19,11 @@ public class Honertis {
 	public DiscordRPCInit rpc;
 	public ResourcePackManager packManager;
 	public boolean update;
-	public MusicPlayer musicPlayer;
-	public String songName = "";
-    public String thumbnail = "";
+	public MusicPlayerGui musicPlayer;
 	
 	public void start() {
 		name = "Honertis";
-		version = "1.7U1";
+		version = "1.7U2";
 		title = "Minecraft 1.8.8 | Honertis v" + version;
 		modulesManager = new ModulesManager();
 		event = new Event();
@@ -33,7 +32,7 @@ public class Honertis {
 		started = true;
 		FileManager.init();
 		rpc.init();
-		musicPlayer = new MusicPlayer();
+		musicPlayer = new MusicPlayerGui();
 	}
 
 	public ResourcePackManager getPackManager() {

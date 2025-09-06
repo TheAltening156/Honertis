@@ -48,12 +48,17 @@ public class GuiHonertisOptions extends GuiScreen {
 	}
 	
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void handleMouseInput() throws IOException {
+		super.handleMouseInput();
 		int dwheel = Mouse.getDWheel();
 		if (dwheel != 0) {
 			int scrollDir = dwheel > 0 ? (dwheel/8) : (dwheel/8);
 			mouse += scrollDir;
 		}
+	}
+	
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawDefaultBackground();
 		mc.fontRendererObj.drawCenteredStringWithShadow(LangManager.format("gui.honertis.options.name"), this.width / 2, 10, -1);
 		mc.fontRendererObj.drawCenteredStringWithShadow(LangManager.format("gui.honertis.options.scroll"), this.width / 2, 24, -1);

@@ -2,6 +2,7 @@ package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
 
+import fr.honertis.Honertis;
 import fr.honertis.guis.music.MusicPlayerGui;
 import fr.honertis.utils.LangManager;
 
@@ -66,14 +67,14 @@ public class GuiChat extends GuiScreen
         this.inputField.setText(this.defaultInputFieldText);
         this.inputField.setCanLoseFocus(false);
         GuiButton musicPlayer = new GuiButton(10, width - 125, height - 35, 120, 20, LangManager.format("gui.musicPlayer.name"));
-        musicPlayer.enabled = false;
+        musicPlayer.enabled = true;
         this.buttonList.add(musicPlayer);
     }
 
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
     	if (button.id == 10) {
-    		mc.displayGuiScreen(new MusicPlayerGui());
+    		mc.displayGuiScreen(Honertis.INSTANCE.musicPlayer);
     	}
     }
     

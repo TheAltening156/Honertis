@@ -1,9 +1,11 @@
 package fr.honertis.guis.music;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.lwjgl.input.Mouse;
 
 import fr.honertis.utils.DrawUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 
 public class SongItem {
@@ -11,11 +13,14 @@ public class SongItem {
 	private String title;
 	private String thumbnailUrl;
 	public boolean hover;
+	private float hoverProgress = 0f; 
+    private long lastTime;
 
 	public SongItem(String videoId, String title, String thumbnailUrl) {
 		this.videoId = videoId;
 		this.title = title;
 		this.thumbnailUrl = thumbnailUrl;
+        this.lastTime = System.currentTimeMillis();
 	}
 	
 	public String getVideoId() {
@@ -43,10 +48,23 @@ public class SongItem {
 	}
 
 	public void drawImageAndText(double songPosX, double songPosY, double imageWidth, double imageHeight, double lineSpacing, double posX, double posY, int mouseX, int mouseY) {		
-		if (GuiScreen.isHovered(posX + 5, posY + 28, posX + 280, posY + 207, mouseX, mouseY)) {
-            hover = GuiScreen.isHovered(songPosX, songPosY, songPosX + imageWidth, songPosY + imageHeight, mouseX, mouseY);
-    	}
-		DrawUtils.drawImageFromYoutubeURL(songPosX + (hover ? -2 : 0), songPosY + (hover ? -2 : 0), imageWidth + (hover ? 4 : 0), imageHeight + (hover ? 4 : 0), getThumbnailUrl());
+        hover = GuiScreen.isHovered(songPosX, songPosY, songPosX + imageWidth, songPosY + imageHeight, mouseX, mouseY) && GuiScreen.isHovered(posX + 5, posY + 28, posX + 280, posY + 207, mouseX, mouseY);
+    	
+		
+		long current = System.currentTimeMillis();
+        float delta = (current - lastTime) / 2.5f;
+        lastTime = current;
+
+        if (hover) {
+            hoverProgress = Math.min(1f, hoverProgress + delta * 0.05f);
+        } else {
+            hoverProgress = Math.max(0f, hoverProgress - delta * 0.05f);
+        }
+		
+		double offset = -2 * hoverProgress;
+        double extraSize = 4 * hoverProgress;
+		DrawUtils.drawImageFromYoutubeURL(songPosX + offset, songPosY + offset, imageWidth + extraSize, imageHeight + extraSize, getThumbnailUrl());
+		//if (Mouse.isButtonDown(0) && hover) Gui.drawRect(songPosX + offset, songPosY + offset, (songPosX + offset) + imageWidth + extraSize, songPosY + offset + imageHeight + extraSize, new java.awt.Color(255,255,255,50).getRGB());
 
         int textX = (int) (songPosX + imageWidth / 2);
         int textY = (int) (songPosY + imageHeight + 5);

@@ -25,10 +25,10 @@ public class MusicPlayer {
 	private Object pauseLock = new Object();
 	public long durationMillis = 0;
 	public long currentStateMillis = 0;
+	public File lastFile;
 	
 	public void play(File file) throws Exception {
 		stop();
-
 	    audioStream = AudioSystem.getAudioInputStream(file);
 	    AudioFormat format = audioStream.getFormat();
 	    AudioFormat targetFormat = new AudioFormat(
@@ -43,7 +43,11 @@ public class MusicPlayer {
 	    line.start();
 
 	    AudioFileFormat fileFormat = AudioSystem.getAudioFileFormat(file);
-	    long frameLength = fileFormat.getFrameLength();
+        if (lastFile != null) {
+        	Files.delete(lastFile.toPath());
+        }
+        lastFile = file;
+        long frameLength = fileFormat.getFrameLength();
 	    if (frameLength > 0 && format.getFrameRate() > 0) {
 	        double durationSeconds = (double) frameLength / format.getFrameRate();
 	        durationMillis = (long) (durationSeconds * 1000);
@@ -60,7 +64,7 @@ public class MusicPlayer {
 	                    while (paused) pauseLock.wait();
 	                }
 	                line.write(buffer, 0, bytesRead);
-
+	                
 	                long frames = line.getLongFramePosition();
 	                double seconds = (double) frames / targetFormat.getFrameRate();
 	                currentStateMillis = (long) (seconds * 1000);
@@ -68,7 +72,6 @@ public class MusicPlayer {
 
 	            line.drain();
 	            stop();
-	            Files.delete(file.toPath());
 	        } catch (Exception e) {
 	            e.printStackTrace();
 	        }

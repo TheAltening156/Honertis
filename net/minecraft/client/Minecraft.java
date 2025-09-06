@@ -19,6 +19,7 @@ import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.module.ModulesManager;
 import fr.honertis.module.modules.FreeLook;
+import fr.honertis.module.modules.Zoom;
 import fr.honertis.utils.MC;
 import fr.honertis.utils.TimeUtils;
 import fr.honertis.utils.WebUtils;
@@ -1581,24 +1582,19 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 
         if (this.leftClickCounter <= 0)
         {
-        	boolean useItem = thePlayer.isUsingItem();
-        	if (useItem && !Honertis.INSTANCE.modulesManager.getModuleByName("BlockTap").isEnabled()) {
-        		useItem = !thePlayer.isUsingItem();
-        	} else if (useItem) {
-        		useItem = thePlayer.isUsingItem();
-        	}
-            if (leftClick && this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+        	if (leftClick && this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
             {
                 BlockPos blockpos = this.objectMouseOver.getBlockPos();
 
-                if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air /*&& this.playerController.onPlayerDamageBlock(blockpos, this.objectMouseOver.sideHit)*/)
+                if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air)
                 {
-                	if (!thePlayer.isUsingItem()) {
-                		this.playerController.onPlayerDamageBlock(blockpos, this.objectMouseOver.sideHit);
-                	}
-                	if (useItem || !thePlayer.isUsingItem()) {
+                	if (!thePlayer.isUsingItem() && this.playerController.onPlayerDamageBlock(blockpos, this.objectMouseOver.sideHit)) {
                 		this.effectRenderer.addBlockHitEffects(blockpos, this.objectMouseOver.sideHit);
-                        this.thePlayer.swingItem();
+    	                this.thePlayer.swingItem();	
+                	}
+                	if (Honertis.INSTANCE.modulesManager.getModuleByName("BlockTap").isEnabled() && thePlayer.isUsingItem()) {
+                		this.effectRenderer.addBlockHitEffects(blockpos, this.objectMouseOver.sideHit);
+    	                this.thePlayer.swingItem();	
                 	}
                 }
             }
@@ -1963,6 +1959,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                         }
                         else
                         {
+                        	Zoom zoom = (Zoom) Honertis.INSTANCE.modulesManager.getModuleByName("Zoom");
+                        	if (!zoom.isZooming)
                             this.thePlayer.inventory.changeCurrentItem(j);
                         }
                     }
@@ -2035,71 +2033,73 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                             this.displayInGameMenu();
                         }
 
-                        if (k == 32 && Keyboard.isKeyDown(61) && this.ingameGUI != null)
-                        {
-                            this.ingameGUI.getChatGUI().clearChatMessages();
-                        }
-
-                        if (k == 31 && Keyboard.isKeyDown(61))
-                        {
-                            this.refreshResources();
-                        }
-
-                        if (k == 17 && Keyboard.isKeyDown(61))
-                        {
-                            ;
-                        }
-
-                        if (k == 18 && Keyboard.isKeyDown(61))
-                        {
-                            ;
-                        }
-
-                        if (k == 47 && Keyboard.isKeyDown(61))
-                        {
-                            ;
-                        }
-
-                        if (k == 38 && Keyboard.isKeyDown(61))
-                        {
-                            ;
-                        }
-
-                        if (k == 22 && Keyboard.isKeyDown(61))
-                        {
-                            ;
-                        }
-
-                        if (k == 20 && Keyboard.isKeyDown(61))
-                        {
-                            this.refreshResources();
-                        }
-
-                        if (k == 33 && Keyboard.isKeyDown(61))
-                        {
-                            this.gameSettings.setOptionValue(GameSettings.Options.RENDER_DISTANCE, GuiScreen.isShiftKeyDown() ? -1 : 1);
-                        }
-
-                        if (k == 30 && Keyboard.isKeyDown(61))
-                        {
-                            this.renderGlobal.loadRenderers();
-                        }
-
-                        if (k == 35 && Keyboard.isKeyDown(61))
-                        {
-                            this.gameSettings.advancedItemTooltips = !this.gameSettings.advancedItemTooltips;
-                            this.gameSettings.saveOptions();
-                        }
-
-                        if (k == 48 && Keyboard.isKeyDown(61))
-                        {
-                            this.renderManager.setDebugBoundingBox(!this.renderManager.isDebugBoundingBox());
-                        }
-
-                        if (k == 25 && Keyboard.isKeyDown(61))
-                        {
-                            this.gameSettings.pauseOnLostFocus = !this.gameSettings.pauseOnLostFocus;
-                            this.gameSettings.saveOptions();
+                        if (Keyboard.isKeyDown(61)) {
+                        	if (k == 32 && this.ingameGUI != null)
+	                        {
+	                            this.ingameGUI.getChatGUI().clearChatMessages();
+	                        }
+	
+	                        if (k == 31)
+	                        {
+	                            this.refreshResources();
+	                        }
+	
+	                        if (k == 17)
+	                        {
+	                            ;
+	                        }
+	
+	                        if (k == 18)
+	                        {
+	                            ;
+	                        }
+	
+	                        if (k == 47)
+	                        {
+	                            ;
+	                        }
+	
+	                        if (k == 38)
+	                        {
+	                            ;
+	                        }
+	
+	                        if (k == 22)
+	                        {
+	                            ;
+	                        }
+	
+	                        if (k == 20)
+	                        {
+	                            this.refreshResources();
+	                        }
+	
+	                        if (k == 33)
+	                        {
+	                            this.gameSettings.setOptionValue(GameSettings.Options.RENDER_DISTANCE, GuiScreen.isShiftKeyDown() ? -1 : 1);
+	                        }
+	
+	                        if (k == 30)
+	                        {
+	                            this.renderGlobal.loadRenderers();
+	                        }
+	
+	                        if (k == 35)
+	                        {
+	                            this.gameSettings.advancedItemTooltips = !this.gameSettings.advancedItemTooltips;
+	                            this.gameSettings.saveOptions();
+	                        }
+	
+	                        if (k == 48)
+	                        {
+	                            this.renderManager.setDebugBoundingBox(!this.renderManager.isDebugBoundingBox());
+	                        }
+	
+	                        if (k == 25)
+	                        {
+	                            this.gameSettings.pauseOnLostFocus = !this.gameSettings.pauseOnLostFocus;
+	                            this.gameSettings.saveOptions();
+	                        }
                         }
 
                         if (k == 59)
@@ -2202,12 +2202,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             {
                 this.displayGuiScreen(new GuiChat());
             }
-
-            if (this.currentScreen == null && this.gameSettings.keyBindCommand.isPressed() && flag)
+            
+            if (this.currentScreen == null && (this.gameSettings.keyBindCommand.isPressed() || Keyboard.isKeyDown(181)) && flag)
             {
                 this.displayGuiScreen(new GuiChat("/"));
             }
-
             if (this.thePlayer.isUsingItem())
             {
                 if (!this.gameSettings.keyBindUseItem.isKeyDown())

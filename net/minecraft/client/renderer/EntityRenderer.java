@@ -6,6 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import fr.honertis.Honertis;
 import fr.honertis.event.EventRender2D;
 import fr.honertis.module.modules.FreeLook;
+import fr.honertis.module.modules.Zoom;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -593,6 +594,11 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
     }
 
+    private float hoverProgress = 0f; // 0 = pas de zoom, 1 = zoom max
+    private final float zoomSpeed = 0.1f; 
+    private float size = 1f;
+
+    
     /**
      * Changes the field of view of the player depending on if they are underwater or not
      */
@@ -624,21 +630,53 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 GameSettings gamesettings = this.mc.gameSettings;
                 flag = GameSettings.isKeyDown(this.mc.gameSettings.ofKeyBindZoom);
             }
-
-            if (flag)
-            {
-                if (!Config.zoomMode)
-                {
-                    Config.zoomMode = true;
-                    this.mc.gameSettings.smoothCamera = true;
-                }
-
-                if (Config.zoomMode)
-                {
-                    f /= 4.0F;
-                }
+            Zoom zoom = (Zoom) Honertis.INSTANCE.modulesManager.getModuleByName("Zoom");
+            if (zoom.isEnabled()) {
+            	if (mc.currentScreen == null) {
+            		if (!zoom.scroll.isToggled()) size = 1;
+	            	if (!Config.zoomMode)
+	 	            {
+	 	                Config.zoomMode = true;
+	            		this.mc.gameSettings.smoothCamera = true;
+	 	            }
+	        		zoom.isZooming = zoom.scroll.isToggled() && Config.zoomMode;
+	            	if (zoom.isZooming) { 
+	            		int i1 = Mouse.getDWheel();
+	            		if (i1 != 0) {
+		                    if (i1 > 0 && size <= 3.75f)
+		                    {
+		                        size += 0.25F;
+		                    }
+		                    if (i1 < 0 && size >= 0.75f)
+		                    {
+		                        size -= 0.25F;
+		                    }
+	            		}
+	            	}
+	            	
+		            float target = flag ? size : 0f;
+		
+		            hoverProgress += (target - hoverProgress) * zoomSpeed;
+		            hoverProgress = Math.max(0f, Math.min(hoverProgress, size));
+		
+		            float zoomFactor = 1f + 3f * hoverProgress;
+		            f /= zoomFactor;
+            	}
+            } else {
+            	if (flag) {
+            		if (!Config.zoomMode)
+     	            {
+     	                Config.zoomMode = true;
+     	                this.mc.gameSettings.smoothCamera = true;
+     	            }
+                    if (Config.zoomMode)
+                    {
+                        f /= 4.0F;
+                    }
+            	}
             }
-            else if (Config.zoomMode)
+            
+            if (Config.zoomMode && !flag)
             {
                 Config.zoomMode = false;
                 this.mc.gameSettings.smoothCamera = false;

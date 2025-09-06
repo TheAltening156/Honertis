@@ -20,6 +20,7 @@ import fr.honertis.module.modules.MoreParticles;
 import fr.honertis.module.modules.Ping;
 import fr.honertis.module.modules.ToggleSneak;
 import fr.honertis.module.modules.ToggleSprint;
+import fr.honertis.module.modules.Zoom;
 import fr.honertis.settings.Settings;
 import fr.honertis.utils.YamlUtils.ConfigMod;
 
@@ -44,7 +45,8 @@ public class ModulesManager {
 			new CustomTime(),
 			new FreeLook(),
 			new DropSwing(),
-			new ToggleSneak());
+			new ToggleSneak(),
+			new Zoom());
 	}
 	
 	

@@ -7,7 +7,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -50,10 +52,15 @@ public class MusicPlayerGui extends GuiScreen {
 	public double posY;
 	public double oldX;
 	public double oldY;
-	public CustomTextField text;
+	public CustomTextField text = new CustomTextField(posX + 70, posY + 7, 150, 20);;
 	public String currentSearch;
 	
+	public MusicPlayer musicPlayer = new MusicPlayer();
+	public String songName = "";
+    public String thumbnail = "";
+	
 	public String ytState = "";
+	public List<SongItem> songs = new ArrayList<SongItem>();
 	
 	public int scrollOffset = 0;
     public int maxScroll = 0;
@@ -63,12 +70,6 @@ public class MusicPlayerGui extends GuiScreen {
 
     private static final String YTDLP_URL = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe";
     private static final String FFMPEG_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip";
-    
-    
-	@Override
-	public void initGui() {
-		text = new CustomTextField(posX + 70, posY + 7, 150, 20);
-	}
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -88,76 +89,71 @@ public class MusicPlayerGui extends GuiScreen {
         
         text.draw(mc);
 
-        if (currentSearch != null) {
-            List<SongItem> songs = parseSongs(currentSearch);
+        double contentX = posX + 4;
+        double contentY = posY + 26;
+        double contentWidth = 275;
+        double contentHeight = 184;
 
-            double contentX = posX + 4;
-            double contentY = posY + 26;
-            double contentWidth = 275;
-            double contentHeight = 184;
+        int imagesPerRow = 3;
+        double gap = 5;
+        double imageWidth = 80;
+        double imageHeight = 45;
+        int lineSpacing = 12;
 
-            int imagesPerRow = 3;
-            double gap = 5;
-            double imageWidth = 80;
-            double imageHeight = 45;
-            int lineSpacing = 12;
+        int totalRows = (int) Math.ceil(songs.size() / (double) imagesPerRow);
+        maxScroll = (int) Math.max(0, totalRows * (imageHeight + 5 + lineSpacing * 2) - contentHeight);
 
-            int totalRows = (int) Math.ceil(songs.size() / (double) imagesPerRow);
-            maxScroll = (int) Math.max(0, totalRows * (imageHeight + 5 + lineSpacing * 2) - contentHeight);
+        GlStateManager.pushMatrix();
+        ScaledResolution sr = new ScaledResolution(mc);
+        int scaleFactor = sr.getScaleFactor();
 
-            GlStateManager.pushMatrix();
-            ScaledResolution sr = new ScaledResolution(mc);
-            int scaleFactor = sr.getScaleFactor();
-
-            int scissorX = (int) (posX * scaleFactor);
-            int scissorY = (int) ((sr.getScaledHeight() - posY - 208) * scaleFactor);
-            int scissorWidth = (int) (275 * scaleFactor);
-            int scissorHeight = (int) (180 * scaleFactor);
-            GL11.glEnable(GL11.GL_SCISSOR_TEST);
-            GL11.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
-            
-            double songPosX = contentX + 15;
-            double songPosY = contentY + 5 - scrollOffset;
-            int count = 0;
-            for (SongItem song : songs) {
-            	song.drawImageAndText(songPosX, songPosY, imageWidth, imageHeight, lineSpacing, posX, posY, mouseX, mouseY);
-            	
-                count++;
-                if (count % imagesPerRow == 0) {
-                    songPosX = contentX + 15;
-                    songPosY += imageHeight + 5 + lineSpacing * 2;
-                } else {
-                    songPosX += imageWidth + gap;
-                }
+        int scissorX = (int) (posX * scaleFactor);
+        int scissorY = (int) ((sr.getScaledHeight() - posY - 208) * scaleFactor);
+        int scissorWidth = (int) (275 * scaleFactor);
+        int scissorHeight = (int) (180 * scaleFactor);
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        GL11.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
+        
+        double songPosX = contentX + 15;
+        double songPosY = contentY + 5 - scrollOffset;
+        int count = 0;
+        for (SongItem song : songs) {
+        	song.drawImageAndText(songPosX, songPosY, imageWidth, imageHeight, lineSpacing, posX, posY, mouseX, mouseY);
+        	
+            count++;
+            if (count % imagesPerRow == 0) {
+                songPosX = contentX + 15;
+                songPosY += imageHeight + 5 + lineSpacing * 2;
+            } else {
+                songPosX += imageWidth + gap;
             }
-            
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
-            GlStateManager.popMatrix();
-            
         }
+        
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        GlStateManager.popMatrix();
         
         boolean hoverPlay = isHovered(posX + 165, posY + 225, posX + 165 + 18, posY + 225 + 18, mouseX, mouseY);
         
-        drawImage(posX + 165 + (hoverPlay ? -1 : 0), posY + 225+ (hoverPlay ? -1 : 0), 18+ (hoverPlay ? 2 : 0), 18 + (hoverPlay ? 2 : 0), new ResourceLocation("honertis/music/" + (Honertis.INSTANCE.musicPlayer.paused ? "play" : "pause") + ".png"));
+        drawImage(posX + 165 + (hoverPlay ? -1 : 0), posY + 225+ (hoverPlay ? -1 : 0), 18+ (hoverPlay ? 2 : 0), 18 + (hoverPlay ? 2 : 0), new ResourceLocation("honertis/music/" + (musicPlayer.paused ? "play" : "pause") + ".png"));
         drawImage(posX + 140, posY + 225, 18, 18, new ResourceLocation("honertis/music/back.png"));
         drawImage(posX + 190, posY + 225, 18, 18, new ResourceLocation("honertis/music/ff.png"));
 
-        if (!Honertis.INSTANCE.songName.equals("") || !Honertis.INSTANCE.thumbnail.equals("")) {
-            mc.fontRendererObj.drawCenteredStringWithShadow(StringEscapeUtils.unescapeHtml4(Honertis.INSTANCE.songName), (int)posX + 165, (int)posY + 215, -1);	
+        if (!songName.equals("") || !thumbnail.equals("")) {
+            mc.fontRendererObj.drawCenteredStringWithShadow(StringEscapeUtils.unescapeHtml4(songName), (int)posX + 165, (int)posY + 215, -1);	
             
-	        drawImageFromYoutubeURL(posX + 12, posY + 215, 51, 31, Honertis.INSTANCE.thumbnail);
+	        drawImageFromYoutubeURL(posX + 12, posY + 215, 51, 31, thumbnail);
 	        
 	    }
         
-        float progress = Honertis.INSTANCE.musicPlayer.currentStateMillis / (float) Honertis.INSTANCE.musicPlayer.durationMillis;
+        float progress = musicPlayer.currentStateMillis / (float) musicPlayer.durationMillis;
         int barWidth = 245 - 95;
         int filledWidth = (int)(barWidth * progress);
         drawRoundedRect(posX+95, posY + 246, posX + 245, posY + 248, 2, new Color(255,255,255,125).getRGB());
         drawRoundedRect(posX+95, posY + 246, posX + 96 + filledWidth, posY + 248, 2, -1);
                 
-        mc.fontRendererObj.drawStringWithShadow(millisecToTime(Honertis.INSTANCE.musicPlayer.currentStateMillis), (int)posX + 93 - mc.fontRendererObj.getStringWidth(millisecToTime(Honertis.INSTANCE.musicPlayer.currentStateMillis)), (int)posY + 243, -1);
-        mc.fontRendererObj.drawStringWithShadow(millisecToTime(Honertis.INSTANCE.musicPlayer.durationMillis), (int)posX + 277 - mc.fontRendererObj.getStringWidth(millisecToTime(Honertis.INSTANCE.musicPlayer.durationMillis)), (int)posY + 243, -1);
-        //Honertis.INSTANCE.musicPlayer.stop();
+        mc.fontRendererObj.drawStringWithShadow(millisecToTime(musicPlayer.currentStateMillis), (int)posX + 93 - mc.fontRendererObj.getStringWidth(millisecToTime(musicPlayer.currentStateMillis)), (int)posY + 243, -1);
+        mc.fontRendererObj.drawStringWithShadow(millisecToTime(musicPlayer.durationMillis), (int)posX + 277 - mc.fontRendererObj.getStringWidth(millisecToTime(musicPlayer.durationMillis)), (int)posY + 243, -1);
+        //musicPlayer.stop();
         if (!ytState.isEmpty() || !ytState.equals("")) {
         	drawRoundedRect((double)width - mc.fontRendererObj.getStringWidth(ytState + "    "), (double)height-30D,(double) width - 2D, (double)height -12D, 5D, Color.DARK_GRAY.getRGB());
         	mc.fontRendererObj.drawString(ytState, width - mc.fontRendererObj.getStringWidth(ytState + "  "), height - 25, -1);
@@ -213,65 +209,63 @@ public class MusicPlayerGui extends GuiScreen {
 			if (!isHovered(posX + 70, posY + 6, posX + 220, posY + 24, mouseX, mouseY))
 			clicked = true;
 		}
-		if (currentSearch != null) {
-	        List<SongItem> songs = parseSongs(currentSearch);	
-            double contentX = posX + 4;
-            double contentY = posY + 26;
-            double contentWidth = 275;
-            double contentHeight = 184;
+        double contentX = posX + 4;
+        double contentY = posY + 26;
+        double contentWidth = 275;
+        double contentHeight = 184;
 
-            int imagesPerRow = 3;
-            double gap = 5;
-            double imageWidth = 80;
-            double imageHeight = 45;
-            int lineSpacing = 12;
+        int imagesPerRow = 3;
+        double gap = 5;
+        double imageWidth = 80;
+        double imageHeight = 45;
+        int lineSpacing = 12;
 
-            int totalRows = (int) Math.ceil(songs.size() / (double) imagesPerRow);
-            maxScroll = (int) Math.max(0, totalRows * (imageHeight + 5 + lineSpacing * 2) - contentHeight);
+        int totalRows = (int) Math.ceil(songs.size() / (double) imagesPerRow);
+        maxScroll = (int) Math.max(0, totalRows * (imageHeight + 5 + lineSpacing * 2) - contentHeight);
 
-            GlStateManager.pushMatrix();
-            ScaledResolution sr = new ScaledResolution(mc);
-            int scaleFactor = sr.getScaleFactor();
+        GlStateManager.pushMatrix();
+        ScaledResolution sr = new ScaledResolution(mc);
+        int scaleFactor = sr.getScaleFactor();
 
-            int scissorX = (int) (posX * scaleFactor);
-            int scissorY = (int) ((sr.getScaledHeight() - posY - 208) * scaleFactor);
-            int scissorWidth = (int) (275 * scaleFactor);
-            int scissorHeight = (int) (180 * scaleFactor);
-            GL11.glEnable(GL11.GL_SCISSOR_TEST);
-            GL11.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
-            
-            double songPosX = contentX + 15;
-            double songPosY = contentY + 5 - scrollOffset;
-            int count = 0;
-            if (isHovered(posX + 5, posY + 28, posX + 280, posY + 207, mouseX, mouseY)) {
-	            for (SongItem song : songs) {
-	            	song.mouseClicked(songPosX, songPosY, imageWidth, imageHeight, lineSpacing, mouseX, mouseY);
-	            	if (song.hover && mouseButton == 0) {
-	            		try {
-							downloadAndPlaySong(song.getVideoId(), "down" + song.getVideoId() + ".wav", song);
-						} catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
-							e.printStackTrace();
-						}
-	            	}
-	                count++;
-	                if (count % imagesPerRow == 0) {
-	                    songPosX = contentX + 15;
-	                    songPosY += imageHeight + 5 + lineSpacing * 2;
-	                } else {
-	                    songPosX += imageWidth + gap;
-	                }
-	            }
+        int scissorX = (int) (posX * scaleFactor);
+        int scissorY = (int) ((sr.getScaledHeight() - posY - 208) * scaleFactor);
+        int scissorWidth = (int) (275 * scaleFactor);
+        int scissorHeight = (int) (180 * scaleFactor);
+        GL11.glEnable(GL11.GL_SCISSOR_TEST);
+        GL11.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
+        
+        double songPosX = contentX + 15;
+        double songPosY = contentY + 5 - scrollOffset;
+        int count = 0;
+        if (isHovered(posX + 5, posY + 28, posX + 280, posY + 207, mouseX, mouseY)) {
+            for (SongItem song : songs) {
+            	song.mouseClicked(songPosX, songPosY, imageWidth, imageHeight, lineSpacing, mouseX, mouseY);
+            	if (song.hover && mouseButton == 0) {
+            		try {
+						downloadAndPlaySong(song.getVideoId(), "down" + song.getVideoId() + ".wav", song);
+					} catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
+						e.printStackTrace();
+					}
+            	}
+                count++;
+                if (count % imagesPerRow == 0) {
+                    songPosX = contentX + 15;
+                    songPosY += imageHeight + 5 + lineSpacing * 2;
+                } else {
+                    songPosX += imageWidth + gap;
+                }
             }
-
-            GL11.glDisable(GL11.GL_SCISSOR_TEST);
-            GlStateManager.popMatrix();
-			
         }
+
+        GL11.glDisable(GL11.GL_SCISSOR_TEST);
+        GlStateManager.popMatrix();
+			
+        
 		if (isHovered(posX + 165, posY + 225, posX + 165 + 18, posY + 225 + 18, mouseX, mouseY)) {
-			if (!Honertis.INSTANCE.musicPlayer.paused)
-				Honertis.INSTANCE.musicPlayer.pause();
+			if (!musicPlayer.paused)
+				musicPlayer.pause();
 			else 
-				Honertis.INSTANCE.musicPlayer.resume();
+				musicPlayer.resume();
 		}
 		/*double barWidth = 245 - 95;
 		if (isHovered(posX+95, posY + 246, posX + 245, posY + 248, mouseX, mouseY) && Mouse.isButtonDown(0)) {
@@ -279,9 +273,9 @@ public class MusicPlayerGui extends GuiScreen {
 			if(relativeX < 0) relativeX = 0;
 			if(relativeX > 245) relativeX = barWidth;
 			double progress = relativeX / barWidth;
-			Honertis.INSTANCE.musicPlayer.currentStateMillis = (long) (progress * Honertis.INSTANCE.musicPlayer.durationMillis);
+			musicPlayer.currentStateMillis = (long) (progress * musicPlayer.durationMillis);
 			try {
-				Honertis.INSTANCE.musicPlayer.setState(progress);
+				musicPlayer.setState(progress);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -301,14 +295,23 @@ public class MusicPlayerGui extends GuiScreen {
 			text.setFocused(false);
 			new Thread(() -> {
 				if (!text.getText().isEmpty())
-				searchYoutube(text.getText());
+					searchYoutube(text.getText());
 			}).start();
 		}
 	}
 	
 	private void searchYoutube(String text) {
-		String url = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=22&key=AIzaSyCer_ztDdAmZJqLSX1FsNFkb_t1v29A5Ls&q=" + text.replace(" ", "%20") + "&type=video";
-		currentSearch = new String(WebUtils.visitSite(url).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);		
+		try {
+			String encodedUrl = URLEncoder.encode(text, "UTF-8");
+			//System.out.println(encodedUrl.replace("+", "%20"));
+			String url = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=22&key=AIzaSyCer_ztDdAmZJqLSX1FsNFkb_t1v29A5Ls&q=" + encodedUrl + "&type=video";
+			currentSearch = new String(WebUtils.visitSite(url).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);		
+			if (currentSearch != null) {
+				this.songs = parseSongs(currentSearch, encodedUrl);
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}		
 	}
 	
 	private static void downloadFile(String url, File destination) throws IOException {
@@ -379,9 +382,9 @@ public class MusicPlayerGui extends GuiScreen {
 	        }
 	        ytState = "";
 	        try {
-				Honertis.INSTANCE.musicPlayer.play(new File(songDir + "/" + outputName));
-				Honertis.INSTANCE.songName = song.getTitle();
-				Honertis.INSTANCE.thumbnail = song.getThumbnailUrl();
+				musicPlayer.play(new File(songDir + "/" + outputName));
+				songName = song.getTitle();
+				thumbnail = song.getThumbnailUrl();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -401,26 +404,85 @@ public class MusicPlayerGui extends GuiScreen {
 		super.onResize(mcIn, p_175273_2_, p_175273_3_);
 	}
 
-	public static List<SongItem> parseSongs(String json) {
+	public static List<SongItem> parseSongs(String json, String searchQuery) {
         List<SongItem> songs = new ArrayList<>();
-        JSONObject obj = new JSONObject(json);
-        JSONArray items = obj.getJSONArray("items");
+        if (json.startsWith("{  \"kind")) {
+            JSONObject obj = new JSONObject(json);
+	        JSONArray items = obj.getJSONArray("items");
+	
+	        for (int i = 0; i < items.length(); i++) {
+	            JSONObject item = items.getJSONObject(i);
+	            JSONObject id = item.getJSONObject("id");
+	            
+	            if (!id.getString("kind").equals("youtube#video")) continue;
+	            
+	            JSONObject snippet = item.getJSONObject("snippet");
+	
+	            String videoId = id.getString("videoId");
+	            String title = snippet.getString("title");
+	
+	            SongItem song = new SongItem(videoId, title.replace("È", "è"), "https://i.ytimg.com/vi/" + videoId + "/maxresdefault.jpg");
+	            songs.add(song);
+	        }
+        } else if (json.startsWith("{  \"error")) {
+        	String html = visitSite("https://www.youtube.com/results?search_query=" + searchQuery);
 
-        for (int i = 0; i < items.length(); i++) {
-            JSONObject item = items.getJSONObject(i);
-            JSONObject id = item.getJSONObject("id");
-            
-            if (!id.getString("kind").equals("youtube#video")) continue;
-            
-            JSONObject snippet = item.getJSONObject("snippet");
+            // Extraire ytInitialData
+            int start = html.indexOf("ytInitialData") + 15;
+            int end = html.indexOf("};", start) + 1;
+            String jsonData = html.substring(start, end);
 
-            String videoId = id.getString("videoId");
-            String title = snippet.getString("title");
+            JSONObject obj = new JSONObject(jsonData);
+            JSONArray contents = obj.getJSONObject("contents")
+                    .getJSONObject("twoColumnSearchResultsRenderer")
+                    .getJSONObject("primaryContents")
+                    .getJSONObject("sectionListRenderer")
+                    .getJSONArray("contents")
+                    .getJSONObject(0)
+                    .getJSONObject("itemSectionRenderer")
+                    .getJSONArray("contents");
 
-            SongItem song = new SongItem(videoId, title, "https://i.ytimg.com/vi/" + videoId + "/maxresdefault.jpg");
-            songs.add(song);
+            for (int i = 0; i < contents.length(); i++) {
+                JSONObject videoRenderer = contents.getJSONObject(i).optJSONObject("videoRenderer");
+                if (videoRenderer == null) continue;
+
+                String videoId = videoRenderer.getString("videoId");
+                String title = videoRenderer
+                        .getJSONObject("title")
+                        .getJSONArray("runs")
+                        .getJSONObject(0)
+                        .getString("text");
+
+
+                //results.add(new SongItem(videoId, title, thumbnail, videoUrl));
+            	songs.add(new SongItem(videoId, title.replace("È", "è"), "https://i.ytimg.com/vi/" + videoId + "/maxresdefault.jpg"));
+            }
+        	//songs.add(new SongItem("--", "Quota excedeed", "https://pixelpc.fr/art.png"));
+
+        } else {
+        	songs.add(new SongItem("--", "Error while getting videos", "https://pixelpc.fr/art.png"));
         }
-
         return songs;
     }
+	
+	public static String visitSite(String urly) {
+	    StringBuilder stuff = new StringBuilder();
+	    try {
+	        URL url = new URL(urly);
+	        java.net.HttpURLConnection connection = (java.net.HttpURLConnection) url.openConnection();
+	        connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+	        try (BufferedReader in = new BufferedReader(
+	                new InputStreamReader(connection.getInputStream(), "UTF-8"))) {
+	            String line;
+	            while ((line = in.readLine()) != null) {
+	                stuff.append(line);
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return stuff.toString();
+	}
+
 }
