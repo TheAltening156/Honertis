@@ -236,6 +236,8 @@ public class MusicPlayerGui extends GuiScreen {
 		if (!isYoutube) {
 			File file1 = new File(BIN_DIR + "/localSongs");
 			file1.mkdirs();
+			File dummyFile = new File(BIN_DIR + "/localSongs/Wav file only");
+			if (!dummyFile.exists()) dummyFile.createNewFile();
 			if (isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY) || isHovered(posX + 71, posY + 6, position, posY + 24, mouseX, mouseY)) {
 				songs = new ArrayList<SongItem>();
 				
