@@ -2,11 +2,13 @@ package fr.honertis.guis.music;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import fr.honertis.utils.DrawUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class SongItem {
 	private String videoId;
@@ -64,16 +66,6 @@ public class SongItem {
 		double offset = -2 * hoverProgress;
         double extraSize = 4 * hoverProgress;
 		DrawUtils.drawImageFromYoutubeURL(songPosX + offset, songPosY + offset, imageWidth + extraSize, imageHeight + extraSize, getThumbnailUrl());
-		//if (Mouse.isButtonDown(0) && hover) Gui.drawRect(songPosX + offset, songPosY + offset, (songPosX + offset) + imageWidth + extraSize, songPosY + offset + imageHeight + extraSize, new java.awt.Color(255,255,255,50).getRGB());
-
-        int textX = (int) (songPosX + imageWidth / 2);
-        int textY = (int) (songPosY + imageHeight + 5);
-
-        for (Object line : Minecraft.getMinecraft().fontRendererObj.listFormattedStringToWidth(StringEscapeUtils.unescapeHtml4(getTitle()), (int) imageWidth)) {                	
-        	Minecraft.getMinecraft().fontRendererObj.drawCenteredStringWithShadow((String) line, textX, textY, -1);
-        	textY += lineSpacing;
-        }
-        
 	}
 	
 	public void mouseClicked(double songPosX, double songPosY, double imageWidth, double imageHeight, double lineSpacing, int mouseX, int mouseY) {

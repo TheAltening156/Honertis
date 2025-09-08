@@ -9,6 +9,7 @@ gui.launcher=You can use the launcher !
 gui.new=A new version of Honertis is available !
 gui.still=You're still on
 gui.current=the current version is
+gui.open=Open song folder
 
 # Other
 color.red=Red

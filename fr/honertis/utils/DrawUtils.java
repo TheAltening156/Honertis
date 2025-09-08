@@ -31,14 +31,17 @@ public class DrawUtils{
 		color(r, g, b, a);
 	}
 	
-	public void drawImage(double x, double y, double width, double height, ResourceLocation image) {
+	public static void drawImage(double x, double y, double width, double height, ResourceLocation image) {
+		drawImage(x, y, 0.0f, 0.0f, width, height, width, height, image);
+	}
+	public static void drawImage(double x, double y, double u, double v, double width, double height, double vw, double vh, ResourceLocation image) {
 		pushMatrix();
         color(1,1,1f, 1f);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(image);
-        drawModalRectWithCustomSizedTexture(x, y, 0.0f, 0.0f, width, height, (float) width, (float) height);
+        drawModalRectWithCustomSizedTexture(x, y, (float)u, (float)v, width, height, (float)vw, (float)vh);
         popMatrix();
 	}
-	public void drawImageShadow(double x, double y, double width, double height, ResourceLocation image) {
+	public static void drawImageShadow(double x, double y, double width, double height, ResourceLocation image) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(image);
 		enableBlend();
         disableLighting();
@@ -89,12 +92,12 @@ public class DrawUtils{
         }
     }
 
-	public void drawCircle(double x, double y, double radius, int color) {
+	public static void drawCircle(double x, double y, double radius, int color) {
 		for (int i : new int[3])
 		drawCircleA(x, y, radius, color);
 	}
 	
-	private void drawCircleA(double x, double y, double radius, int color) {
+	private static void drawCircleA(double x, double y, double radius, int color) {
 		pushMatrix();
 
 		disableTexture2D();
@@ -146,59 +149,6 @@ public class DrawUtils{
 		glDisable(GL_BLEND);
 		glEnable(GL_TEXTURE_2D);
 		glScaled(2D, 2D, 2D);
-	}
-	
-	public void drawRoundedRectTEST(double x, double y, double width, double height, double round, int color) {
-		/*Color topColor = new Color(0,0,0, 157);
-		Color bottomColor = new Color(0,0,0,0);
-		
-		glScaled(0.5D, 0.5D, 0.5D);
-	    x *= 2D;
-	    y *= 2D;
-	    width *= 2D;
-	    height *= 2D;
-
-	    glDisable(GL_TEXTURE_2D);
-	    glEnable(GL_BLEND);
-	    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	    glShadeModel(GL_SMOOTH);
-
-	    glBegin(GL_POLYGON);
-
-	    glColor4f(topColor.getRed() / 255f, topColor.getGreen() / 255f, topColor.getBlue() / 255f, topColor.getAlpha() / 255f);
-	    for (int i = 0; i <= 90; i += 3) {
-	        glVertex2d(
-	            x + round + Math.sin(Math.toRadians(i)) * -round,
-	            y + round + Math.cos(Math.toRadians(i)) * -round
-	        );
-	    }
-	    glColor4f(bottomColor.getRed() / 255f, bottomColor.getGreen() / 255f, bottomColor.getBlue() / 255f, bottomColor.getAlpha() / 255f);
-	    for (int i = 90; i <= 180; i += 3) {
-	        glVertex2d(
-	            x + round + Math.sin(Math.toRadians(i)) * -round,
-	            height - round + Math.cos(Math.toRadians(i)) * -round
-	        );
-	    }
-	    for (int i = 0; i <= 90; i += 3) {
-	        glVertex2d(
-	            width - round + Math.sin(Math.toRadians(i)) * round,
-	            height - round + Math.cos(Math.toRadians(i)) * round
-	        );
-	    }
-	    glColor4f(topColor.getRed() / 255f, topColor.getGreen() / 255f, topColor.getBlue() / 255f, topColor.getAlpha() / 255f);
-	    for (int i = 90; i <= 180; i += 3) {
-	        glVertex2d(
-	            width - round + Math.sin(Math.toRadians(i)) * round,
-	            y + round + Math.cos(Math.toRadians(i)) * round
-	        );
-	    }
-
-	    glEnd();
-
-	    glDisable(GL_BLEND);
-	    glEnable(GL_TEXTURE_2D);
-	    glShadeModel(GL_FLAT);
-	    glScaled(2D, 2D, 2D);*/
 	}
 
 }

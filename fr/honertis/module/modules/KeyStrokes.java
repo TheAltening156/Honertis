@@ -87,14 +87,12 @@ public class KeyStrokes extends ModuleBase{
 			int alpha = (int)(125 - colorProgress); 
 			alpha = Math.max(0, Math.min(125, alpha)); 
 			Color animatedColor = new Color(0, 0, 0, alpha);
-			//x += 50;
 			Gui.drawRect(x, y, x + x1, y + y1, animatedColor.getRGB());
 			Gui.drawRect(x, y, x + x1, y + y1, color);
 
 			int textColorValue = 255 - progress;
 	        int colorCode = new Color(textColorValue, textColorValue, textColorValue).getRGB();
-	        //fr.drawCenteredString(Keyboard.getKeyName(keyCode), 63, 59, colorCode);
-	        //x, y, x + 25, y + 25
+
 	        String name = this == Keys.JUMP ? "Jump" : this == Keys.LMB ? "LMB" : this == Keys.RMB ? "RMB" : Keyboard.getKeyName(keyCode);
 	        x+=8;
 	        y+=7;

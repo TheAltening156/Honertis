@@ -520,6 +520,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.setWindowIcon();
         this.setInitialDisplayMode();
         Honertis.INSTANCE.start();
+        if (Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook").isEnabled())
+        	Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook").setEnabled(false);
         this.createDisplay();
         OpenGlHelper.initializeTextures();
         this.framebufferMc = new Framebuffer(this.displayWidth, this.displayHeight, true);
@@ -1070,6 +1072,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage
      */
     public void shutdownMinecraftApplet()
     {
+    	Honertis.INSTANCE.musicPlayer.musicPlayer.stop();
+    	Honertis.INSTANCE.musicPlayer.musicPlayer.deleteCurrentFile();
+    	Honertis.INSTANCE.musicPlayer.musicPlayer.deleteLastFile();
     	FileManager.save();
         try
         {
@@ -2030,6 +2035,14 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     }
                     else
                     {
+                    	
+                    	FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook");
+                        
+                		if (!mod.hold.isToggled()) {
+                			if (k == mod.key.getKey())
+                				mod.toggle();
+                		}
+                    	
                         if (k == 1)
                         {
                             this.displayInGameMenu();

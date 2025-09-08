@@ -2328,7 +2328,10 @@ public abstract class EntityPlayer extends EntityLivingBase
         ichatcomponent.getChatStyle().setInsertion(this.getName());
         return ichatcomponent;
     }
-
+    
+    public long lastTime = System.currentTimeMillis();
+    public float sneakProgress;
+    
     public float getEyeHeight()
     {
         float f = 1.62F;
@@ -2338,10 +2341,19 @@ public abstract class EntityPlayer extends EntityLivingBase
             f = 0.2F;
         }
 
-        if (this.isSneaking())
-        {
-            f -= 0.08F;
+        long currentTime = System.currentTimeMillis();
+        double delta = (currentTime - lastTime) / 18f;
+        lastTime = currentTime;
+        if (this.isSneaking()) {
+        	sneakProgress = (float) Math.min(0.08f, sneakProgress + delta * 0.08f);
+        } else {
+        	sneakProgress = (float) Math.max(0f, sneakProgress - delta * 0.08f);
         }
+        f -= sneakProgress;
+        /*if (this.isSneaking())
+        {
+            //f -= 0.08F;
+        }*/
 
         return f;
     }

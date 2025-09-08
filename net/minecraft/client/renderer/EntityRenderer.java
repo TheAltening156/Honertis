@@ -754,7 +754,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
     private void orientCamera(float partialTicks)
     {
         Entity entity = this.mc.getRenderViewEntity();
-        float f = entity.getEyeHeight() - 0.01f /*+ 44f*/;
+        float f = entity.getEyeHeight() - 0.01f;
         double d0 = entity.prevPosX + (entity.posX - entity.prevPosX) * (double)partialTicks;
         double d1 = entity.prevPosY + (entity.posY - entity.prevPosY) * (double)partialTicks + (double)f;
         double d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double)partialTicks;
@@ -786,58 +786,91 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
         else if (this.mc.gameSettings.thirdPersonView > 0)
         {
-            double d3 = (double)(this.thirdPersonDistanceTemp + (this.thirdPersonDistance - this.thirdPersonDistanceTemp) * partialTicks);
+        	if (mod.isEnabled()) {
+        	    float yaw = mod.rotYaw;
+        	    float pitch = mod.rotPitch;
 
-            if (this.mc.gameSettings.debugCamEnable)
-            {
-                GlStateManager.translate(0.0F, 0.0F, (float)(-d3));
-            }
-            else
-            {
-                float f1 = entity.rotationYaw;
-                float f2 = entity.rotationPitch;
+        	    double d3 = 4.0D;
+        	    double d4 = -MathHelper.sin(yaw * (float)Math.PI / 180F) * MathHelper.cos(pitch * (float)Math.PI / 180F) * d3;
+        	    double d5 =  MathHelper.cos(yaw * (float)Math.PI / 180F) * MathHelper.cos(pitch * (float)Math.PI / 180F) * d3;
+        	    double d6 = -MathHelper.sin(pitch * (float)Math.PI / 180F) * d3;
 
-                if (this.mc.gameSettings.thirdPersonView == 2)
-                {
-                    f2 += 180.0F;
-                }
+        	    for (int i = 0; i < 8; ++i) {
+        	        float f3 = (i & 1) * 2 - 1;
+        	        float f4 = (i >> 1 & 1) * 2 - 1;
+        	        float f5 = (i >> 2 & 1) * 2 - 1;
+        	        f3 *= 0.1F;
+        	        f4 *= 0.1F;
+        	        f5 *= 0.1F;
 
-                double d4 = (double)(-MathHelper.sin(f1 / 180.0F * (float)Math.PI) * MathHelper.cos(f2 / 180.0F * (float)Math.PI)) * d3;
-                double d5 = (double)(MathHelper.cos(f1 / 180.0F * (float)Math.PI) * MathHelper.cos(f2 / 180.0F * (float)Math.PI)) * d3;
-                double d6 = (double)(-MathHelper.sin(f2 / 180.0F * (float)Math.PI)) * d3;
+        	        MovingObjectPosition mop = this.mc.theWorld.rayTraceBlocks(
+        	            new Vec3(d0 + f3, d1 + f4, d2 + f5),
+        	            new Vec3(d0 - d4 + f3 + f5, d1 - d6 + f4, d2 - d5 + f5)
+        	        );
 
-                for (int i = 0; i < 8; ++i)
-                {
-                    float f3 = (float)((i & 1) * 2 - 1);
-                    float f4 = (float)((i >> 1 & 1) * 2 - 1);
-                    float f5 = (float)((i >> 2 & 1) * 2 - 1);
-                    f3 = f3 * 0.1F;
-                    f4 = f4 * 0.1F;
-                    f5 = f5 * 0.1F;
-                    MovingObjectPosition movingobjectposition = this.mc.theWorld.rayTraceBlocks(new Vec3(d0 + (double)f3, d1 + (double)f4, d2 + (double)f5), new Vec3(d0 - d4 + (double)f3 + (double)f5, d1 - d6 + (double)f4, d2 - d5 + (double)f5));
+        	        if (mop != null) {
+        	            double dist = mop.hitVec.distanceTo(new Vec3(d0, d1, d2));
+        	            if (dist < d3) {
+        	                d3 = dist;
+        	            }
+        	        }
+        	    }
 
-                    if (movingobjectposition != null)
-                    {
-                        double d7 = movingobjectposition.hitVec.distanceTo(new Vec3(d0, d1, d2));
-
-                        if (d7 < d3)
-                        {
-                            d3 = d7;
-                        }
-                    }
-                }
-
-                if (this.mc.gameSettings.thirdPersonView == 2)
-                {
-                    GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
-                }
-
-                GlStateManager.rotate(entity.rotationPitch - f2, 1.0F, 0.0F, 0.0F);
-                GlStateManager.rotate(entity.rotationYaw - f1, 0.0F, 1.0F, 0.0F);
-                GlStateManager.translate(0.0F, 0.0F, (float)(-d3));
-                GlStateManager.rotate(f1 - entity.rotationYaw, 0.0F, 1.0F, 0.0F);
-                GlStateManager.rotate(f2 - entity.rotationPitch, 1.0F, 0.0F, 0.0F);
-            }
+        	    GlStateManager.translate(0.0F, 0.0F, (float)(-d3));
+        	} else {
+	            double d3 = (double)(this.thirdPersonDistanceTemp + (this.thirdPersonDistance - this.thirdPersonDistanceTemp) * partialTicks);
+	
+	            if (this.mc.gameSettings.debugCamEnable)
+	            {
+	                GlStateManager.translate(0.0F, 0.0F, (float)(-d3));
+	            }
+	            else
+	            {
+	                float f1 = entity.rotationYaw;
+	                float f2 = entity.rotationPitch;
+	       
+	                if (this.mc.gameSettings.thirdPersonView == 2)
+	                {
+	                    f2 += 180.0F;
+	                }
+	
+	                double d4 = (double)(-MathHelper.sin(f1 / 180.0F * (float)Math.PI) * MathHelper.cos(f2 / 180.0F * (float)Math.PI)) * d3;
+	                double d5 = (double)(MathHelper.cos(f1 / 180.0F * (float)Math.PI) * MathHelper.cos(f2 / 180.0F * (float)Math.PI)) * d3;
+	                double d6 = (double)(-MathHelper.sin(f2 / 180.0F * (float)Math.PI)) * d3;
+	                for (int i = 0; i < 8; ++i)
+	                {
+	                    float f3 = (float)((i & 1) * 2 - 1);
+	                    float f4 = (float)((i >> 1 & 1) * 2 - 1);
+	                    float f5 = (float)((i >> 2 & 1) * 2 - 1);
+	                    f3 = f3 * 0.1F;
+	                    f4 = f4 * 0.1F;
+	                    f5 = f5 * 0.1F;
+	                    MovingObjectPosition movingobjectposition = this.mc.theWorld.rayTraceBlocks(new Vec3(d0 + (double)f3, d1 + (double)f4, d2 + (double)f5), new Vec3(d0 - d4 + (double)f3 + (double)f5, d1 - d6 + (double)f4, d2 - d5 + (double)f5));
+	
+	                    if (movingobjectposition != null)
+	                    {
+	                        double d7 = movingobjectposition.hitVec.distanceTo(new Vec3(d0, d1, d2));
+	
+	                        if (d7 < d3)
+	                        {
+	                            d3 = d7;
+	                        }
+	                    }
+	                }
+		            
+	                if (this.mc.gameSettings.thirdPersonView == 2)
+	                {
+	                    GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
+	                }
+	                
+	                GlStateManager.rotate(entity.rotationPitch - f2, 1.0F, 0.0F, 0.0F);
+	                GlStateManager.rotate(entity.rotationYaw - f1, 0.0F, 1.0F, 0.0F);
+	                GlStateManager.translate(0.0F, 0.0F, (float)(-d3));
+	                GlStateManager.rotate(f1 - entity.rotationYaw, 0.0F, 1.0F, 0.0F);
+	                GlStateManager.rotate(f2 - entity.rotationPitch, 1.0F, 0.0F, 0.0F);
+	            	
+	            }
+        	}
         }
         else
         {
@@ -886,7 +919,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             {
             	//Yaw cam
                 //GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks + 180.0F, 0.0F, 1.0F, 0.0F);
-                GlStateManager.rotate(newYaw + 180.0F, 0.0F, 1.0F, 0.0F);
+                GlStateManager.rotate(newYaw + 180, 0.0F, 1.0F, 0.0F);
             }
         }
 

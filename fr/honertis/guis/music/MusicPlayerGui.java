@@ -1,5 +1,9 @@
 package fr.honertis.guis.music;
 
+import static net.minecraft.client.renderer.GlStateManager.*;
+
+import static fr.honertis.utils.Utils.*;
+
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,11 +12,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -31,6 +37,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -38,6 +45,7 @@ import org.lwjgl.opengl.GL11;
 import fr.honertis.Honertis;
 import fr.honertis.manager.FileManager;
 import fr.honertis.utils.DrawUtils;
+import fr.honertis.utils.LangManager;
 import fr.honertis.utils.WebUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -45,6 +53,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 
 public class MusicPlayerGui extends GuiScreen {
 	public boolean clicked;
@@ -64,20 +73,25 @@ public class MusicPlayerGui extends GuiScreen {
 	
 	public int scrollOffset = 0;
     public int maxScroll = 0;
+        
+    public boolean isYoutube = true;
     
-    private static final String BIN_DIR = "honertis/musicPlayer/";
+    private static final String BIN_DIR = "Honertis/musicPlayer/";
     private static final File songDir = new File(BIN_DIR + "/songs");
 
     private static final String YTDLP_URL = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe";
     private static final String FFMPEG_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip";
-	
+    
+    public int volume = 75;
+    
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		if (clicked) {
             posX += mouseX - oldX;
             posY += mouseY - oldY;
         }
-        text.setPosition(posX + 70, posY + 5);
+		if (isYoutube)
+			text.setPosition(posX + 70, posY + 5);
 
         for (double d : new double[]{4, 4.25, 4.50, 4.75}) {
             drawRoundedRect(posX + d, posY + d, posX + 281, posY + 255, 7, new Color(50, 50, 50, 30).getRGB());
@@ -86,9 +100,20 @@ public class MusicPlayerGui extends GuiScreen {
         drawRect(posX + 5, posY + 25, posX + 280, posY + 26, new Color(25, 25, 25).getRGB());
         
         drawRect(posX + 5, posY + 210, posX + 280, posY + 211, new Color(25, 25, 25).getRGB());
+        if (isYoutube)
+        	text.draw(mc);
         
-        text.draw(mc);
+    	drawRoundedRect(posX + 15, posY + 9, posX + 27, posY + 21, 5, isYoutube ? new Color(100,100,100).getRGB() : new Color(0, 125, 255).getRGB());
+    	mc.fontRendererObj.drawStringWithShadow("Local", (int)posX + 32, (int)posY + 11, -1);
+        if (!isYoutube) {
+        	double position = posX + 79 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.refresh"));
+        	drawRoundedRect(posX + 71, posY + 6, position, posY + 24, 5, isHovered(posX + 71, posY + 6, position, posY + 24, mouseX, mouseY) ? new Color(150,150,150).getRGB() : new Color(100,100,100).getRGB());
+        	mc.fontRendererObj.drawStringWithShadow(LangManager.format("gui.refresh"), (int)posX + 75, (int)posY + 11, -1);
+        	
+        	drawRoundedRect(position + 5, posY + 6, position + 15 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, 5, isHovered(position + 5, posY + 6, position + 15 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, mouseX, mouseY) ? new Color(150,150,150).getRGB() : new Color(100,100,100).getRGB());
+        	mc.fontRendererObj.drawStringWithShadow(LangManager.format("gui.open"), (int)position + 10, (int)posY + 11, -1);
 
+        }
         double contentX = posX + 4;
         double contentY = posY + 26;
         double contentWidth = 275;
@@ -102,88 +127,87 @@ public class MusicPlayerGui extends GuiScreen {
 
         int totalRows = (int) Math.ceil(songs.size() / (double) imagesPerRow);
         maxScroll = (int) Math.max(0, totalRows * (imageHeight + 5 + lineSpacing * 2) - contentHeight);
-
-        GlStateManager.pushMatrix();
+        
         ScaledResolution sr = new ScaledResolution(mc);
         int scaleFactor = sr.getScaleFactor();
 
-        int scissorX = (int) (posX * scaleFactor);
+        int scissorX = (int) ((posX + 8) * scaleFactor);
         int scissorY = (int) ((sr.getScaledHeight() - posY - 208) * scaleFactor);
-        int scissorWidth = (int) (275 * scaleFactor);
+        int scissorWidth = (int) ((275-6) * scaleFactor);
         int scissorHeight = (int) (180 * scaleFactor);
+
+        GlStateManager.pushMatrix();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
-        
+
         double songPosX = contentX + 15;
         double songPosY = contentY + 5 - scrollOffset;
         int count = 0;
         for (SongItem song : songs) {
-        	song.drawImageAndText(songPosX, songPosY, imageWidth, imageHeight, lineSpacing, posX, posY, mouseX, mouseY);
-        	
+            song.drawImageAndText(songPosX, songPosY, imageWidth, imageHeight, lineSpacing, posX, posY, mouseX, mouseY);
+
             count++;
             if (count % imagesPerRow == 0) {
                 songPosX = contentX + 15;
-                songPosY += imageHeight + 5 + lineSpacing * 2;
+                songPosY += imageHeight + lineSpacing * 2;
             } else {
                 songPosX += imageWidth + gap;
             }
         }
-        
+
+        count = 0;
+        songPosX = contentX + 15;
+        songPosY = contentY + 5 - scrollOffset;
+        {
+	        for (SongItem song : songs) {
+	            int textX = (int) songPosX;
+	            int textY = (int) (songPosY + imageHeight + 5);
+	            int maxTextWidth = (int) imageWidth;
+	            String text = StringEscapeUtils.unescapeHtml4(song.getTitle());
+	            text = text.replace(".wav", "");
+	            int textWidth = mc.fontRendererObj.getStringWidth(text + "       ");
+
+	            double offset = textScroll(textWidth, maxTextWidth, System.currentTimeMillis(), 0.5);
+	            
+	            GlStateManager.pushMatrix();
+	            GL11.glEnable(GL11.GL_SCISSOR_TEST);
+
+	            double localX = Math.max(textX, contentX);
+	            double localY = Math.max(textY, contentY);
+	            double localW = Math.min(textX + maxTextWidth, contentX + (scissorWidth / scaleFactor)) - localX;
+	            double localH = Math.min(textY + lineSpacing, contentY + (scissorHeight / scaleFactor)) - localY;
+
+	            if (localW > 0 && localH > 0) {
+	                scissorGui(localX, localY, localW, localH);
+
+	                if (textWidth > maxTextWidth) {
+	                    GlStateManager.translate(-offset, 0, 0);
+	                    mc.fontRendererObj.drawStringWithShadow(text + "       " + text, textX, textY, -1);
+	                    GlStateManager.translate(offset, 0, 0);
+	                } else {
+	                    mc.fontRendererObj.drawCenteredStringWithShadow(text, textX + maxTextWidth / 2, textY, -1);
+	                }
+	            }
+
+	            GL11.glDisable(GL11.GL_SCISSOR_TEST);
+	            GlStateManager.popMatrix();
+	            
+	            count++;
+	            if (count % imagesPerRow == 0) {
+	                songPosX = contentX + 15;
+	                songPosY += imageHeight + lineSpacing * 2;
+	            } else {
+	                songPosX += imageWidth + gap;
+	            }
+	        }
+        }
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         GlStateManager.popMatrix();
         
-        boolean hoverPlay = isHovered(posX + 165, posY + 225, posX + 165 + 18, posY + 225 + 18, mouseX, mouseY);
-        
-        drawImage(posX + 165 + (hoverPlay ? -1 : 0), posY + 225+ (hoverPlay ? -1 : 0), 18+ (hoverPlay ? 2 : 0), 18 + (hoverPlay ? 2 : 0), new ResourceLocation("honertis/music/" + (musicPlayer.paused ? "play" : "pause") + ".png"));
-        drawImage(posX + 140, posY + 225, 18, 18, new ResourceLocation("honertis/music/back.png"));
-        drawImage(posX + 190, posY + 225, 18, 18, new ResourceLocation("honertis/music/ff.png"));
-
-        if (!songName.equals("") || !thumbnail.equals("")) {
-            mc.fontRendererObj.drawCenteredStringWithShadow(StringEscapeUtils.unescapeHtml4(songName), (int)posX + 165, (int)posY + 215, -1);	
-            
-	        drawImageFromYoutubeURL(posX + 12, posY + 215, 51, 31, thumbnail);
-	        
-	    }
-        
-        float progress = musicPlayer.currentStateMillis / (float) musicPlayer.durationMillis;
-        int barWidth = 245 - 95;
-        int filledWidth = (int)(barWidth * progress);
-        drawRoundedRect(posX+95, posY + 246, posX + 245, posY + 248, 2, new Color(255,255,255,125).getRGB());
-        drawRoundedRect(posX+95, posY + 246, posX + 96 + filledWidth, posY + 248, 2, -1);
-                
-        mc.fontRendererObj.drawStringWithShadow(millisecToTime(musicPlayer.currentStateMillis), (int)posX + 93 - mc.fontRendererObj.getStringWidth(millisecToTime(musicPlayer.currentStateMillis)), (int)posY + 243, -1);
-        mc.fontRendererObj.drawStringWithShadow(millisecToTime(musicPlayer.durationMillis), (int)posX + 277 - mc.fontRendererObj.getStringWidth(millisecToTime(musicPlayer.durationMillis)), (int)posY + 243, -1);
-        //musicPlayer.stop();
-        if (!ytState.isEmpty() || !ytState.equals("")) {
-        	drawRoundedRect((double)width - mc.fontRendererObj.getStringWidth(ytState + "    "), (double)height-30D,(double) width - 2D, (double)height -12D, 5D, Color.DARK_GRAY.getRGB());
-        	mc.fontRendererObj.drawString(ytState, width - mc.fontRendererObj.getStringWidth(ytState + "  "), height - 25, -1);
-        }
-		oldX = mouseX;
+        CurrentPlayingSong c = new CurrentPlayingSong();
+        c.draw(mc, songName, thumbnail, ytState, posX, posY, musicPlayer, width, height, mouseX, mouseY);
+        oldX = mouseX;
 		oldY = mouseY;
-	}
-	
-	public String millisecToTime(long millis) {
-		long totalSeconds = millis / 1000;
-		long seconds = totalSeconds % 60;
-		long totalMinutes = totalSeconds / 60;
-		long minutes = totalMinutes % 60;
-		long totalHours = totalMinutes / 60;
-		long hours = totalHours % 24;
-		long days = totalHours / 24;
-
-		if (days > 0) {
-			// Format as days:hours:minutes:seconds
-			return String.format("%d:%02d:%02d:%02d", days, hours, minutes, seconds);
-		} else if (hours > 0) {
-			// Format as hours:minutes:seconds
-			return String.format("%d:%02d:%02d", hours, minutes, seconds);
-		} else if (minutes > 0) {
-			// Format as minutes:seconds
-			return String.format("%d:%02d", minutes, seconds);
-		} else {
-			// Format as seconds only
-			return String.format("0:%02d", seconds);
-		}
 	}
 	
 	@Override
@@ -199,14 +223,76 @@ public class MusicPlayerGui extends GuiScreen {
 	
 	@Override
 	public void updateScreen() {
-		text.update();
+		if (isYoutube)
+			text.update();
 	}
 	
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		text.mouseClicked(mouseX, mouseY, mouseButton);
+		if (isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY)) {
+			isYoutube = !isYoutube;
+		}
+		double position = posX + 79 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.refresh"));
+		if (!isYoutube) {
+			File file1 = new File(BIN_DIR + "/localSongs");
+			file1.mkdirs();
+			if (isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY) || isHovered(posX + 71, posY + 6, position, posY + 24, mouseX, mouseY)) {
+				songs = new ArrayList<SongItem>();
+				
+				File [] files = file1.listFiles();
+				ytState = "Searching for local songs ...";
+				for (File f : files) {
+					if (f.isFile() && f.getName().endsWith(".wav")) {
+						ytState = "Found " + f.getName();
+						songs.add(new SongItem("", f.getName(), "https://pixelpc.fr/art169.png"));	
+					}
+				}
+				ytState = "";
+			}
+			if (isHovered(position + 5, posY + 6, position + 15 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, mouseX, mouseY)) {
+				String s = file1.getAbsolutePath();
+
+				if (Util.getOSType() == Util.EnumOS.OSX) {
+					try {
+						System.out.println(s);
+						Runtime.getRuntime().exec(new String[] { "/usr/bin/open", s });
+						return;
+					} catch (IOException ioexception1) {
+						System.out.println((String) "Couldn\'t open file");
+					}
+				} else if (Util.getOSType() == Util.EnumOS.WINDOWS) {
+					String s1 = String.format("cmd.exe /C start \"Open file\" \"%s\"", new Object[] { s });
+
+					try {
+						Runtime.getRuntime().exec(s1);
+						return;
+					} catch (IOException ioexception) {
+						System.out.println((String) "Couldn\'t open file");
+					}
+				}
+
+				boolean flag = false;
+
+				try {
+					Class<?> oclass = Class.forName("java.awt.Desktop");
+					Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object) null, new Object[0]);
+					oclass.getMethod("browse", new Class[] { URI.class }).invoke(object,
+							new Object[] { file1.toURI() });
+				} catch (Throwable throwable) {
+					flag = true;
+				}
+
+				if (flag) {
+					Sys.openURL("file://" + s);
+				}
+			}
+		} else {
+			songs = new ArrayList<SongItem>();
+		}
+		if (isYoutube)
+			text.mouseClicked(mouseX, mouseY, mouseButton);
 		if (isHovered(posX + 5, posY + 5, posX + 280, posY + 26, mouseX, mouseY)) {
-			if (!isHovered(posX + 70, posY + 6, posX + 220, posY + 24, mouseX, mouseY))
+			if (!(isYoutube ? isHovered(posX + 70, posY + 6, posX + 220, posY + 24, mouseX, mouseY) : (isHovered(posX + 71, posY + 6, position, posY + 24, mouseX, mouseY)) || isHovered(position + 5, posY + 6, position + 15 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, mouseX, mouseY)) && !isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY))
 			clicked = true;
 		}
         double contentX = posX + 4;
@@ -247,26 +333,39 @@ public class MusicPlayerGui extends GuiScreen {
 						e.printStackTrace();
 					}
             	}
-                count++;
-                if (count % imagesPerRow == 0) {
-                    songPosX = contentX + 15;
-                    songPosY += imageHeight + 5 + lineSpacing * 2;
-                } else {
-                    songPosX += imageWidth + gap;
-                }
+            	 count++;
+ 	            if (count % imagesPerRow == 0) {
+ 	                songPosX = contentX + 15;
+ 	                songPosY += imageHeight + lineSpacing * 2;
+ 	            } else {
+ 	                songPosX += imageWidth + gap;
+ 	            }
             }
         }
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         GlStateManager.popMatrix();
 			
-        
-		if (isHovered(posX + 165, posY + 225, posX + 165 + 18, posY + 225 + 18, mouseX, mouseY)) {
-			if (!musicPlayer.paused)
+        if (mouseButton == 0) {
+			if (isHovered(posX + 165, posY + 225, posX + 165 + 18, posY + 225 + 18, mouseX, mouseY)) {
+				if (!musicPlayer.paused) {
+					musicPlayer.pause();
+				} else { 
+					if (musicPlayer.currentStateMillis == musicPlayer.durationMillis) 
+						musicPlayer.playLastFile();
+					else
+						musicPlayer.resume();
+				}
+			}
+			
+			if (isHovered(posX + 140, posY + 225, posX + 140 + 18, posY + 225 + 18, mouseX, mouseY)) {
+				musicPlayer.playLastFile();
+			}
+			if (isHovered(posX + 190, posY + 225, posX + 190 + 18, posY + 225 + 18, mouseX, mouseY)) {
 				musicPlayer.pause();
-			else 
-				musicPlayer.resume();
-		}
+				musicPlayer.currentStateMillis = musicPlayer.durationMillis;
+			}
+        }
 		/*double barWidth = 245 - 95;
 		if (isHovered(posX+95, posY + 246, posX + 245, posY + 248, mouseX, mouseY) && Mouse.isButtonDown(0)) {
 			double relativeX = mouseX - (posX + 95);
@@ -291,11 +390,12 @@ public class MusicPlayerGui extends GuiScreen {
 			else 
 				text.setFocused(false);
 		}
-		if (keyCode == Keyboard.KEY_RETURN) {
+		if (keyCode == Keyboard.KEY_RETURN && text.isFocused()) {
 			text.setFocused(false);
 			new Thread(() -> {
-				if (!text.getText().isEmpty())
+				if (!text.getText().isEmpty()) 
 					searchYoutube(text.getText());
+				
 			}).start();
 		}
 	}
@@ -303,7 +403,6 @@ public class MusicPlayerGui extends GuiScreen {
 	private void searchYoutube(String text) {
 		try {
 			String encodedUrl = URLEncoder.encode(text, "UTF-8");
-			//System.out.println(encodedUrl.replace("+", "%20"));
 			String url = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=22&key=AIzaSyCer_ztDdAmZJqLSX1FsNFkb_t1v29A5Ls&q=" + encodedUrl + "&type=video";
 			currentSearch = new String(WebUtils.visitSite(url).getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);		
 			if (currentSearch != null) {
@@ -320,12 +419,14 @@ public class MusicPlayerGui extends GuiScreen {
         }
     }
 	
-	private static void unzipFfmpeg(File zipFile, File destDir) throws IOException {
+	private void unzipFfmpeg(File zipFile, File destDir) throws IOException {
         try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile))) {
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
                 if (entry.getName().endsWith("ffmpeg.exe")) {
                     File newFile = new File(destDir, "ffmpeg.exe");
+                    ytState = "Extracting ffmpeg ... ";
+                    newFile.getParentFile().mkdirs();
                     Files.copy(zis, newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
                     break;
                 }
@@ -342,16 +443,18 @@ public class MusicPlayerGui extends GuiScreen {
 	        File ytDlp = new File(binDir, "yt-dlp.exe");
 	        if (!ytDlp.exists()) {
 	            try {
+					ytState = "Downloading yt-dlp ...";
 					downloadFile(YTDLP_URL, ytDlp);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 	        }
 	
-	        File ffmpegExe = new File(BIN_DIR, "ffmpeg.exe");
+	        File ffmpegExe = new File(binDir, "ffmpeg.exe");
 	        if (!ffmpegExe.exists()) {
-	            File ffmpegZip = new File(BIN_DIR, "ffmpeg.zip");
+	            File ffmpegZip = new File(binDir, "ffmpeg.zip");
 	            try {
+		        	ytState = "Downloding ffmpeg ... ";
 					downloadFile(FFMPEG_URL, ffmpegZip);
 		            unzipFfmpeg(ffmpegZip, binDir);
 				} catch (IOException e) {
@@ -359,30 +462,33 @@ public class MusicPlayerGui extends GuiScreen {
 				}
 	            ffmpegZip.delete();
 	        }
-	        
-	        ProcessBuilder pb = new ProcessBuilder(
-	                BIN_DIR + "yt-dlp.exe",
-	                "-x", "--audio-format", "wav",
-	                "-o", songDir + "/" + outputName,
-	                videoUrl
-	        );
-	        pb.redirectErrorStream(true);
-	        try {
-		        Process process = pb.start();
-		
-		        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-		            String line;
-		            while ((line = reader.readLine()) != null) {
-		                System.out.println(line);
-		                ytState = line;
-		            }
+	        if (isYoutube) {
+	        	ytState = "Getting song from link: " + videoUrl;
+		        ProcessBuilder pb = new ProcessBuilder(
+		        		binDir + "/yt-dlp.exe",
+		                "-x", "--audio-format", "wav",
+		                "-o", songDir + "/" + outputName,
+		                "--", videoUrl
+		        );
+	
+		        pb.redirectErrorStream(true);
+		        try {
+			        Process process = pb.start();
+			
+			        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+			            String line;
+			            while ((line = reader.readLine()) != null) {
+			                System.out.println(line);
+			                ytState = line;
+			            }
+			        }
+		        } catch (IOException e) {
+		        	e.printStackTrace();
 		        }
-	        } catch (IOException e) {
-	        	e.printStackTrace();
 	        }
 	        ytState = "";
 	        try {
-				musicPlayer.play(new File(songDir + "/" + outputName));
+				musicPlayer.play(new File((isYoutube ? songDir + "/" + outputName : binDir + "/localSongs/" + song.getTitle())));
 				songName = song.getTitle();
 				thumbnail = song.getThumbnailUrl();
 			} catch (Exception e) {
@@ -421,13 +527,12 @@ public class MusicPlayerGui extends GuiScreen {
 	            String videoId = id.getString("videoId");
 	            String title = snippet.getString("title");
 	
-	            SongItem song = new SongItem(videoId, title.replace("È", "è"), "https://i.ytimg.com/vi/" + videoId + "/maxresdefault.jpg");
+	            SongItem song = new SongItem(videoId, title.replace("Ãˆ", "Ã¨"), "https://i.ytimg.com/vi/" + videoId + "/maxresdefault.jpg");
 	            songs.add(song);
 	        }
         } else if (json.startsWith("{  \"error")) {
         	String html = visitSite("https://www.youtube.com/results?search_query=" + searchQuery);
 
-            // Extraire ytInitialData
             int start = html.indexOf("ytInitialData") + 15;
             int end = html.indexOf("};", start) + 1;
             String jsonData = html.substring(start, end);
@@ -453,14 +558,10 @@ public class MusicPlayerGui extends GuiScreen {
                         .getJSONObject(0)
                         .getString("text");
 
-
-                //results.add(new SongItem(videoId, title, thumbnail, videoUrl));
-            	songs.add(new SongItem(videoId, title.replace("È", "è"), "https://i.ytimg.com/vi/" + videoId + "/maxresdefault.jpg"));
+            	songs.add(new SongItem(videoId, title.replace("Ãˆ", "Ã¨"), "https://i.ytimg.com/vi/" + videoId + "/maxresdefault.jpg"));
             }
-        	//songs.add(new SongItem("--", "Quota excedeed", "https://pixelpc.fr/art.png"));
-
         } else {
-        	songs.add(new SongItem("--", "Error while getting videos", "https://pixelpc.fr/art.png"));
+        	songs.add(new SongItem("--", "Error while getting videos", "https://pixelpc.fr/art169.png"));
         }
         return songs;
     }

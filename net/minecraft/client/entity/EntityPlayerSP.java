@@ -9,7 +9,6 @@ import fr.honertis.Honertis;
 import fr.honertis.event.EventType;
 import fr.honertis.event.EventUpdate;
 import fr.honertis.module.ModuleBase;
-import fr.honertis.module.modules.FreeLook;
 import fr.honertis.module.modules.MoreParticles;
 import fr.honertis.utils.TimeUtils;
 import fr.honertis.utils.Utils;

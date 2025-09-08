@@ -200,7 +200,6 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback
             if (button.id == 105)
             {
                 this.mc.gameSettings.saveOptions();
-                //this.mc.displayGuiScreen(new GuiScreen(this));
                 mc.displayGuiScreen(new GuiScreenPackManager(this));
             }
 

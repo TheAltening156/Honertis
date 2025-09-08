@@ -16,21 +16,36 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import fr.honertis.Honertis;
+
 public class MusicPlayer {
 
 	private SourceDataLine line;
 	private AudioInputStream audioStream;
-	private Thread playThread;
-	boolean paused = false;
+	public Thread playThread;
+	boolean paused = true;
 	private Object pauseLock = new Object();
 	public long durationMillis = 0;
 	public long currentStateMillis = 0;
+	public File currentFile;
 	public File lastFile;
+
 	
 	public void play(File file) throws Exception {
+		currentFile = file;
+		paused = false;
 		stop();
 	    audioStream = AudioSystem.getAudioInputStream(file);
+	    
 	    AudioFormat format = audioStream.getFormat();
+	    AudioFileFormat fileFormat = AudioSystem.getAudioFileFormat(file);
+	    long frameLength = fileFormat.getFrameLength();
+        if (frameLength > 0 && format.getFrameRate() > 0) {
+            double durationSeconds = (double) frameLength / format.getFrameRate();
+            durationMillis = (long) (durationSeconds * 1000);
+        } else {
+            durationMillis = -1;
+        }
 	    AudioFormat targetFormat = new AudioFormat(
 	            AudioFormat.Encoding.PCM_SIGNED,
 	            44100, 16, 2, 4, 44100, false
@@ -40,45 +55,64 @@ public class MusicPlayer {
 	    DataLine.Info info = new DataLine.Info(SourceDataLine.class, targetFormat);
 	    line = (SourceDataLine) AudioSystem.getLine(info);
 	    line.open(targetFormat);
+	    setVolume(Honertis.INSTANCE.musicPlayer.volume);
 	    line.start();
-
-	    AudioFileFormat fileFormat = AudioSystem.getAudioFileFormat(file);
-        if (lastFile != null) {
-        	Files.delete(lastFile.toPath());
-        }
+        deleteLastFile();
         lastFile = file;
-        long frameLength = fileFormat.getFrameLength();
-	    if (frameLength > 0 && format.getFrameRate() > 0) {
-	        double durationSeconds = (double) frameLength / format.getFrameRate();
-	        durationMillis = (long) (durationSeconds * 1000);
-	    } else {
-	        durationMillis = -1;
-	    }
-	    
 	    playThread = new Thread(() -> {
 	        try {
-	            byte[] buffer = new byte[4096];
+	            byte[] buffer = new byte[16384];
 	            int bytesRead;
 	            while ((bytesRead = audioStream.read(buffer, 0, buffer.length)) != -1) {
-	                synchronized (pauseLock) {
+	            	synchronized (pauseLock) {
 	                    while (paused) pauseLock.wait();
 	                }
-	                line.write(buffer, 0, bytesRead);
-	                
+	                if (paused) break;	                
 	                long frames = line.getLongFramePosition();
 	                double seconds = (double) frames / targetFormat.getFrameRate();
 	                currentStateMillis = (long) (seconds * 1000);
+	                line.write(buffer, 0, bytesRead);
 	            }
 
 	            line.drain();
 	            stop();
+	            currentStateMillis = durationMillis;
+	            paused = true;
 	        } catch (Exception e) {
-	            e.printStackTrace();
+	            //e.printStackTrace();
 	        }
 	    });
 	    playThread.start();
 	}
-
+	
+	public void deleteLastFile() {
+		if (lastFile != null && lastFile != currentFile && (Honertis.INSTANCE.musicPlayer.isYoutube && !currentFile.toPath().endsWith(".wav"))) {
+        	try {
+        		Files.delete(lastFile.toPath());
+        	} catch (IOException e) {
+        		
+        	}
+        }
+	}
+	public void deleteCurrentFile() {
+		if (currentFile != null && (Honertis.INSTANCE.musicPlayer.isYoutube && !currentFile.toPath().endsWith(".wav"))) {
+        	try {
+        		Files.delete(currentFile.toPath());
+        	} catch (IOException e) {
+        		
+        	}
+        }
+	}
+	
+	public void playLastFile() {
+		if (lastFile == null) return;
+		try {
+			play(lastFile);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void stop() {
 		//paused = true;
 		try {
@@ -97,7 +131,6 @@ public class MusicPlayer {
 		line = null;
 		audioStream = null;
 		playThread = null;
-		paused = false;
 	}
 	
 	public void pause() {
@@ -136,7 +169,6 @@ public class MusicPlayer {
 			dB = volumeControl.getMaximum();
 
 		volumeControl.setValue(dB);
-		System.out.println("Volume Set to " + percent + "% (" + dB + " dB)");
 	}
 
 }
