@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
+import fr.honertis.Honertis;
 import fr.honertis.utils.DrawUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -50,9 +51,9 @@ public class SongItem {
 	}
 
 	public void drawImageAndText(double songPosX, double songPosY, double imageWidth, double imageHeight, double lineSpacing, double posX, double posY, int mouseX, int mouseY) {		
-        hover = GuiScreen.isHovered(songPosX, songPosY, songPosX + imageWidth, songPosY + imageHeight, mouseX, mouseY) && GuiScreen.isHovered(posX + 5, posY + 28, posX + 280, posY + 207, mouseX, mouseY);
+        hover = (Honertis.INSTANCE.musicPlayer.isYoutube ? GuiScreen.isHovered(songPosX, songPosY, songPosX + imageWidth, songPosY + imageHeight, mouseX, mouseY) : GuiScreen.isHovered(songPosX + 17, songPosY, songPosX + imageWidth - 18, songPosY + imageHeight, mouseX, mouseY))
+        	 && GuiScreen.isHovered(posX + 5, posY + 28, posX + 280, posY + 207, mouseX, mouseY);
     	
-		
 		long current = System.currentTimeMillis();
         float delta = (current - lastTime) / 2.5f;
         lastTime = current;
@@ -69,7 +70,7 @@ public class SongItem {
 	}
 	
 	public void mouseClicked(double songPosX, double songPosY, double imageWidth, double imageHeight, double lineSpacing, int mouseX, int mouseY) {
-        hover = GuiScreen.isHovered(songPosX, songPosY, songPosX + imageWidth, songPosY + imageHeight, mouseX, mouseY);
+        hover = Honertis.INSTANCE.musicPlayer.isYoutube ? GuiScreen.isHovered(songPosX, songPosY, songPosX + imageWidth, songPosY + imageHeight, mouseX, mouseY) : GuiScreen.isHovered(songPosX + 17, songPosY, songPosX + imageWidth - 18, songPosY + imageHeight, mouseX, mouseY);
 	}
 
 }

@@ -19,8 +19,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -46,6 +49,7 @@ import fr.honertis.Honertis;
 import fr.honertis.manager.FileManager;
 import fr.honertis.utils.DrawUtils;
 import fr.honertis.utils.LangManager;
+import fr.honertis.utils.Utils;
 import fr.honertis.utils.WebUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -62,7 +66,7 @@ public class MusicPlayerGui extends GuiScreen {
 	public double oldX;
 	public double oldY;
 	public CustomTextField text = new CustomTextField(posX + 70, posY + 7, 150, 20);;
-	public String currentSearch;
+	public static String currentSearch;
 	
 	public MusicPlayer musicPlayer = new MusicPlayer();
 	public String songName = "";
@@ -75,6 +79,7 @@ public class MusicPlayerGui extends GuiScreen {
     public int maxScroll = 0;
         
     public boolean isYoutube = true;
+    public boolean repeat = false;
     
     private static final String BIN_DIR = "Honertis/musicPlayer/";
     private static final File songDir = new File(BIN_DIR + "/songs");
@@ -110,7 +115,7 @@ public class MusicPlayerGui extends GuiScreen {
         	drawRoundedRect(posX + 71, posY + 6, position, posY + 24, 5, isHovered(posX + 71, posY + 6, position, posY + 24, mouseX, mouseY) ? new Color(150,150,150).getRGB() : new Color(100,100,100).getRGB());
         	mc.fontRendererObj.drawStringWithShadow(LangManager.format("gui.refresh"), (int)posX + 75, (int)posY + 11, -1);
         	
-        	drawRoundedRect(position + 5, posY + 6, position + 15 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, 5, isHovered(position + 5, posY + 6, position + 15 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, mouseX, mouseY) ? new Color(150,150,150).getRGB() : new Color(100,100,100).getRGB());
+        	drawRoundedRect(position + 5, posY + 6, position + 13 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, 5, isHovered(position + 5, posY + 6, position + 13 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, mouseX, mouseY) ? new Color(150,150,150).getRGB() : new Color(100,100,100).getRGB());
         	mc.fontRendererObj.drawStringWithShadow(LangManager.format("gui.open"), (int)position + 10, (int)posY + 11, -1);
 
         }
@@ -164,10 +169,10 @@ public class MusicPlayerGui extends GuiScreen {
 	            int textY = (int) (songPosY + imageHeight + 5);
 	            int maxTextWidth = (int) imageWidth;
 	            String text = StringEscapeUtils.unescapeHtml4(song.getTitle());
-	            text = text.replace(".wav", "");
+	            text = replaceUpperCase( text.replace(".wav", ""));
 	            int textWidth = mc.fontRendererObj.getStringWidth(text + "       ");
 
-	            double offset = textScroll(textWidth, maxTextWidth, System.currentTimeMillis(), 0.5);
+	            double offset = textScroll(textWidth, maxTextWidth, System.currentTimeMillis(), 0.75);
 	            
 	            GlStateManager.pushMatrix();
 	            GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -204,8 +209,8 @@ public class MusicPlayerGui extends GuiScreen {
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         GlStateManager.popMatrix();
         
-        CurrentPlayingSong c = new CurrentPlayingSong();
-        c.draw(mc, songName, thumbnail, ytState, posX, posY, musicPlayer, width, height, mouseX, mouseY);
+        CurrentPlayingSong cps = new CurrentPlayingSong();
+        cps.draw(mc, replaceUpperCase(songName), thumbnail, ytState, posX, posY, musicPlayer, repeat, width, height, mouseX, mouseY);
         oldX = mouseX;
 		oldY = mouseY;
 	}
@@ -229,7 +234,7 @@ public class MusicPlayerGui extends GuiScreen {
 	
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		if (isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY)) {
+		if (isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY) && mouseButton == 0) {
 			isYoutube = !isYoutube;
 		}
 		double position = posX + 79 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.refresh"));
@@ -251,7 +256,7 @@ public class MusicPlayerGui extends GuiScreen {
 				}
 				ytState = "";
 			}
-			if (isHovered(position + 5, posY + 6, position + 15 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, mouseX, mouseY)) {
+			if (isHovered(position + 5, posY + 6, position + 13 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, mouseX, mouseY)) {
 				String s = file1.getAbsolutePath();
 
 				if (Util.getOSType() == Util.EnumOS.OSX) {
@@ -289,10 +294,11 @@ public class MusicPlayerGui extends GuiScreen {
 				}
 			}
 		} else {
+			if (isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY))
 			songs = new ArrayList<SongItem>();
 		}
 		if (isYoutube)
-			text.mouseClicked(mouseX, mouseY, mouseButton);
+			text.mouseClicked(mouseX, mouseY);
 		if (isHovered(posX + 5, posY + 5, posX + 280, posY + 26, mouseX, mouseY)) {
 			if (!(isYoutube ? isHovered(posX + 70, posY + 6, posX + 220, posY + 24, mouseX, mouseY) : (isHovered(posX + 71, posY + 6, position, posY + 24, mouseX, mouseY)) || isHovered(position + 5, posY + 6, position + 15 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, mouseX, mouseY)) && !isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY))
 			clicked = true;
@@ -362,6 +368,9 @@ public class MusicPlayerGui extends GuiScreen {
 			
 			if (isHovered(posX + 140, posY + 225, posX + 140 + 18, posY + 225 + 18, mouseX, mouseY)) {
 				musicPlayer.playLastFile();
+			}
+			if (isHovered(posX + 115, posY + 225, posX + 115 + 18, posY + 225 + 18, mouseX, mouseY)) {
+				repeat = !repeat;
 			}
 			if (isHovered(posX + 190, posY + 225, posX + 190 + 18, posY + 225 + 18, mouseX, mouseY)) {
 				musicPlayer.pause();
@@ -487,15 +496,21 @@ public class MusicPlayerGui extends GuiScreen {
 		        } catch (IOException e) {
 		        	e.printStackTrace();
 		        }
+		        try {
+					musicPlayer.play(new File(songDir + "/" + outputName), true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+	        } else {
+	        	try {
+					musicPlayer.play(new File(binDir + "/localSongs/" + song.getTitle()), false);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 	        }
 	        ytState = "";
-	        try {
-				musicPlayer.play(new File((isYoutube ? songDir + "/" + outputName : binDir + "/localSongs/" + song.getTitle())));
-				songName = song.getTitle();
-				thumbnail = song.getThumbnailUrl();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+	        songName = song.getTitle();
+			thumbnail = song.getThumbnailUrl();
         }).start();
 	}
 	@Override
@@ -522,15 +537,14 @@ public class MusicPlayerGui extends GuiScreen {
 	            JSONObject item = items.getJSONObject(i);
 	            JSONObject id = item.getJSONObject("id");
 	            
-	            if (!id.getString("kind").equals("youtube#video")) continue;
-	            
-	            JSONObject snippet = item.getJSONObject("snippet");
-	
-	            String videoId = id.getString("videoId");
-	            String title = snippet.getString("title");
-	
-	            SongItem song = new SongItem(videoId, title.replace("È", "è"), "https://i.ytimg.com/vi/" + videoId + "/maxresdefault.jpg");
-	            songs.add(song);
+	            if (id.getString("kind").equals("youtube#video")) {
+		            JSONObject snippet = item.getJSONObject("snippet");
+		
+		            String videoId = id.getString("videoId");
+		            String title = snippet.getString("title");
+		
+		            songs.add(new SongItem(videoId, title, "https://i.ytimg.com/vi/" + videoId + "/maxresdefault.jpg"));
+	            }
 	        }
         } else if (json.startsWith("{  \"error")) {
         	String html = visitSite("https://www.youtube.com/results?search_query=" + searchQuery);
@@ -560,7 +574,7 @@ public class MusicPlayerGui extends GuiScreen {
                         .getJSONObject(0)
                         .getString("text");
 
-            	songs.add(new SongItem(videoId, title.replace("È", "è"), "https://i.ytimg.com/vi/" + videoId + "/maxresdefault.jpg"));
+            	songs.add(new SongItem(videoId, title, "https://i.ytimg.com/vi/" + videoId + "/maxresdefault.jpg"));
             }
         } else {
         	songs.add(new SongItem("--", "Error while getting videos", "https://pixelpc.fr/art169.png"));

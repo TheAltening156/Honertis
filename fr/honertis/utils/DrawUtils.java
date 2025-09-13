@@ -16,6 +16,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 
@@ -51,55 +53,94 @@ public class DrawUtils{
 	}
 	
 	private static Map<String, ResourceLocation> thumbnailCache = new HashMap<>();
+	private static Map<String, BufferedImage> pendingImages = new ConcurrentHashMap<>();
+	private static Set<String> loading = ConcurrentHashMap.newKeySet();
 
-	private static BufferedImage image;
-    public static void drawImageFromYoutubeURL(double x, double y, double width, double height, String urlString) {
-        pushMatrix();
-        try {
-	    	ResourceLocation resource = thumbnailCache.get(urlString);
-	    	
-	        if (resource == null) {
-	    		try {
-	            	image = ImageIO.read(new URL(urlString));
-		        	
-		        } catch (Exception e) {
-		        	for (String size : new String[] {"mqdefault", "hqdefault", "sddefault", "default"}) {
-	                	try {
+	private static void loadThumbnailAsync(String urlString) {
+		if (thumbnailCache.containsKey(urlString) || loading.contains(urlString))
+			return;
+
+		loading.add(urlString);
+		new Thread(() -> {
+			try {
+				BufferedImage image = null;
+				try {
+					image = ImageIO.read(new URL(urlString));
+				} catch (IOException e) {
+					for (String size : new String[] { "mqdefault", "hqdefault", "sddefault", "default" }) {
+						try {
 							image = ImageIO.read(new URL(urlString.replace("maxresdefault", size)));
-						} catch (IOException e1) {
-							e1.printStackTrace();
+							break;
+						} catch (IOException ignored) {
 						}
-	
-			        }
-	        		
-	        	}
-		    	if (image != null) {
-	        		DynamicTexture dynamicTexture = new DynamicTexture(image);
-		            ResourceLocation res = Minecraft.getMinecraft().getTextureManager().getDynamicTextureLocation("thumb_" + urlString.hashCode(), dynamicTexture);
-		            thumbnailCache.put(urlString, res);
-	        	}
+					}
+				}
+				if (image != null) {
+					pendingImages.put(urlString, image);
+				}
+			} catch (Exception ignored) {
+			} finally {
+				loading.remove(urlString);
+			}
+		}, "YT-Thumbnail-Loader").start();
+	}
+	private static ResourceLocation PLACEHOLDER;
+
+	public static void drawImageFromYoutubeURL(double x, double y, double width, double height, String urlString) {
+	    pushMatrix();
+	    try {
+	        BufferedImage pending = pendingImages.remove(urlString);
+	        if (pending != null) {
+	            DynamicTexture dynamicTexture = new DynamicTexture(pending);
+	            ResourceLocation res = Minecraft.getMinecraft()
+	                    .getTextureManager()
+	                    .getDynamicTextureLocation("thumb_" + urlString.hashCode(), dynamicTexture);
+	            thumbnailCache.put(urlString, res);
+	        }
+
+	        ResourceLocation resource = thumbnailCache.get(urlString);
+	        if (resource == null) {
+	            loadThumbnailAsync(urlString);
+	            if (PLACEHOLDER == null) {
+	            	try {
+	        	        BufferedImage img = ImageIO.read(new URL("https://pixelpc.fr/art169.png"));
+	        	        DynamicTexture tex = new DynamicTexture(img);
+	        	        PLACEHOLDER = Minecraft.getMinecraft()
+	        	                .getTextureManager()
+	        	                .getDynamicTextureLocation("placeholder_art169", tex);
+	        	    } catch (IOException e) {
+	        	        e.printStackTrace();
+	        	        PLACEHOLDER = null;
+	        	    }
+	            }
+	            if (PLACEHOLDER != null) {
+	                enableBlend();
+	                Minecraft.getMinecraft().getTextureManager().bindTexture(PLACEHOLDER);
+	                tryBlendFuncSeparate(770, 771, 1, 0);
+	                color(1, 1, 1);
+	                drawModalRectWithCustomSizedTexture(x, y, 0.0f, 0.0f, width, height, (float) width, (float) height);
+	                disableBlend();
+	            }
 	            return;
 	        }
-	
+
 	        enableBlend();
 	        Minecraft.getMinecraft().getTextureManager().bindTexture(resource);
 	        tryBlendFuncSeparate(770, 771, 1, 0);
 	        color(1, 1, 1);
 	        drawModalRectWithCustomSizedTexture(x, y, 0.0f, 0.0f, width, height, (float) width, (float) height);
 	        disableBlend();
-        } finally {
-        	glPopMatrix();
-        }
-    }
-
+	    } finally {
+	        glPopMatrix();
+	    }
+	}
+    
 	public static void drawCircle(double x, double y, double radius, int color) {
 		for (int i : new int[3])
 		drawCircleA(x, y, radius, color);
 	}
 	
 	private static void drawCircleA(double x, double y, double radius, int color) {
-		pushMatrix();
-
 		disableTexture2D();
 		setColor(color);
 		enableBlend();
@@ -114,8 +155,6 @@ public class DrawUtils{
 		disableBlend();
 		glDisable(GL_POLYGON_SMOOTH);
 		disableTexture2D();
-		popMatrix();
-
 	}
 	
 	public static void drawRoundedRect(double x, double y, double width, double height, double round, int color) {

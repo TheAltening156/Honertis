@@ -14,7 +14,7 @@ public class CurrentPlayingSong {
 	private float smoothProgress = 0f;  
 	private long lastTime = System.currentTimeMillis();
 	
-	public void draw(Minecraft mc, String songName, String thumbnail, String ytState, double posX, double posY, MusicPlayer musicPlayer, double width, double height, int mouseX, int mouseY) {
+	public void draw(Minecraft mc, String songName, String thumbnail, String ytState, double posX, double posY, MusicPlayer musicPlayer, boolean repeat, double width, double height, int mouseX, int mouseY) {
        songName = songName.replace(".wav", "");
 		if (!songName.equals("") || !thumbnail.equals("")) {
         	GlStateManager.pushMatrix();
@@ -39,7 +39,7 @@ public class CurrentPlayingSong {
 	
         double pos = 0;
         for (Buttons buttons : Buttons.values()) {
-        	buttons.draw(posX, posY, pos, musicPlayer, mouseX, mouseY);
+        	buttons.draw(posX, posY, pos, musicPlayer, repeat, mouseX, mouseY);
         	pos += 25;
         }
 		long current = System.currentTimeMillis();

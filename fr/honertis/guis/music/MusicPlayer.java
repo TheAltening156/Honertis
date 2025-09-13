@@ -29,12 +29,15 @@ public class MusicPlayer {
 	public long currentStateMillis = 0;
 	public File currentFile;
 	public File lastFile;
-
+	public boolean wasYoutube;
 	
-	public void play(File file) throws Exception {
+	public void play(File file, boolean isYoutube) throws Exception {
 		currentFile = file;
 		paused = false;
 		stop();
+		
+	    deleteLastFile();
+
 	    audioStream = AudioSystem.getAudioInputStream(file);
 	    
 	    AudioFormat format = audioStream.getFormat();
@@ -57,8 +60,8 @@ public class MusicPlayer {
 	    line.open(targetFormat);
 	    setVolume(Honertis.INSTANCE.musicPlayer.volume);
 	    line.start();
-        deleteLastFile();
-        lastFile = file;
+		wasYoutube = isYoutube;
+		lastFile = file;
 	    playThread = new Thread(() -> {
 	        try {
 	            byte[] buffer = new byte[16384];
@@ -78,6 +81,7 @@ public class MusicPlayer {
 	            stop();
 	            currentStateMillis = durationMillis;
 	            paused = true;
+	            if (Honertis.INSTANCE.musicPlayer.repeat) playLastFile();
 	        } catch (Exception e) {
 	            //e.printStackTrace();
 	        }
@@ -86,28 +90,27 @@ public class MusicPlayer {
 	}
 	
 	public void deleteLastFile() {
-		if (lastFile != null && lastFile != currentFile && (Honertis.INSTANCE.musicPlayer.isYoutube && !currentFile.toPath().endsWith(".wav"))) {
-        	try {
-        		Files.delete(lastFile.toPath());
-        	} catch (IOException e) {
-        		
-        	}
-        }
+    	try {
+    		if (lastFile != null && lastFile != currentFile && wasYoutube) 
+    			Files.delete(lastFile.toPath());
+    	} catch (IOException e) {
+
+    	}
+        
 	}
 	public void deleteCurrentFile() {
-		if (currentFile != null && (Honertis.INSTANCE.musicPlayer.isYoutube && !currentFile.toPath().endsWith(".wav"))) {
-        	try {
-        		Files.delete(currentFile.toPath());
-        	} catch (IOException e) {
-        		
-        	}
-        }
+    	try {
+    		if (currentFile != null && wasYoutube) 
+    			Files.delete(currentFile.toPath());
+    	} catch (IOException e) {
+    		
+    	}
 	}
 	
 	public void playLastFile() {
 		if (lastFile == null) return;
 		try {
-			play(lastFile);
+			play(lastFile, wasYoutube);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

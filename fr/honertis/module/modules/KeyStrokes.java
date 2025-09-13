@@ -72,6 +72,7 @@ public class KeyStrokes extends ModuleBase{
 		private void drawRect(int progress, int keyCode, int x, int y) {
 			leftButtonState.isKeyPressed(Mouse.isButtonDown(0));
 			rightButtonState.isKeyPressed(Mouse.isButtonDown(1));
+			
 			float colorValue = progress / 255.0f;
 			int color = new Color(colorValue, colorValue, colorValue, colorValue).getRGB();
 			FontRenderer fr = mc.fontRendererObj;
@@ -145,13 +146,15 @@ public class KeyStrokes extends ModuleBase{
 	        }
 
 	        public void isKeyPressed(boolean key) {
-	            if (key != pressed) {
-	                lastPress = System.currentTimeMillis();
-	                pressed = key;
-	                if (key) {
-	                    list.add(lastPress);
-	                }
-	            }
+	        	if (mc.currentScreen == null) {
+		            if (key != pressed) {
+		                lastPress = System.currentTimeMillis();
+		                pressed = key;
+		                if (key) {
+		                    list.add(lastPress);
+		                }
+		            }
+	        	}
 	            long currentTime = System.currentTimeMillis();
 	            list.removeIf(aLong -> aLong + 1000 < currentTime);
 	        }

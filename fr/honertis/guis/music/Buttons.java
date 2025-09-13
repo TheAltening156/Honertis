@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public enum Buttons {
+	REPEAT(new ResourceLocation("honertis/music/repeat.png")),
 	BACK(new ResourceLocation("honertis/music/back.png")),
 	PLAY(new ResourceLocation("honertis/music/play.png")),
 	FASTFORWARD(new ResourceLocation("honertis/music/ff.png")),
@@ -28,10 +29,12 @@ public enum Buttons {
 		this.res = res;
 	}
 	
-	public void draw(double posX, double posY, double pos, MusicPlayer player, int mouseX, int mouseY) {
+	public void draw(double posX, double posY, double pos, MusicPlayer player, boolean repeat, int mouseX, int mouseY) {
         long currentTime = System.currentTimeMillis();
         float delta = (currentTime - lastTime);
 	    if (this != VOLUME) {
+			
+	    	posX -= 25;
 			hover = GuiScreen.isHovered(posX + 140 + pos, posY + 225, posX + 140 + pos + 18, posY + 225 + 18, mouseX, mouseY);
 	        delta /=  2.5f;
 	        lastTime = currentTime;
@@ -42,18 +45,20 @@ public enum Buttons {
 	        }
 	        double offset = -1 * hoverProgress;
 	        double extra = 2 * hoverProgress;
+	        if (this == REPEAT) {
+	        	res = new ResourceLocation("honertis/music/repeat" + (repeat ? "On" : "Off") + ".png");
+	        }
 	        if (this == PLAY) {
 	        	res = new ResourceLocation("honertis/music/" + (player.paused ? "play" : "pause") + ".png");
 	        }
-	        pushMatrix();
+	        
 	        enableBlend();
 	        disableLighting();
 	        color(1,1,1f, 1f);
 	    	drawImage(posX + 140 + pos + offset, posY + 225 + offset, 18 + extra, 18 + extra, res);
 	    	disableBlend();
-	        popMatrix();
 		} else {
-			hover = GuiScreen.isHovered(posX + 140 + pos, posY + 225, posX + 140 + pos + 18 + 45, posY + 225 + 18, mouseX, mouseY);
+			hover = GuiScreen.isHovered(posX + 115 + pos, posY + 225, posX + 115 + pos + 18 + 45, posY + 225 + 18, mouseX, mouseY);
 			
             delta /= 47f;
 	        lastTime = currentTime;
@@ -62,7 +67,7 @@ public enum Buttons {
 	        } else {
 	        	hoverProgress = Math.max(0f, hoverProgress - delta * 16f); 
 	        }
-	        drawRoundedRect(posX + 214, posY + 226, posX + 231 + hoverProgress/*231 278*/, posY + 242, 16, new Color(80,80,80).getRGB());
+	        drawRoundedRect(posX + 214, posY + 226, posX + 230 + hoverProgress/*231 278*/, posY + 242, 16, new Color(80,80,80).getRGB());
 	        double soundBarWidthProgress = (hoverProgress * (47/38));
 
 	        double soundBarWidth = 38;
@@ -85,7 +90,7 @@ public enum Buttons {
 	        disableLighting();
 	        color(1,1,1f, 1f);
 	        double x = 12;
-	        drawImage(posX + 216.5, posY + 228, 0.0f, Honertis.INSTANCE.musicPlayer.volume <= 25 ? 0 : Honertis.INSTANCE.musicPlayer.volume <= 75 ? 12 : Honertis.INSTANCE.musicPlayer.volume >= 75 ? 24 :0, x, x, x, x*3, res);
+	        drawImage(posX + 217, posY + 228, 0.0f, Honertis.INSTANCE.musicPlayer.volume <= 25 ? 0 : Honertis.INSTANCE.musicPlayer.volume <= 75 ? 12 : Honertis.INSTANCE.musicPlayer.volume >= 75 ? 24 :0, x, x, x, x*3, res);
 	        disableBlend();
 		}
 	}

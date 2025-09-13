@@ -1,5 +1,8 @@
 package fr.honertis.utils;
 
+import java.text.Normalizer;
+import java.util.regex.Pattern;
+
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
@@ -14,6 +17,22 @@ public class Utils {
             if (offset > textWidth) offset = 0;
         }
         return offset;
+	}
+	
+	public static String replaceUpperCase(String input) {
+		StringBuilder sb = new StringBuilder();
+        Pattern diacritics = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+
+        for (char c : input.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                String normalized = Normalizer.normalize(String.valueOf(c), Normalizer.Form.NFD);
+                normalized = diacritics.matcher(normalized).replaceAll("");
+                sb.append(normalized);
+            } else {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
 	}
 	
 	public static void scissorGui(double guiX, double guiY, double guiW, double guiH) {

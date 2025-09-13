@@ -3,13 +3,17 @@ package fr.honertis.module.modules;
 import fr.honertis.event.EventRenderGui;
 import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
+import fr.honertis.settings.BooleanSettings;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.network.NetworkPlayerInfo;
 
 public class Ping extends ModuleBase{
 
+	public BooleanSettings tab = new BooleanSettings("Tab", true);
+
 	public Ping() {
 		super("Ping", "module.ping", Category.UTILITIES);
+		this.addSettings(tab);
 	}
 	
 	@Override

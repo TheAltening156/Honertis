@@ -3,6 +3,11 @@ package net.minecraft.client.gui;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import com.mojang.authlib.GameProfile;
+
+import fr.honertis.Honertis;
+import fr.honertis.module.modules.Ping;
+
+import java.awt.Color;
 import java.util.Comparator;
 import java.util.List;
 import net.minecraft.client.Minecraft;
@@ -215,8 +220,16 @@ public class GuiPlayerTabOverlay extends Gui
                         this.drawScoreboardValues(scoreObjectiveIn, k2, gameprofile.getName(), k5, l5, networkplayerinfo1);
                     }
                 }
-
-                this.drawPing(i1, j2 - (flag ? 9 : 0), k2, networkplayerinfo1);
+                if (((Ping)Honertis.INSTANCE.modulesManager.getModuleByName("Ping")).tab.isToggled()) {
+	                GlStateManager.pushMatrix();
+	                GlStateManager.scale(0.5, 0.5, 0);
+	                GlStateManager.translate(i1 + j2 - (flag ? 9 : 0) - 11, k2,0);
+	                int response = Math.max(1, Math.min(999, networkplayerinfo1.getResponseTime()));
+	                String text = "" + response;
+	                mc.fontRendererObj.drawString(text, (i1 + j2 - (flag ? 9 : 0) + 8) - mc.fontRendererObj.getStringWidth(text), k2 + 5, response >= 750 ? new Color(255, 0, 0).getRGB() : response >= 500 ? new Color(255, 122, 0).getRGB() : response >= 250 ? new Color(255, 255, 0).getRGB() : new Color(0, 255, 0).getRGB());
+	                GlStateManager.popMatrix();
+                } else 
+                	this.drawPing(i1, j2 - (flag ? 9 : 0), k2, networkplayerinfo1);
             }
         }
 
