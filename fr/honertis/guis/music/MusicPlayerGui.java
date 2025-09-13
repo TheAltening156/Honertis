@@ -81,16 +81,18 @@ public class MusicPlayerGui extends GuiScreen {
     public boolean isYoutube = true;
     public boolean repeat = false;
     
-    private static final String BIN_DIR = "Honertis/musicPlayer/";
+    private static final File BIN_DIR = new File("Honertis/musicPlayer/");
     private static final File songDir = new File(BIN_DIR + "/songs");
+	private static final File localSongs = new File(BIN_DIR + "/localSongs");
 
     private static final String YTDLP_URL = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe";
-    private static final String FFMPEG_URL = "https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip";
+    private static final String FFMPEG_URL = "https://pixelpc.fr/ffmpeg.exe";
     
     public int volume = 75;
     
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+		if (!localSongs.exists()) localSongs.mkdirs();
 		if (clicked) {
             posX += mouseX - oldX;
             posY += mouseY - oldY;
@@ -239,14 +241,12 @@ public class MusicPlayerGui extends GuiScreen {
 		}
 		double position = posX + 79 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.refresh"));
 		if (!isYoutube) {
-			File file1 = new File(BIN_DIR + "/localSongs");
-			file1.mkdirs();
-			File dummyFile = new File(BIN_DIR + "/localSongs/Wav file only");
+			File dummyFile = new File(localSongs + "/Wav file only");
 			if (!dummyFile.exists()) dummyFile.createNewFile();
 			if (isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY) || isHovered(posX + 71, posY + 6, position, posY + 24, mouseX, mouseY)) {
 				songs = new ArrayList<SongItem>();
 				
-				File [] files = file1.listFiles();
+				File [] files = localSongs.listFiles();
 				ytState = "Searching for local songs ...";
 				for (File f : files) {
 					if (f.isFile() && f.getName().endsWith(".wav")) {
@@ -257,7 +257,7 @@ public class MusicPlayerGui extends GuiScreen {
 				ytState = "";
 			}
 			if (isHovered(position + 5, posY + 6, position + 13 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, mouseX, mouseY)) {
-				String s = file1.getAbsolutePath();
+				String s = localSongs.getAbsolutePath();
 
 				if (Util.getOSType() == Util.EnumOS.OSX) {
 					try {
@@ -284,7 +284,7 @@ public class MusicPlayerGui extends GuiScreen {
 					Class<?> oclass = Class.forName("java.awt.Desktop");
 					Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object) null, new Object[0]);
 					oclass.getMethod("browse", new Class[] { URI.class }).invoke(object,
-							new Object[] { file1.toURI() });
+							new Object[] { localSongs.toURI() });
 				} catch (Throwable throwable) {
 					flag = true;
 				}
@@ -429,29 +429,13 @@ public class MusicPlayerGui extends GuiScreen {
             Files.copy(in, destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
     }
-	
-	private void unzipFfmpeg(File zipFile, File destDir) throws IOException {
-        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile))) {
-            ZipEntry entry;
-            while ((entry = zis.getNextEntry()) != null) {
-                if (entry.getName().endsWith("ffmpeg.exe")) {
-                    File newFile = new File(destDir, "ffmpeg.exe");
-                    ytState = "Extracting ffmpeg ... ";
-                    newFile.getParentFile().mkdirs();
-                    Files.copy(zis, newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    break;
-                }
-            }
-        }
-    }
-	
+
 	private void downloadAndPlaySong(String videoUrl, String outputName, SongItem song) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
         new Thread(() -> {
-			File binDir = new File(BIN_DIR);
-	        if (!binDir.exists()) binDir.mkdirs();
+	        if (!BIN_DIR.exists()) BIN_DIR.mkdirs();
 	        if (!songDir.exists()) songDir.mkdirs();
 	
-	        File ytDlp = new File(binDir, "yt-dlp.exe");
+	        File ytDlp = new File(BIN_DIR, "yt-dlp.exe");
 	        if (!ytDlp.exists()) {
 	            try {
 					ytState = "Downloading yt-dlp ...";
@@ -461,22 +445,20 @@ public class MusicPlayerGui extends GuiScreen {
 				}
 	        }
 	
-	        File ffmpegExe = new File(binDir, "ffmpeg.exe");
+	        File ffmpegExe = new File(BIN_DIR, "ffmpeg.exe");
+	        
 	        if (!ffmpegExe.exists()) {
-	            File ffmpegZip = new File(binDir, "ffmpeg.zip");
 	            try {
 		        	ytState = "Downloding ffmpeg ... ";
-					downloadFile(FFMPEG_URL, ffmpegZip);
-		            unzipFfmpeg(ffmpegZip, binDir);
+					downloadFile(FFMPEG_URL, ffmpegExe);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-	            ffmpegZip.delete();
 	        }
 	        if (isYoutube) {
 	        	ytState = "Getting song from link: " + videoUrl;
 		        ProcessBuilder pb = new ProcessBuilder(
-		        		binDir + "/yt-dlp.exe",
+		        		BIN_DIR + "/yt-dlp.exe",
 		                "-x", "--audio-format", "wav",
 		                "-o", songDir + "/" + outputName,
 		                "--", videoUrl
@@ -503,7 +485,7 @@ public class MusicPlayerGui extends GuiScreen {
 				}
 	        } else {
 	        	try {
-					musicPlayer.play(new File(binDir + "/localSongs/" + song.getTitle()), false);
+					musicPlayer.play(new File(BIN_DIR + "/localSongs/" + song.getTitle()), false);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
