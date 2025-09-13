@@ -67,7 +67,7 @@ public enum Buttons {
 	        } else {
 	        	hoverProgress = Math.max(0f, hoverProgress - delta * 16f); 
 	        }
-	        drawRoundedRect(posX + 214, posY + 226, posX + 230 + hoverProgress/*231 278*/, posY + 242, 16, new Color(80,80,80).getRGB());
+	        drawRoundedRect(posX + 214, posY + 226, posX + 230 + (Honertis.INSTANCE.musicPlayer.volume >= 75 ? 2 : 0) + hoverProgress/*231 278*/, posY + 242, 16, new Color(80,80,80).getRGB());
 	        double soundBarWidthProgress = (hoverProgress * (47/38));
 
 	        double soundBarWidth = 38;

@@ -15,9 +15,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.imageio.ImageIO;
 
@@ -52,16 +55,23 @@ public class DrawUtils{
         disableBlend();
 	}
 	
-	private static Map<String, ResourceLocation> thumbnailCache = new HashMap<>();
+	private static Map<String, ResourceLocation> thumbnailCache = new LinkedHashMap<String, ResourceLocation>(16, 0.75f, true) {
+		@Override
+	    protected boolean removeEldestEntry(Map.Entry<String, ResourceLocation> eldest) {
+	        return size() > 50;
+	    }
+	};
 	private static Map<String, BufferedImage> pendingImages = new ConcurrentHashMap<>();
 	private static Set<String> loading = ConcurrentHashMap.newKeySet();
 
+	private static final ExecutorService executor = Executors.newFixedThreadPool(4); 
+	
 	private static void loadThumbnailAsync(String urlString) {
 		if (thumbnailCache.containsKey(urlString) || loading.contains(urlString))
 			return;
 
 		loading.add(urlString);
-		new Thread(() -> {
+		executor.submit(() -> {
 			try {
 				BufferedImage image = null;
 				try {
@@ -76,13 +86,14 @@ public class DrawUtils{
 					}
 				}
 				if (image != null) {
+					image = resize(image, 160, 90);
 					pendingImages.put(urlString, image);
 				}
 			} catch (Exception ignored) {
 			} finally {
 				loading.remove(urlString);
 			}
-		}, "YT-Thumbnail-Loader").start();
+		});
 	}
 	private static ResourceLocation PLACEHOLDER;
 
@@ -135,6 +146,12 @@ public class DrawUtils{
 	    }
 	}
     
+	private static BufferedImage resize(BufferedImage img, int newW, int newH) {
+	    BufferedImage resized = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+	    resized.getGraphics().drawImage(img.getScaledInstance(newW, newH, java.awt.Image.SCALE_SMOOTH), 0, 0, null);
+	    return resized;
+	}
+	
 	public static void drawCircle(double x, double y, double radius, int color) {
 		for (int i : new int[3])
 		drawCircleA(x, y, radius, color);
