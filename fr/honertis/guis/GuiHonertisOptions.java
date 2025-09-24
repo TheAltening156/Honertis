@@ -102,10 +102,10 @@ public class GuiHonertisOptions extends GuiScreen {
 								NumberSettings num = (NumberSettings) s;
 								double min = num.getMin();
 								double max = num.getMax();
-								double rdrWidth = 127 * ((num.getDefValue() - min) / (max - min));
+								double rdrWidth = 127 * ((num.getValue() - min) / (max - min));
 								Gui.drawRect(settsX, settsY + 3, settsX + 127, settsY + 7, -1);
 								Gui.drawRect(settsX - 3 + (int)rdrWidth, settsY - 3, settsX + 3 + (int)rdrWidth, settsY + 13, -1);
-								mc.fontRendererObj.drawStringWithShadow(String.format("%.0f", num.getDefValue()), settsX + 133, settsY + 1, -1);
+								mc.fontRendererObj.drawStringWithShadow(String.format("%.2f", num.getFloatValue()), settsX + 133, settsY + 1, -1);
 								
 								double mouseSnap = mouseX;
 								mouseSnap = Math.max(settsX, mouseSnap);
@@ -115,7 +115,7 @@ public class GuiHonertisOptions extends GuiScreen {
 								double val = min + test * diff;
 		                       
 								if (isHovered(settsX - 3, settsY - 3, settsX + 127, settsY + 13, mouseX, mouseY) && clicked) {
-									num.setValue(num.getIncrement() == 1 ? (int) val : val);
+									num.setValue(val);
 								}
 		                      
 							}

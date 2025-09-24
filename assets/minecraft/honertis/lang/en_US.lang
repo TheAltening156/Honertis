@@ -62,6 +62,7 @@ module.sprint=Automatically sprints
 module.dropSwing=Bring back the arm swing when dropping an item (1.15)
 
 module.zoom=Smooth zoom (ease in/out)
+module.zoom.zoomspeed=Zoom Speed
 
 # Honertis Menu
 gui.honertis.options.name=Honertis Options

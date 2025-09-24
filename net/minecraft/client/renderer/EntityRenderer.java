@@ -595,7 +595,6 @@ public class EntityRenderer implements IResourceManagerReloadListener
     }
 
     private float hoverProgress = 0f; // 0 = pas de zoom, 1 = zoom max
-    private final float zoomSpeed = 0.1f; 
     private float size = 1f;
 
     
@@ -643,11 +642,11 @@ public class EntityRenderer implements IResourceManagerReloadListener
 	            	if (zoom.isZooming) { 
 	            		int i1 = Mouse.getDWheel();
 	            		if (i1 != 0) {
-		                    if (i1 > 0 && size <= 3.75f)
+		                    if (i1 > 0 && size <= 4.0f)
 		                    {
 		                        size += 0.25F;
 		                    }
-		                    if (i1 < 0 && size >= 0.75f)
+		                    if (i1 < 0 && size >= 0.50f)
 		                    {
 		                        size -= 0.25F;
 		                    }
@@ -655,7 +654,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
 	            	}
 	            	
 		            float target = flag ? size : 0f;
-		
+		            float zoomSpeed = (float) Math.pow(1f - (zoom.zoomSpeed.getFloatValue() - 0.05f) / (1 - 0.05f), 2); 
+
 		            hoverProgress += (target - hoverProgress) * zoomSpeed;
 		            hoverProgress = Math.max(0f, Math.min(hoverProgress, size));
 		

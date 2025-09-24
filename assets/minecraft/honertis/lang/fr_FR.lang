@@ -62,7 +62,7 @@ module.sprint=Sprint automatiquement
 module.dropSwing=Réajoute le mouvement du bras quand on jette un objet (comme en 1.15)
 
 module.zoom=Zoom smooth (zoom/dézoom smooth)
-
+module.zoom.zoomspeed=Vitesse de Zoom
 
 # Honertis Menu
 gui.honertis.options.name=Options Honertis
