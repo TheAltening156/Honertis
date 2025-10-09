@@ -6,7 +6,7 @@ import fr.honertis.module.ModuleBase;
 public class MouseTweaks extends ModuleBase{
 
 	public MouseTweaks() {
-		super("Yalter's MouseTweaks", "module.mouseTweaks.name", Category.UTILITIES);
+		super("Yalter's MouseTweaks", "module.mouseTweaks", Category.UTILITIES);
 	}
 	
 	@Override
