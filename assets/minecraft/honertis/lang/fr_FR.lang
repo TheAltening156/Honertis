@@ -64,6 +64,8 @@ module.dropSwing=Réajoute le mouvement du bras quand on jette un objet (comme e
 module.zoom=Zoom smooth (zoom/dézoom smooth)
 module.zoom.zoomspeed=Vitesse de Zoom
 
+module.mouseTweaks=Mod Mouse Tweaks de Yalter
+
 # Honertis Menu
 gui.honertis.options.name=Options Honertis
 gui.honertis.options.scroll=Vous pouvez utiliser le scroll de la souris

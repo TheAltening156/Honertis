@@ -283,7 +283,7 @@ public class McMainMenu extends GuiScreen implements GuiYesNoCallback
 
         if (button.id == 14)
         {
-            this.mc.displayGuiScreen(new GuiHonertisOptions(this));
+            this.mc.displayGuiScreen(Honertis.INSTANCE.getOptionsGUI(this));
         }
 
         if (button.id == 4)

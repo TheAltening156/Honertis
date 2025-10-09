@@ -105,7 +105,7 @@ public class GuiHonertisOptions extends GuiScreen {
 								double rdrWidth = 127 * ((num.getValue() - min) / (max - min));
 								Gui.drawRect(settsX, settsY + 3, settsX + 127, settsY + 7, -1);
 								Gui.drawRect(settsX - 3 + (int)rdrWidth, settsY - 3, settsX + 3 + (int)rdrWidth, settsY + 13, -1);
-								mc.fontRendererObj.drawStringWithShadow(String.format("%.2f", num.getFloatValue()), settsX + 133, settsY + 1, -1);
+								mc.fontRendererObj.drawStringWithShadow( num.getIncrement() == 1 ? ("" + (int) num.getFloatValue()) : String.format("%." + (num.getIncrement() == 0.01 ? "2" : num.getIncrement() == 0.001 ? "3" : "1") + "f", num.getFloatValue()), settsX + 133, settsY + 1, -1);
 								
 								double mouseSnap = mouseX;
 								mouseSnap = Math.max(settsX, mouseSnap);

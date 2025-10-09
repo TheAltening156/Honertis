@@ -1293,15 +1293,15 @@ public class Minecraft implements IThreadListener, IPlayerUsage
 		            dropTime.reset();
 		        } 
 		        if (autoDrop) {
-		            if (dropTime1.hasTimeElapsed(1000, false)) {
-		                if (dropTime.hasTimeElapsed(25, true)) {
+		            if (dropTime1.hasTimeElapsed(500, false)) {
+		                if (dropTime.hasTimeElapsed(50, true)) {
 		                    this.thePlayer.dropOneItem(GuiScreen.isCtrlKeyDown());
 		                }
 		            }
 		        }
 		    }
         }
-        
+                
         if (time.hasTimeElapsed(120000, true)) {
         	FileManager.save();
         	time.reset();

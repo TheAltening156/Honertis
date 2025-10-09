@@ -396,7 +396,7 @@ public class RenderManager {
 
                render.func_76986_a(p_147939_1_, p_147939_2_, p_147939_4_, p_147939_6_, p_147939_8_, p_147939_9_);
             } catch (Throwable throwable2) {
-               throw new ReportedException(CrashReport.func_85055_a(throwable2, "Rendering entity in world"));
+               throw new ReportedException(CrashReport.makeCrashReport(throwable2, "Rendering entity in world"));
             }
 
             try {
@@ -404,14 +404,14 @@ public class RenderManager {
                   render.func_76979_b(p_147939_1_, p_147939_2_, p_147939_4_, p_147939_6_, p_147939_8_, p_147939_9_);
                }
             } catch (Throwable throwable1) {
-               throw new ReportedException(CrashReport.func_85055_a(throwable1, "Post-rendering entity in world"));
+               throw new ReportedException(CrashReport.makeCrashReport(throwable1, "Post-rendering entity in world"));
             }
 
             if(this.field_85095_o && !p_147939_1_.func_82150_aj() && !p_147939_10_) {
                try {
                   this.func_85094_b(p_147939_1_, p_147939_2_, p_147939_4_, p_147939_6_, p_147939_8_, p_147939_9_);
                } catch (Throwable throwable) {
-                  throw new ReportedException(CrashReport.func_85055_a(throwable, "Rendering entity hitbox in world"));
+                  throw new ReportedException(CrashReport.makeCrashReport(throwable, "Rendering entity hitbox in world"));
                }
             }
          } else if(this.field_78724_e != null) {
@@ -420,7 +420,7 @@ public class RenderManager {
 
          return true;
       } catch (Throwable throwable3) {
-         CrashReport crashreport = CrashReport.func_85055_a(throwable3, "Rendering entity in world");
+         CrashReport crashreport = CrashReport.makeCrashReport(throwable3, "Rendering entity in world");
          CrashReportCategory crashreportcategory = crashreport.func_85058_a("Entity being rendered");
          p_147939_1_.func_85029_a(crashreportcategory);
          CrashReportCategory crashreportcategory1 = crashreport.func_85058_a("Renderer details");

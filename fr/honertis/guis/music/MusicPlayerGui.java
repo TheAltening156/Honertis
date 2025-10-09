@@ -74,6 +74,7 @@ public class MusicPlayerGui extends GuiScreen {
 	
 	public String ytState = "";
 	public List<SongItem> songs = new ArrayList<SongItem>();
+	public List<SongItem> lastSongs;
 	
 	public int scrollOffset = 0;
     public int maxScroll = 0;
@@ -238,12 +239,16 @@ public class MusicPlayerGui extends GuiScreen {
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		if (isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY) && mouseButton == 0) {
 			isYoutube = !isYoutube;
+			lastSongs = songs;
+			if (lastSongs != null) {
+				songs = lastSongs;
+			}
 		}
 		double position = posX + 79 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.refresh"));
 		if (!isYoutube) {
 			File dummyFile = new File(localSongs + "/Wav file only");
 			if (!dummyFile.exists()) dummyFile.createNewFile();
-			if (isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY) || isHovered(posX + 71, posY + 6, position, posY + 24, mouseX, mouseY)) {
+			if (isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY) || isHovered(posX + 71, posY + 6, position, posY + 24, mouseX, mouseY) && mouseButton == 0) {
 				songs = new ArrayList<SongItem>();
 				
 				File [] files = localSongs.listFiles();
@@ -256,7 +261,7 @@ public class MusicPlayerGui extends GuiScreen {
 				}
 				ytState = "";
 			}
-			if (isHovered(position + 5, posY + 6, position + 13 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, mouseX, mouseY)) {
+			if (isHovered(position + 5, posY + 6, position + 13 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, mouseX, mouseY) && mouseButton == 0) {
 				String s = localSongs.getAbsolutePath();
 
 				if (Util.getOSType() == Util.EnumOS.OSX) {
@@ -294,7 +299,7 @@ public class MusicPlayerGui extends GuiScreen {
 				}
 			}
 		} else {
-			if (isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY))
+			if (isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY) && mouseButton == 0)
 			songs = new ArrayList<SongItem>();
 		}
 		if (isYoutube)
@@ -429,7 +434,7 @@ public class MusicPlayerGui extends GuiScreen {
             Files.copy(in, destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
     }
-
+	
 	private void downloadAndPlaySong(String videoUrl, String outputName, SongItem song) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
         new Thread(() -> {
 	        if (!BIN_DIR.exists()) BIN_DIR.mkdirs();
@@ -437,12 +442,7 @@ public class MusicPlayerGui extends GuiScreen {
 	
 	        File ytDlp = new File(BIN_DIR, "yt-dlp.exe");
 	        if (!ytDlp.exists()) {
-	            try {
-					ytState = "Downloading yt-dlp ...";
-					downloadFile(YTDLP_URL, ytDlp);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+	           downloadYtDlp(ytDlp);
 	        }
 	
 	        File ffmpegExe = new File(BIN_DIR, "ffmpeg.exe");
@@ -463,7 +463,6 @@ public class MusicPlayerGui extends GuiScreen {
 		                "-o", songDir + "/" + outputName,
 		                "--", videoUrl
 		        );
-	
 		        pb.redirectErrorStream(true);
 		        try {
 			        Process process = pb.start();
@@ -473,6 +472,33 @@ public class MusicPlayerGui extends GuiScreen {
 			            while ((line = reader.readLine()) != null) {
 			                System.out.println(line);
 			                ytState = line;
+			                if (line.startsWith("ERROR:")) {
+			                	downloadYtDlp(ytDlp);
+			                	ytState = "Getting song from link: " + videoUrl;
+			     		        pb = new ProcessBuilder(
+			     		        		BIN_DIR + "/yt-dlp.exe",
+			     		                "-x", "--audio-format", "wav",
+			     		                "-o", songDir + "/" + outputName,
+			     		                "--", videoUrl
+			     		        );
+			     		        pb.redirectErrorStream(true);
+			     		        try {
+			     			        process = pb.start();
+			     			
+			     			        try (BufferedReader reader1 = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+			     			            String line1;
+			     			            while ((line1 = reader1.readLine()) != null) {
+			     			                System.out.println(line1);
+			     			                ytState = line1;
+			     			                if (line1.startsWith("ERROR:")) {
+			     			     				ytState = "Unable to play song.";
+			     			                }
+			     			            }
+			     			        }
+			     		        } catch (IOException e) {
+			     		        	e.printStackTrace();
+			     		        }
+			                }
 			            }
 			        }
 		        } catch (IOException e) {
@@ -495,6 +521,16 @@ public class MusicPlayerGui extends GuiScreen {
 			thumbnail = song.getThumbnailUrl();
         }).start();
 	}
+	
+	private void downloadYtDlp(File ytDlp) {
+		try {
+			ytState = "Downloading yt-dlp ...";
+			downloadFile(YTDLP_URL, ytDlp);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
 		clicked = false;

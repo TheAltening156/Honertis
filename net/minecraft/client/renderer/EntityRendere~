@@ -306,7 +306,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
       }
 
       if(this.field_78531_r.func_175606_aa() == null) {
-         this.field_78531_r.func_175607_a(this.field_78531_r.field_71439_g);
+         this.field_78531_r.func_175607_a(this.field_78531_r.thePlayer);
       }
 
       Entity entity = this.field_78531_r.func_175606_aa();
@@ -355,13 +355,13 @@ public class EntityRenderer implements IResourceManagerReloadListener {
       if(entity != null && this.field_78531_r.field_71441_e != null) {
          this.field_78531_r.field_71424_I.func_76320_a("pick");
          this.field_78531_r.field_147125_j = null;
-         double d0 = (double)this.field_78531_r.field_71442_b.func_78757_d();
+         double d0 = (double)this.field_78531_r.playerController.func_78757_d();
          this.field_78531_r.field_71476_x = entity.func_174822_a(d0, p_78473_1_);
          double d1 = d0;
          Vec3 vec3 = entity.func_174824_e(p_78473_1_);
          boolean flag = false;
          boolean flag1 = true;
-         if(this.field_78531_r.field_71442_b.func_78749_i()) {
+         if(this.field_78531_r.playerController.func_78749_i()) {
             d0 = 6.0D;
             d1 = 6.0D;
          } else {
@@ -689,10 +689,10 @@ public class EntityRenderer implements IResourceManagerReloadListener {
          this.func_78475_f(p_78479_1_);
       }
 
-      float f1 = this.field_78531_r.field_71439_g.field_71080_cy + (this.field_78531_r.field_71439_g.field_71086_bY - this.field_78531_r.field_71439_g.field_71080_cy) * p_78479_1_;
+      float f1 = this.field_78531_r.thePlayer.field_71080_cy + (this.field_78531_r.thePlayer.field_71086_bY - this.field_78531_r.thePlayer.field_71080_cy) * p_78479_1_;
       if(f1 > 0.0F) {
          byte b0 = 20;
-         if(this.field_78531_r.field_71439_g.func_70644_a(Potion.field_76431_k)) {
+         if(this.field_78531_r.thePlayer.func_70644_a(Potion.field_76431_k)) {
             b0 = 7;
          }
 
@@ -759,7 +759,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 
             flag = this.field_78531_r.func_175606_aa() instanceof EntityLivingBase && ((EntityLivingBase)this.field_78531_r.func_175606_aa()).func_70608_bn();
             boolean flag1 = !ReflectorForge.renderFirstPersonHand(this.field_78531_r.field_71438_f, p_renderHand_1_, p_renderHand_2_);
-            if(flag1 && this.field_78531_r.field_71474_y.field_74320_O == 0 && !flag && !this.field_78531_r.field_71474_y.field_74319_N && !this.field_78531_r.field_71442_b.func_78747_a()) {
+            if(flag1 && this.field_78531_r.field_71474_y.field_74320_O == 0 && !flag && !this.field_78531_r.field_71474_y.field_74319_N && !this.field_78531_r.playerController.func_78747_a()) {
                this.func_180436_i();
                if(Config.isShaders()) {
                   ShadersRender.renderItemFP(this.field_78516_c, p_renderHand_1_, p_renderHand_5_);
@@ -834,7 +834,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
          this.field_78531_r.field_71424_I.func_76320_a("lightTex");
          WorldClient worldclient = this.field_78531_r.field_71441_e;
          if(worldclient != null) {
-            if(Config.isCustomColors() && CustomColors.updateLightmap(worldclient, this.field_78514_e, this.field_78504_Q, this.field_78531_r.field_71439_g.func_70644_a(Potion.field_76439_r))) {
+            if(Config.isCustomColors() && CustomColors.updateLightmap(worldclient, this.field_78514_e, this.field_78504_Q, this.field_78531_r.thePlayer.func_70644_a(Potion.field_76439_r))) {
                this.field_78513_d.func_110564_a();
                this.field_78536_aa = false;
                this.field_78531_r.field_71424_I.func_76319_b();
@@ -874,8 +874,8 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                   f10 = 0.25F + f7 * 0.75F;
                }
 
-               if(this.field_78531_r.field_71439_g.func_70644_a(Potion.field_76439_r)) {
-                  float f15 = this.func_180438_a(this.field_78531_r.field_71439_g, p_78472_1_);
+               if(this.field_78531_r.thePlayer.func_70644_a(Potion.field_76439_r)) {
+                  float f15 = this.func_180438_a(this.field_78531_r.thePlayer, p_78472_1_);
                   float f12 = 1.0F / f8;
                   if(f12 > 1.0F / f9) {
                      f12 = 1.0F / f9;
@@ -995,11 +995,11 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             this.field_78492_L = p_181560_1_;
             f2 = this.field_78498_J * f4;
             f3 = this.field_78499_K * f4;
-            this.field_78531_r.field_71439_g.func_70082_c(f2, f3 * (float)b0);
+            this.field_78531_r.thePlayer.func_70082_c(f2, f3 * (float)b0);
          } else {
             this.field_78496_H = 0.0F;
             this.field_78497_I = 0.0F;
-            this.field_78531_r.field_71439_g.func_70082_c(f2, f3 * (float)b0);
+            this.field_78531_r.thePlayer.func_70082_c(f2, f3 * (float)b0);
          }
       }
 
@@ -1068,7 +1068,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                   this.field_78531_r.field_71462_r.func_73863_a(j1, k1, p_181560_1_);
                }
             } catch (Throwable throwable) {
-               CrashReport crashreport = CrashReport.func_85055_a(throwable, "Rendering screen");
+               CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Rendering screen");
                CrashReportCategory crashreportcategory = crashreport.func_85058_a("Screen render details");
                crashreportcategory.func_71500_a("Screen name", new EntityRenderer$2(this));
                crashreportcategory.func_71500_a("Mouse location", new Callable() {
@@ -1116,7 +1116,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                BlockPos blockpos = this.field_78531_r.field_71476_x.func_178782_a();
                IBlockState iblockstate = this.field_78531_r.field_71441_e.func_180495_p(blockpos);
                Block block = iblockstate.func_177230_c();
-               if(this.field_78531_r.field_71442_b.func_178889_l() == WorldSettings.GameType.SPECTATOR) {
+               if(this.field_78531_r.playerController.func_178889_l() == WorldSettings.GameType.SPECTATOR) {
                   flag = ReflectorForge.blockHasTileEntity(iblockstate) && this.field_78531_r.field_71441_e.func_175625_s(blockpos) instanceof IInventory;
                } else {
                   flag = itemstack != null && (itemstack.func_179544_c(block) || itemstack.func_179547_d(block));
@@ -1129,7 +1129,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
    }
 
    private void func_175067_i(float p_175067_1_) {
-      if(this.field_78531_r.field_71474_y.field_74330_P && !this.field_78531_r.field_71474_y.field_74319_N && !this.field_78531_r.field_71439_g.func_175140_cp() && !this.field_78531_r.field_71474_y.field_178879_v) {
+      if(this.field_78531_r.field_71474_y.field_74330_P && !this.field_78531_r.field_71474_y.field_74319_N && !this.field_78531_r.thePlayer.func_175140_cp() && !this.field_78531_r.field_71474_y.field_178879_v) {
          Entity entity = this.field_78531_r.func_175606_aa();
          GlStateManager.func_179147_l();
          GlStateManager.func_179120_a(770, 771, 1, 0);
@@ -1155,7 +1155,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
    public void func_78471_a(float p_78471_1_, long p_78471_2_) {
       this.func_78472_g(p_78471_1_);
       if(this.field_78531_r.func_175606_aa() == null) {
-         this.field_78531_r.func_175607_a(this.field_78531_r.field_71439_g);
+         this.field_78531_r.func_175607_a(this.field_78531_r.thePlayer);
       }
 
       this.func_78473_a(p_78471_1_);
@@ -1211,7 +1211,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
          Shaders.setCamera(p_175068_2_);
       }
 
-      ActiveRenderInfo.func_74583_a(this.field_78531_r.field_71439_g, this.field_78531_r.field_71474_y.field_74320_O == 2);
+      ActiveRenderInfo.func_74583_a(this.field_78531_r.thePlayer, this.field_78531_r.field_71474_y.field_74320_O == 2);
       this.field_78531_r.field_71424_I.func_76318_c("frustum");
       ClippingHelperImpl.func_78558_a();
       this.field_78531_r.field_71424_I.func_76318_c("culling");
@@ -1262,9 +1262,9 @@ public class EntityRenderer implements IResourceManagerReloadListener {
       RenderHelper.func_74518_a();
       this.field_78531_r.field_71424_I.func_76318_c("terrain_setup");
       if(flag) {
-         ShadersRender.setupTerrain(renderglobal, entity, (double)p_175068_2_, frustum, this.field_175084_ae++, this.field_78531_r.field_71439_g.func_175149_v());
+         ShadersRender.setupTerrain(renderglobal, entity, (double)p_175068_2_, frustum, this.field_175084_ae++, this.field_78531_r.thePlayer.func_175149_v());
       } else {
-         renderglobal.func_174970_a(entity, (double)p_175068_2_, frustum, this.field_175084_ae++, this.field_78531_r.field_71439_g.func_175149_v());
+         renderglobal.func_174970_a(entity, (double)p_175068_2_, frustum, this.field_175084_ae++, this.field_78531_r.thePlayer.func_175149_v());
       }
 
       if(p_175068_1_ == 0 || p_175068_1_ == 2) {

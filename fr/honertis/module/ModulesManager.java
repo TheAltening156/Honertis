@@ -3,6 +3,7 @@ package fr.honertis.module;
 import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import fr.honertis.Honertis;
 import fr.honertis.module.modules.AutoGG;
 import fr.honertis.module.modules.BlockHit;
 import fr.honertis.module.modules.BlockTap;
@@ -17,6 +18,7 @@ import fr.honertis.module.modules.HitColor;
 import fr.honertis.module.modules.KeyStrokes;
 import fr.honertis.module.modules.LowFire;
 import fr.honertis.module.modules.MoreParticles;
+import fr.honertis.module.modules.MouseTweaks;
 import fr.honertis.module.modules.Ping;
 import fr.honertis.module.modules.ToggleSneak;
 import fr.honertis.module.modules.ToggleSprint;
@@ -46,7 +48,9 @@ public class ModulesManager {
 			new FreeLook(),
 			new DropSwing(),
 			new ToggleSneak(),
-			new Zoom());
+			new Zoom(),
+			new MouseTweaks());
+		
 	}
 	
 	

@@ -14,7 +14,6 @@ import org.lwjgl.Sys;
 import com.google.common.collect.Lists;
 
 import fr.honertis.Honertis;
-import fr.honertis.manager.ResourcePackManager;
 import fr.honertis.utils.LangManager;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptionButton;
@@ -61,7 +60,7 @@ public class GuiScreenPackManager extends GuiScreen {
 				I18n.format("resourcePack.openFolder", new Object[0])));
 		this.buttonList.add(
 				new GuiOptionButton(1, this.width / 2 + 4, this.height - 48, I18n.format("gui.done", new Object[0])));
-		this.buttonList.add(new GuiButton(99, this.width - 80, 10, 70, 20, LangManager.format("gui.refresh")));
+		this.buttonList.add(new GuiButton(99, 0, 10, 70, 20, LangManager.format("gui.refresh")));
 
 		if (!this.changed) {
 			this.availableResourcePacks = Lists.<ResourcePackListEntry>newArrayList();

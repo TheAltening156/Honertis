@@ -212,7 +212,7 @@ public class EffectRenderer {
       try {
          p_178923_1_.func_70071_h_();
       } catch (Throwable throwable) {
-         CrashReport crashreport = CrashReport.func_85055_a(throwable, "Ticking Particle");
+         CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Ticking Particle");
          CrashReportCategory crashreportcategory = crashreport.func_85058_a("Particle being ticked");
          final int i = p_178923_1_.func_70537_b();
          crashreportcategory.func_71500_a("Particle", new Callable() {
@@ -279,7 +279,7 @@ public class EffectRenderer {
                   try {
                      entityfx.func_180434_a(worldrenderer, p_78874_1_, p_78874_2_, f, f4, f1, f2, f3);
                   } catch (Throwable throwable) {
-                     CrashReport crashreport = CrashReport.func_85055_a(throwable, "Rendering Particle");
+                     CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Rendering Particle");
                      CrashReportCategory crashreportcategory = crashreport.func_85058_a("Particle being rendered");
                      crashreportcategory.func_71500_a("Particle", new Callable() {
                         private static final String __OBFID = "CL_00000918";

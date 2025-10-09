@@ -2,6 +2,7 @@ package net.minecraft.client.gui;
 
 import java.io.IOException;
 
+import fr.honertis.Honertis;
 import fr.honertis.guis.GuiHonertisOptions;
 import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.gui.achievement.GuiStats;
@@ -96,7 +97,7 @@ public class GuiIngameMenu extends GuiScreen
                 this.mc.displayGuiScreen(new GuiShareToLan(this));
                 break;
             case 8: 
-            	this.mc.displayGuiScreen(new GuiHonertisOptions(this));
+            	this.mc.displayGuiScreen(Honertis.INSTANCE.getOptionsGUI(this));
         }
     }
 

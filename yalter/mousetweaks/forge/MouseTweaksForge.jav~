@@ -1,0 +1,39 @@
+/*
+ * Decompiled with CFR 0.150.
+ * 
+ * Could not load the following classes:
+ *  net.minecraftforge.common.MinecraftForge
+ *  net.minecraftforge.fml.common.Mod
+ *  net.minecraftforge.fml.common.Mod$EventHandler
+ *  net.minecraftforge.fml.common.event.FMLInitializationEvent
+ *  net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+ *  net.minecraftforge.fml.common.gameevent.TickEvent$Phase
+ *  net.minecraftforge.fml.common.gameevent.TickEvent$RenderTickEvent
+ */
+package yalter.mousetweaks.forge;
+
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import yalter.mousetweaks.Constants;
+import yalter.mousetweaks.Main;
+import yalter.mousetweaks.OnTickMethod;
+
+@Mod(modid="mousetweaks", version="2.7.1", updateJSON="http://play.sourceruns.org/yalter/MouseTweaks/update.json", useMetadata=true, clientSideOnly=true, guiFactory="yalter.mousetweaks.forge.ConfigGuiFactory", acceptedMinecraftVersions="[1.8.8]")
+public class MouseTweaksForge {
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event) {
+        Main.initialize(Constants.EntryPoint.FORGE);
+        MinecraftForge.EVENT_BUS.register((Object)this);
+    }
+
+    @SubscribeEvent
+    public void onRenderTick(TickEvent.RenderTickEvent event) {
+        if (Main.onTickMethod == OnTickMethod.FORGE && event.phase == TickEvent.Phase.START) {
+            Main.onUpdateInGame();
+        }
+    }
+}
+

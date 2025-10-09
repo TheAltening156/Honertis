@@ -14,14 +14,7 @@ public class NumberSettings extends Settings{
 		this.increment = increment;
 		
 	}
-	public NumberSettings(String name, double val, double min, double max) {
-		this.name = name;
-		this.defValue = val;
-		this.min = min;
-		this.max = max;
-		this.increment = 0.1;
-	}
-	
+
 	public void setValue(double val) {
 		double precision = 1.0 / this.increment;
 		this.defValue = Math.round(Math.max(this.min, Math.min(this.max, val)) * precision) / precision;

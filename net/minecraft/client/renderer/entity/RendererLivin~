@@ -209,7 +209,7 @@ public abstract class RendererLivingEntity extends Render {
 
    protected void func_77036_a(EntityLivingBase p_77036_1_, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float p_77036_7_) {
       boolean flag = !p_77036_1_.func_82150_aj();
-      boolean flag1 = !flag && !p_77036_1_.func_98034_c(Minecraft.func_71410_x().field_71439_g);
+      boolean flag1 = !flag && !p_77036_1_.func_98034_c(Minecraft.getMinecraft().thePlayer);
       if(flag || flag1) {
          if(!this.func_180548_c(p_77036_1_)) {
             return;
@@ -465,7 +465,7 @@ public abstract class RendererLivingEntity extends Render {
    }
 
    protected boolean func_177070_b(EntityLivingBase p_177070_1_) {
-      EntityPlayerSP entityplayersp = Minecraft.func_71410_x().field_71439_g;
+      EntityPlayerSP entityplayersp = Minecraft.getMinecraft().thePlayer;
       if(p_177070_1_ instanceof EntityPlayer && p_177070_1_ != entityplayersp) {
          Team team = p_177070_1_.func_96124_cp();
          Team team1 = entityplayersp.func_96124_cp();
