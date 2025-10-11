@@ -659,7 +659,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 		            hoverProgress += (target - hoverProgress) * zoomSpeed;
 		            hoverProgress = Math.max(0f, Math.min(hoverProgress, size));
 		
-		            float zoomFactor = 1f + size * hoverProgress;
+		            float zoomFactor = 1f + 3f * hoverProgress;
 		            f /= zoomFactor;
             	}
             } else {

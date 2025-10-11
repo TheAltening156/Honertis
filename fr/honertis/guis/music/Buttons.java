@@ -13,6 +13,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public enum Buttons {
+	MINIPLAYER(new ResourceLocation("honertis/music/miniPlayer.png")),
 	REPEAT(new ResourceLocation("honertis/music/repeat.png")),
 	BACK(new ResourceLocation("honertis/music/back.png")),
 	PLAY(new ResourceLocation("honertis/music/play.png")),
@@ -34,7 +35,7 @@ public enum Buttons {
         float delta = (currentTime - lastTime);
 	    if (this != VOLUME) {
 			
-	    	posX -= 25;
+	    	posX -= 50;
 			hover = GuiScreen.isHovered(posX + 140 + pos, posY + 225, posX + 140 + pos + 18, posY + 225 + 18, mouseX, mouseY);
 	        delta /=  2.5f;
 	        lastTime = currentTime;
