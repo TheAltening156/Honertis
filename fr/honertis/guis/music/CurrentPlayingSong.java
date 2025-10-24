@@ -14,15 +14,15 @@ public class CurrentPlayingSong {
 	private float smoothProgress = 0f;  
 	private long lastTime = System.currentTimeMillis();
 	
-	public void draw(Minecraft mc, String songName, String thumbnail, String ytState, double posX, double posY, MusicPlayer musicPlayer, boolean repeat, double width, double height, int mouseX, int mouseY) {
+	public void draw(Minecraft mc, String songName, String thumbnail, String ytState, double posX, double posY, MusicPlayer musicPlayer, boolean repeat, boolean miniPlayer, double width, double height, int mouseX, int mouseY, int mode) {
        songName = songName.replace(".wav", "");
 		if (!songName.equals("") || !thumbnail.equals("")) {
         	GlStateManager.pushMatrix();
         	GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        	Utils.scissorGui(posX + 70, posY, 205, 254);
+        	Utils.scissorGui(posX + 73, posY, 204, 254);
         	String text = StringEscapeUtils.unescapeHtml4(songName);
 	        int textWidth = mc.fontRendererObj.getStringWidth(text + "           ");
-	        double maxTextWidth = 205;
+	        double maxTextWidth = 204;
         	double offset = Utils.textScroll(textWidth, maxTextWidth, System.currentTimeMillis(), 1);
         	if (textWidth > maxTextWidth) {
         		GlStateManager.translate(-offset, 0, 0);
@@ -33,15 +33,18 @@ public class CurrentPlayingSong {
         	}
         	GL11.glDisable(GL11.GL_SCISSOR_TEST);
         	GlStateManager.popMatrix();
-        	drawImageFromYoutubeURL(posX + 12, posY + 215, 55, 30.93, thumbnail);
+        	if (mode == 0)
+        	drawImageFromYoutubeURL(posX + 12, posY + 217, 55, 30.93, thumbnail);
 	        offset++;
 	    }
 	
-        double pos = 0;
-        for (Buttons buttons : Buttons.values()) {
-        	buttons.draw(posX, posY, pos, musicPlayer, repeat, mouseX, mouseY);
-        	pos += 25;
-        }
+		if (mode == 0) {
+	        double pos = 0;
+	        for (Buttons buttons : Buttons.values()) {
+	        	buttons.draw(posX, posY, pos, musicPlayer, repeat, miniPlayer, mouseX, mouseY);
+	        	pos += 25;
+	        }
+		}
 		long current = System.currentTimeMillis();
     	float delta = (current - lastTime) / 1000f;
     	lastTime = current;
@@ -61,6 +64,8 @@ public class CurrentPlayingSong {
     	int barWidth = 245 - 95;
     	int filledWidth = (int)(barWidth * smoothProgress);
 
+    	if (mode != 0) posY -= 6; 
+    	
     	drawRoundedRect(posX+95, posY+247, posX+245, posY+249, 2, new Color(255,255,255,125).getRGB());
     	drawRoundedRect(posX+95, posY+247, posX+95+filledWidth, posY+249, 2, Color.WHITE.getRGB());
         mc.fontRendererObj.drawStringWithShadow(millisecToTime(musicPlayer.currentStateMillis), (int)posX + 93 - mc.fontRendererObj.getStringWidth(millisecToTime(musicPlayer.currentStateMillis)), (int)posY + 244, -1);
@@ -69,6 +74,7 @@ public class CurrentPlayingSong {
         	drawRoundedRect((double)width - mc.fontRendererObj.getStringWidth(ytState + "    "), (double)height-30D,(double) width - 2D, (double)height -12D, 5D, Color.DARK_GRAY.getRGB());
         	mc.fontRendererObj.drawString(ytState, width - mc.fontRendererObj.getStringWidth(ytState + "  "), height - 25, -1);
         }
+        if (mode != 0) posY += 6;
 	}
 	public String millisecToTime(long millis) {
 		long totalSeconds = millis / 1000;

@@ -115,11 +115,9 @@ public class MusicPlayerGui extends GuiScreen {
 	}
     
     public int volume = 75;
-    
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		if (miniPlayer)
-			miniPlayer = false;
 		if (isYoutube && songs != lastSongs)
 			lastSongs = songs;
 		if (!localSongs.exists()) localSongs.mkdirs();
@@ -242,7 +240,7 @@ public class MusicPlayerGui extends GuiScreen {
         GlStateManager.popMatrix();
         
         CurrentPlayingSong cps = new CurrentPlayingSong();
-        cps.draw(mc, replaceUpperCase(songName), thumbnail, ytState, posX, posY, musicPlayer, repeat, width, height, mouseX, mouseY);
+        cps.draw(mc, replaceUpperCase(songName), thumbnail, ytState, posX, posY, musicPlayer, repeat, miniPlayer, width, height, mouseX, mouseY, 0);
         oldX = mouseX;
 		oldY = mouseY;
 	}
@@ -385,7 +383,7 @@ public class MusicPlayerGui extends GuiScreen {
         GlStateManager.popMatrix();
 			
         if (mouseButton == 0) {
-			if (isHovered(posX + 165, posY + 225, posX + 165 + 18, posY + 225 + 18, mouseX, mouseY)) {
+			if (isHovered(posX + 173, posY + 225, posX + 173 + 18, posY + 225 + 18, mouseX, mouseY)) {
 				if (!musicPlayer.paused) {
 					musicPlayer.pause();
 				} else { 
@@ -396,17 +394,17 @@ public class MusicPlayerGui extends GuiScreen {
 				}
 			}
 			
-			if (isHovered(posX + 140, posY + 225, posX + 140 + 18, posY + 225 + 18, mouseX, mouseY)) {
+			if (isHovered(posX + 148, posY + 225, posX + 148 + 18, posY + 225 + 18, mouseX, mouseY)) {
 				musicPlayer.playLastFile();
 			}
-			if (isHovered(posX + 115, posY + 225, posX + 115 + 18, posY + 225 + 18, mouseX, mouseY)) {
+			if (isHovered(posX + 123, posY + 225, posX + 123 + 18, posY + 225 + 18, mouseX, mouseY)) {
 				repeat = !repeat;
 			}
-			if (isHovered(posX + 190, posY + 225, posX + 190 + 18, posY + 225 + 18, mouseX, mouseY)) {
+			if (isHovered(posX + 198, posY + 225, posX + 198 + 18, posY + 225 + 18, mouseX, mouseY)) {
 				musicPlayer.pause();
 				musicPlayer.currentStateMillis = musicPlayer.durationMillis;
 			}
-			if (isHovered(posX + 90, posY + 225, posX + 90 + 18, posY + 225 + 18, mouseX, mouseY)) {
+			if (isHovered(posX + 98, posY + 225, posX + 98 + 18, posY + 225 + 18, mouseX, mouseY)) {
 				miniPlayer = !miniPlayer;
 			}
         }

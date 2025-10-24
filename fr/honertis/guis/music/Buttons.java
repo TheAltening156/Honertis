@@ -9,6 +9,8 @@ import org.lwjgl.input.Mouse;
 import fr.honertis.Honertis;
 
 import static fr.honertis.utils.DrawUtils.*;
+
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
@@ -30,13 +32,13 @@ public enum Buttons {
 		this.res = res;
 	}
 	
-	public void draw(double posX, double posY, double pos, MusicPlayer player, boolean repeat, int mouseX, int mouseY) {
-        long currentTime = System.currentTimeMillis();
+	public void draw(double posX, double posY, double pos, MusicPlayer player, boolean repeat, boolean miniPayer, int mouseX, int mouseY) {
+		long currentTime = System.currentTimeMillis();
         float delta = (currentTime - lastTime);
 	    if (this != VOLUME) {
 			
 	    	posX -= 50;
-			hover = GuiScreen.isHovered(posX + 140 + pos, posY + 225, posX + 140 + pos + 18, posY + 225 + 18, mouseX, mouseY);
+			hover = GuiScreen.isHovered(posX + 148 + pos, posY + 225, posX + 148 + pos + 18, posY + 225 + 18, mouseX, mouseY);
 	        delta /=  2.5f;
 	        lastTime = currentTime;
 	        if (hover) {
@@ -49,6 +51,9 @@ public enum Buttons {
 	        if (this == REPEAT) {
 	        	res = new ResourceLocation("honertis/music/repeat" + (repeat ? "On" : "Off") + ".png");
 	        }
+	        if (this == MINIPLAYER) {
+	        	res = new ResourceLocation("honertis/music/miniPlayer" + (miniPayer ? "On" : "Off") + ".png");
+	        }
 	        if (this == PLAY) {
 	        	res = new ResourceLocation("honertis/music/" + (player.paused ? "play" : "pause") + ".png");
 	        }
@@ -56,27 +61,28 @@ public enum Buttons {
 	        enableBlend();
 	        disableLighting();
 	        color(1,1,1f, 1f);
-	    	drawImage(posX + 140 + pos + offset, posY + 225 + offset, 18 + extra, 18 + extra, res);
+	    	drawImage(posX + 148 + pos + offset, posY + 225 + offset, 18 + extra, 18 + extra, res);
 	    	disableBlend();
 		} else {
-			hover = GuiScreen.isHovered(posX + 115 + pos, posY + 225, posX + 115 + pos + 18 + 45, posY + 225 + 18, mouseX, mouseY);
+			posX += 8;
+			hover = GuiScreen.isHovered(posX + 89 + pos, posY + 225, posX + 84 + pos + 18 + 45, posY + 225 + 18, mouseX, mouseY);
 			
-            delta /= 47f;
+            delta /= 40f;
 	        lastTime = currentTime;
 	        if (hover) {
-	        	hoverProgress = Math.min(47f, hoverProgress + delta * 16f); 
+	        	hoverProgress = Math.min(40f, hoverProgress + delta * 16f); 
 	        } else {
 	        	hoverProgress = Math.max(0f, hoverProgress - delta * 16f); 
 	        }
-	        drawRoundedRect(posX + 214, posY + 226, posX + 230 + (Honertis.INSTANCE.musicPlayer.volume >= 75 ? 2 : 0) + hoverProgress/*231 278*/, posY + 242, 16, new Color(80,80,80).getRGB());
-	        double soundBarWidthProgress = (hoverProgress * (47/38));
+	        drawRoundedRect(posX + 214, posY + 226, posX + 230 + (Honertis.INSTANCE.musicPlayer.volume > 75 ? 2 : 0) + hoverProgress/*231 278*/, posY + 242, 16, new Color(80,80,80).getRGB());
+	        double soundBarWidthProgress = (hoverProgress * (38/30));
 
-	        double soundBarWidth = 38;
+	        double soundBarWidth = 30;
 	        double animatedWidth = Math.min(soundBarWidth, soundBarWidthProgress);
 	        if (!(soundBarWidthProgress < 0.2)) {
-	        	drawRoundedRect(posX + 234, posY + 233, posX + 225.5 + soundBarWidthProgress, posY + 235, 2, new Color(255,255,255,125).getRGB());
+	        	drawRoundedRect(posX + 233, posY + 233, posX + 224 + soundBarWidthProgress, posY + 235, 2, new Color(255,255,255,125).getRGB());
 
-	        	double soundRelativeX = mouseX - (posX + 234);
+	        	double soundRelativeX = mouseX - (posX + 233);
 				if(soundRelativeX < 0) soundRelativeX = 0;
 				if(soundRelativeX > soundBarWidth) soundRelativeX = soundBarWidth;
 				double soundProgress = soundRelativeX / soundBarWidth;
@@ -85,7 +91,7 @@ public enum Buttons {
 	        	}
 	        }
 	        int volumeWidth = (int)((Honertis.INSTANCE.musicPlayer.volume / 100.0) * animatedWidth);
-	    	drawRoundedRect(posX + 234, posY + 233, posX + 234 + volumeWidth, posY + 235, volumeWidth <= 1? 0 : 2, -1);
+	    	drawRoundedRect(posX + 234, posY + 233, posX + 234 + volumeWidth, posY + 235, soundBarWidthProgress < 0.2 ? 0 :  2, -1);
 	        
 	        enableBlend();
 	        disableLighting();
