@@ -5,9 +5,15 @@ import com.google.gson.JsonSyntaxException;
 
 import fr.honertis.Honertis;
 import fr.honertis.event.EventRender2D;
+import fr.honertis.guis.music.MusicPlayerGui;
+import fr.honertis.module.addons.MiniPlayer;
 import fr.honertis.module.modules.FreeLook;
 import fr.honertis.module.modules.Zoom;
+import fr.honertis.utils.DrawUtils;
 
+import static fr.honertis.utils.Utils.replaceUpperCase;
+
+import java.awt.Color;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.FloatBuffer;
@@ -1467,7 +1473,16 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 this.renderEndNanoTime = System.nanoTime();
                 TileEntityRendererDispatcher.instance.renderEngine = this.mc.getTextureManager();
             }
-
+            MiniPlayer player = mc.ingameGUI.player;
+            if (!this.mc.gameSettings.showDebugInfo) {            	
+        		MusicPlayerGui musicPlayer = Honertis.INSTANCE.musicPlayer;
+            	if (player.isEnabled()) {
+            		ScaledResolution sr = new ScaledResolution(mc);
+            	    DrawUtils.drawRoundedRect(player.posX.getValue(), player.posY.getValue(), player.posX.getValue() + 225, player.posY.getValue() + 40, 14, new Color(45,45,45).getRGB());
+            	    Honertis.INSTANCE.playingSong.draw(mc, replaceUpperCase(musicPlayer.songName), musicPlayer.thumbnail, musicPlayer.ytState, player.posX.getValue() -60, -250 + (player.posY.getValue() + 40), musicPlayer.musicPlayer, musicPlayer.repeat, player.isEnabled(), musicPlayer.width, musicPlayer.height, 0, 0, 1);
+            	}
+            	
+            }
             if (this.mc.currentScreen != null)
             {
                 GlStateManager.clear(256);

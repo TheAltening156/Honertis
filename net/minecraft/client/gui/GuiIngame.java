@@ -16,6 +16,7 @@ import fr.honertis.event.EventRenderGui;
 import fr.honertis.event.EventType;
 import fr.honertis.guis.music.CurrentPlayingSong;
 import fr.honertis.guis.music.MusicPlayerGui;
+import fr.honertis.module.addons.MiniPlayer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -122,6 +123,7 @@ public class GuiIngame extends Gui
         this.field_175192_A = 70;
         this.field_175193_B = 20;
     }
+	public MiniPlayer player = (MiniPlayer) Honertis.INSTANCE.modulesManager.getModuleByName("MiniPlayer");
 
     public void renderGameOverlay(float partialTicks)
     {
@@ -360,15 +362,6 @@ public class GuiIngame extends Gui
         e.setType(EventType.PRE);
         if (!this.mc.gameSettings.showDebugInfo) {
         	Honertis.INSTANCE.event.onEvent(e);
-        	
-    		MusicPlayerGui musicPlayer = Honertis.INSTANCE.musicPlayer;
-        	if (musicPlayer.miniPlayer) {
-        		CurrentPlayingSong cps = new CurrentPlayingSong();
-        		ScaledResolution sr = new ScaledResolution(mc);
-        	    drawRoundedRect(sr.getScaledWidth() - 225, 0, sr.getScaledWidth(), 40, 14, new Color(45,45,45).getRGB());
-        		cps.draw(mc, replaceUpperCase(musicPlayer.songName), musicPlayer.thumbnail, musicPlayer.ytState, sr.getScaledWidth() - 285, -210, musicPlayer.musicPlayer, musicPlayer.repeat, musicPlayer.miniPlayer, musicPlayer.width, musicPlayer.height, 0, 0, 1);
-        	}
-        	
         }
         
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

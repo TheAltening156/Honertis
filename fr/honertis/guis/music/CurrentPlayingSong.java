@@ -11,8 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 
 public class CurrentPlayingSong {
-	private float smoothProgress = 0f;  
-	private long lastTime = System.currentTimeMillis();
+	private Buttons buttons;
 	
 	public void draw(Minecraft mc, String songName, String thumbnail, String ytState, double posX, double posY, MusicPlayer musicPlayer, boolean repeat, boolean miniPlayer, double width, double height, int mouseX, int mouseY, int mode) {
        songName = songName.replace(".wav", "");
@@ -40,41 +39,49 @@ public class CurrentPlayingSong {
 	
 		if (mode == 0) {
 	        double pos = 0;
-	        for (Buttons buttons : Buttons.values()) {
+	        for (Buttons buttons : buttons.values()) {
 	        	buttons.draw(posX, posY, pos, musicPlayer, repeat, miniPlayer, mouseX, mouseY);
 	        	pos += 25;
 	        }
 		}
-		long current = System.currentTimeMillis();
-    	float delta = (current - lastTime) / 1000f;
-    	lastTime = current;
 
     	float targetProgress = 0f;
     	if (musicPlayer.durationMillis > 0) {
     	    targetProgress = musicPlayer.currentStateMillis / (float) musicPlayer.durationMillis;
-    	} else {
-    		smoothProgress = 0f;
     	}
-		
-    	if (Float.isNaN(smoothProgress) || Float.isInfinite(smoothProgress)) {
-    	    smoothProgress = 1f;
-    	}
-    	smoothProgress = Math.max(0f, Math.min(1f, (targetProgress - smoothProgress) + delta));
 
     	int barWidth = 245 - 95;
-    	int filledWidth = (int)(barWidth * smoothProgress);
 
     	if (mode != 0) posY -= 6; 
     	
     	drawRoundedRect(posX+95, posY+247, posX+245, posY+249, 2, new Color(255,255,255,125).getRGB());
-    	drawRoundedRect(posX+95, posY+247, posX+95+filledWidth, posY+249, 2, Color.WHITE.getRGB());
+    	drawRoundedRect(posX+95, posY+247, posX+96+targetProgress * barWidth, posY+249, 2, Color.WHITE.getRGB());
         mc.fontRendererObj.drawStringWithShadow(millisecToTime(musicPlayer.currentStateMillis), (int)posX + 93 - mc.fontRendererObj.getStringWidth(millisecToTime(musicPlayer.currentStateMillis)), (int)posY + 244, -1);
         mc.fontRendererObj.drawStringWithShadow(millisecToTime(musicPlayer.durationMillis), (int)posX + 277 - mc.fontRendererObj.getStringWidth(millisecToTime(musicPlayer.durationMillis)), (int)posY + 244, -1);
         if (!ytState.isEmpty() || !ytState.equals("")) {
         	drawRoundedRect((double)width - mc.fontRendererObj.getStringWidth(ytState + "    "), (double)height-30D,(double) width - 2D, (double)height -12D, 5D, Color.DARK_GRAY.getRGB());
-        	mc.fontRendererObj.drawString(ytState, width - mc.fontRendererObj.getStringWidth(ytState + "  "), height - 25, -1);
+        	mc.fontRendererObj.drawString(ytState, width - mc.fontRendererObj.getStringWidth(ytState + "    "), height - 25, -1);
         }
         if (mode != 0) posY += 6;
+	}
+	
+	public void mouseClick() {
+        double pos = 0;
+        for (Buttons buttons : buttons.values()) {
+        	if (buttons == Buttons.VOLUME) {
+        		if (buttons.hover) {
+        			buttons.volumeClicked = true;
+        		}
+        	}
+        	pos += 25;
+        }
+		
+	}
+	
+	public void releaseClick() {
+        for (Buttons buttons : buttons.values()) {
+        	buttons.volumeClicked = false;
+		}
 	}
 	public String millisecToTime(long millis) {
 		long totalSeconds = millis / 1000;

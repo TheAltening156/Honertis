@@ -2,6 +2,7 @@ package fr.honertis;
 
 import fr.honertis.event.Event;
 import fr.honertis.guis.GuiHonertisOptions;
+import fr.honertis.guis.music.CurrentPlayingSong;
 import fr.honertis.guis.music.MusicPlayer;
 import fr.honertis.guis.music.MusicPlayerGui;
 import fr.honertis.manager.FileManager;
@@ -21,7 +22,7 @@ public class Honertis {
 	public DiscordRPCInit rpc;
 	public boolean update;
 	public MusicPlayerGui musicPlayer;
-	private GuiHonertisOptions optionsGUI;
+	public CurrentPlayingSong playingSong;
 	
 	public void start() {
 		name = "Honertis";
@@ -32,12 +33,10 @@ public class Honertis {
 		event = new Event();
 		rpc = new DiscordRPCInit();
 		musicPlayer = new MusicPlayerGui();
+		playingSong = new CurrentPlayingSong();
 		FileManager.init();
 		rpc.init();
 		yalter.mousetweaks.Main.initialize(Constants.EntryPoint.UNDEFINED);
 	}
 
-	public GuiScreen getOptionsGUI(GuiScreen guiScreen) {
-		return optionsGUI == null ? optionsGUI = new GuiHonertisOptions(guiScreen) : optionsGUI;
-	}
 }

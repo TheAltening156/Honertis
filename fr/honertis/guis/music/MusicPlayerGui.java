@@ -47,6 +47,7 @@ import org.lwjgl.opengl.GL11;
 
 import fr.honertis.Honertis;
 import fr.honertis.manager.FileManager;
+import fr.honertis.module.addons.MiniPlayer;
 import fr.honertis.utils.DrawUtils;
 import fr.honertis.utils.LangManager;
 import fr.honertis.utils.Utils;
@@ -82,12 +83,11 @@ public class MusicPlayerGui extends GuiScreen {
         
     public boolean isYoutube = true;
     public boolean repeat = false;
-    
-    public boolean miniPlayer = false;
-    
+        
     private static final File BIN_DIR = new File("Honertis/musicPlayer/");
     private static final File songDir = new File(BIN_DIR + "/songs");
 	private static final File localSongs = new File(BIN_DIR + "/localSongs");
+	public MiniPlayer player = (MiniPlayer) Honertis.INSTANCE.modulesManager.getModuleByName("MiniPlayer");
 
 	public static String ytdlp = "yt-dlp" + getOs();
 	public static String ffmpeg = "ffmpeg" + getOs();
@@ -238,11 +238,16 @@ public class MusicPlayerGui extends GuiScreen {
         }
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
         GlStateManager.popMatrix();
-        
-        CurrentPlayingSong cps = new CurrentPlayingSong();
-        cps.draw(mc, replaceUpperCase(songName), thumbnail, ytState, posX, posY, musicPlayer, repeat, miniPlayer, width, height, mouseX, mouseY, 0);
+        Honertis.INSTANCE.playingSong.draw(mc, replaceUpperCase(songName), thumbnail, ytState, posX, posY, musicPlayer, repeat, player.isEnabled(), width, height, mouseX, mouseY, 0);
         oldX = mouseX;
 		oldY = mouseY;
+		
+		if (player.isClicked) {
+			player.posX.setDefValue(player.posX.getDefValue() + mouseX - player.oldX);
+			player.posY.setDefValue(player.posY.getDefValue() + mouseY - player.oldY);
+		}
+		player.oldX = mouseX;
+		player.oldY = mouseY;
 	}
 	
 	@Override
@@ -264,10 +269,19 @@ public class MusicPlayerGui extends GuiScreen {
 	
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+		Honertis.INSTANCE.playingSong.mouseClick();
+		
 		if (isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY) && mouseButton == 0) {
 			isYoutube = !isYoutube;
 		}
 		double position = posX + 79 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.refresh"));
+		if (isHovered(posX + 5, posY + 5, posX + 280, posY + 26, mouseX, mouseY)) {
+			if (!(isYoutube ? isHovered(posX + 70, posY + 6, posX + 220, posY + 24, mouseX, mouseY) : (isHovered(posX + 71, posY + 6, position, posY + 24, mouseX, mouseY)) || isHovered(position + 5, posY + 6, position + 15 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, mouseX, mouseY)) && !isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY))
+			clicked = true;
+		}
+		
+		if (isHovered(player.posX.getValue(), player.posY.getValue(), player.posX.getValue() + 225, player.posY.getValue() + 40, mouseX, mouseY) && !isHovered(posX + 5, posY + 5, posX + 280, posY + 255, mouseX, mouseY)) player.isClicked = true;
+
 		if (!isYoutube) {
 			File dummyFile = new File(localSongs + "/Wav file only");
 			if (!dummyFile.exists()) dummyFile.createNewFile();
@@ -285,41 +299,7 @@ public class MusicPlayerGui extends GuiScreen {
 				ytState = "";
 			}
 			if (isHovered(position + 5, posY + 6, position + 13 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, mouseX, mouseY) && mouseButton == 0) {
-				String s = localSongs.getAbsolutePath();
-
-				if (Util.getOSType() == Util.EnumOS.OSX) {
-					try {
-						System.out.println(s);
-						Runtime.getRuntime().exec(new String[] { "/usr/bin/open", s });
-						return;
-					} catch (IOException ioexception1) {
-						System.out.println((String) "Couldn\'t open file");
-					}
-				} else if (Util.getOSType() == Util.EnumOS.WINDOWS) {
-					String s1 = String.format("cmd.exe /C start \"Open file\" \"%s\"", new Object[] { s });
-
-					try {
-						Runtime.getRuntime().exec(s1);
-						return;
-					} catch (IOException ioexception) {
-						System.out.println((String) "Couldn\'t open file");
-					}
-				}
-
-				boolean flag = false;
-
-				try {
-					Class<?> oclass = Class.forName("java.awt.Desktop");
-					Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object) null, new Object[0]);
-					oclass.getMethod("browse", new Class[] { URI.class }).invoke(object,
-							new Object[] { localSongs.toURI() });
-				} catch (Throwable throwable) {
-					flag = true;
-				}
-
-				if (flag) {
-					Sys.openURL("file://" + s);
-				}
+				Utils.openPath(localSongs.getAbsolutePath(), localSongs);
 			}
 		} else {
 			if (isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY) && mouseButton == 0 && lastSongs != null)
@@ -327,10 +307,7 @@ public class MusicPlayerGui extends GuiScreen {
 		}
 		if (isYoutube)
 			text.mouseClicked(mouseX, mouseY);
-		if (isHovered(posX + 5, posY + 5, posX + 280, posY + 26, mouseX, mouseY)) {
-			if (!(isYoutube ? isHovered(posX + 70, posY + 6, posX + 220, posY + 24, mouseX, mouseY) : (isHovered(posX + 71, posY + 6, position, posY + 24, mouseX, mouseY)) || isHovered(position + 5, posY + 6, position + 15 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, mouseX, mouseY)) && !isHovered(posX + 15, posY + 9, posX + 27, posY + 21, mouseX, mouseY))
-			clicked = true;
-		}
+		
         double contentX = posX + 4;
         double contentY = posY + 26;
         double contentWidth = 275;
@@ -405,7 +382,7 @@ public class MusicPlayerGui extends GuiScreen {
 				musicPlayer.currentStateMillis = musicPlayer.durationMillis;
 			}
 			if (isHovered(posX + 98, posY + 225, posX + 98 + 18, posY + 225 + 18, mouseX, mouseY)) {
-				miniPlayer = !miniPlayer;
+				player.setEnabled(!player.isEnabled());
 			}
         }
 		/*double barWidth = 245 - 95;
@@ -560,6 +537,8 @@ public class MusicPlayerGui extends GuiScreen {
 	@Override
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
 		clicked = false;
+		player.isClicked = false;
+		Honertis.INSTANCE.playingSong.releaseClick();
 	}
 	@Override
 	public boolean doesGuiPauseGame() {

@@ -134,41 +134,7 @@ public class GuiScreenPackManager extends GuiScreen {
 				File file1 = this.mc.getResourcePackRepository().getDirResourcepacks();
 				String s = file1.getAbsolutePath();
 
-				if (Util.getOSType() == Util.EnumOS.OSX) {
-					try {
-						logger.info(s);
-						Runtime.getRuntime().exec(new String[] { "/usr/bin/open", s });
-						return;
-					} catch (IOException ioexception1) {
-						logger.error((String) "Couldn\'t open file", (Throwable) ioexception1);
-					}
-				} else if (Util.getOSType() == Util.EnumOS.WINDOWS) {
-					String s1 = String.format("cmd.exe /C start \"Open file\" \"%s\"", new Object[] { s });
-
-					try {
-						Runtime.getRuntime().exec(s1);
-						return;
-					} catch (IOException ioexception) {
-						logger.error((String) "Couldn\'t open file", (Throwable) ioexception);
-					}
-				}
-
-				boolean flag = false;
-
-				try {
-					Class<?> oclass = Class.forName("java.awt.Desktop");
-					Object object = oclass.getMethod("getDesktop", new Class[0]).invoke((Object) null, new Object[0]);
-					oclass.getMethod("browse", new Class[] { URI.class }).invoke(object,
-							new Object[] { file1.toURI() });
-				} catch (Throwable throwable) {
-					logger.error("Couldn\'t open link", throwable);
-					flag = true;
-				}
-
-				if (flag) {
-					logger.info("Opening via system class!");
-					Sys.openURL("file://" + s);
-				}
+				fr.honertis.utils.Utils.openPath(s, file1);
 			} else if (button.id == 1) {
 				if (this.changed) {
 					List<ResourcePackRepository.Entry> list = Lists.<ResourcePackRepository.Entry>newArrayList();

@@ -52,7 +52,7 @@ public class GuiHonertisOptions extends GuiScreen {
 		super.handleMouseInput();
 		int dwheel = Mouse.getDWheel();
 		if (dwheel != 0) {
-			int scrollDir = dwheel > 0 ? (dwheel/8) : (dwheel/8);
+			double scrollDir = dwheel > 0 ? (dwheel/8) : (dwheel/8);
 			mouse += scrollDir;
 		}
 	}
@@ -71,7 +71,7 @@ public class GuiHonertisOptions extends GuiScreen {
 			for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
 				int settsX = modX - 95;
 				int settsY = modY + 25;
-				if (m.getCat() == c) {					
+				if (m.getCat() == c && m.shown) {					
 					mc.fontRendererObj.drawStringWithShadow(m.getName(), modX - 175, modY, -1);
 					GlStateManager.pushMatrix();
 					GlStateManager.scale(0.5, 0.5, 1);
@@ -167,7 +167,7 @@ public class GuiHonertisOptions extends GuiScreen {
 			for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
 				int settsX = modX - 95;
 				int settsY = modY + 25;
-				if (m.getCat() == c) {
+				if (m.getCat() == c && m.shown) {
 					if (mouseButton == 0) {
 						if (isHovered(modX + 35, modY - 5, modX + 66, modY + 12, mouseX, mouseY)) {
 							m.toggle();
@@ -226,7 +226,7 @@ public class GuiHonertisOptions extends GuiScreen {
 			for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
 				int settsX = modX - 95;
 				int settsY = modY + 25;
-				if (m.getCat() == c) {
+				if (m.getCat() == c && m.shown) {
 					for (Settings s : m.settings) {
 						if (!m.settings.isEmpty() && m.showSettings() && s.show) {
 							

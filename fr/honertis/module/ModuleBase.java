@@ -23,11 +23,20 @@ public class ModuleBase extends Events{
 	public Minecraft mc = Minecraft.getMinecraft();
 	public List<Settings> settings = Lists.newArrayList();
 	private boolean showSettings;
+	public boolean shown;
 	
 	public ModuleBase(String name, String desc, Category cat) {
 		this.name = name;
 		this.desc = desc;
 		this.cat = cat;
+		this.shown = true;
+	}
+	
+	public ModuleBase(String name, String desc, Category cat, boolean shown) {
+		this.name = name;
+		this.desc = desc;
+		this.cat = cat;
+		this.shown = shown;
 	}
 	
 	public void addSettings(Settings... s) {
@@ -57,6 +66,12 @@ public class ModuleBase extends Events{
 	}
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+	public boolean isShown() {
+		return shown;
+	}
+	public void setShown(boolean shown) {
+		this.shown = shown;
 	}
 	
 	public void toggle() {

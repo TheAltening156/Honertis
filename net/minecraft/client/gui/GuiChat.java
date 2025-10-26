@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 
 import fr.honertis.Honertis;
 import fr.honertis.guis.music.MusicPlayerGui;
+import fr.honertis.module.addons.MiniPlayer;
 import fr.honertis.utils.LangManager;
 
 import java.io.IOException;
@@ -181,6 +182,9 @@ public class GuiChat extends GuiScreen
         }
     }
 
+	public MiniPlayer player = (MiniPlayer) Honertis.INSTANCE.modulesManager.getModuleByName("MiniPlayer");
+
+    
     /**
      * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
      */
@@ -196,10 +200,17 @@ public class GuiChat extends GuiScreen
             }
         }
 
+        if (isHovered(player.posX.getValue(), player.posY.getValue(), player.posX.getValue() + 225, player.posY.getValue() + 40, mouseX, mouseY)) player.isClicked = true;
+        
         this.inputField.mouseClicked(mouseX, mouseY, mouseButton);
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
+    @Override
+    protected void mouseReleased(int mouseX, int mouseY, int state) {
+    	player.isClicked = false;
+    }
+    
     /**
      * Sets the text of the chat
      */
@@ -315,6 +326,12 @@ public class GuiChat extends GuiScreen
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     {
+    	if (player.isClicked) {
+			player.posX.setDefValue(player.posX.getDefValue() + mouseX - player.oldX);
+			player.posY.setDefValue(player.posY.getDefValue() + mouseY - player.oldY);
+		}
+		player.oldX = mouseX;
+		player.oldY = mouseY;
         drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
         this.inputField.drawTextBox();
         IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());

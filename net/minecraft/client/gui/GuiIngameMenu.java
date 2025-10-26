@@ -97,7 +97,7 @@ public class GuiIngameMenu extends GuiScreen
                 this.mc.displayGuiScreen(new GuiShareToLan(this));
                 break;
             case 8: 
-            	this.mc.displayGuiScreen(Honertis.INSTANCE.getOptionsGUI(this));
+            	this.mc.displayGuiScreen(new GuiHonertisOptions(this));
         }
     }
 

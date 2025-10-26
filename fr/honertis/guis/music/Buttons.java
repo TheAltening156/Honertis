@@ -27,6 +27,7 @@ public enum Buttons {
     public long lastTime = System.currentTimeMillis();
     public double hoverProgress = 0;
     public boolean hover;
+    public boolean volumeClicked;
     
 	Buttons(ResourceLocation res) {
 		this.res = res;
@@ -80,18 +81,20 @@ public enum Buttons {
 	        double soundBarWidth = 30;
 	        double animatedWidth = Math.min(soundBarWidth, soundBarWidthProgress);
 	        if (!(soundBarWidthProgress < 0.2)) {
-	        	drawRoundedRect(posX + 233, posY + 233, posX + 224 + soundBarWidthProgress, posY + 235, 2, new Color(255,255,255,125).getRGB());
+	        	drawRoundedRect(posX + 234, posY + 233, posX + 224 + soundBarWidthProgress, posY + 235, 2, new Color(255,255,255,125).getRGB());
 
 	        	double soundRelativeX = mouseX - (posX + 233);
 				if(soundRelativeX < 0) soundRelativeX = 0;
 				if(soundRelativeX > soundBarWidth) soundRelativeX = soundBarWidth;
 				double soundProgress = soundRelativeX / soundBarWidth;
-	        	if (Mouse.isButtonDown(0)) {
+	        	if (volumeClicked) {
 	        		player.setVolume(Honertis.INSTANCE.musicPlayer.volume = (int) (soundProgress * 100));
 	        	}
+	        	int volumeWidth = (int)((Honertis.INSTANCE.musicPlayer.volume / 100.0) * animatedWidth);
+		    	drawRoundedRect(posX + 233, posY + 233, posX + 233 + volumeWidth, posY + 235, soundBarWidthProgress < 0.2 ? 0 :  2, -1);
+		    	drawRoundedRect(posX + 232 + volumeWidth, posY + 232, posX + 235 + volumeWidth, posY + 236, soundBarWidthProgress < 0.2 ? 0 :  2, -1);
 	        }
-	        int volumeWidth = (int)((Honertis.INSTANCE.musicPlayer.volume / 100.0) * animatedWidth);
-	    	drawRoundedRect(posX + 234, posY + 233, posX + 234 + volumeWidth, posY + 235, soundBarWidthProgress < 0.2 ? 0 :  2, -1);
+	        
 	        
 	        enableBlend();
 	        disableLighting();

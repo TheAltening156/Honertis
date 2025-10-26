@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.honertis.Honertis;
+import fr.honertis.module.addons.MiniPlayer;
 import fr.honertis.module.modules.AutoGG;
 import fr.honertis.module.modules.BlockHit;
 import fr.honertis.module.modules.BlockTap;
@@ -49,7 +50,8 @@ public class ModulesManager {
 			new DropSwing(),
 			new ToggleSneak(),
 			new Zoom(),
-			new MouseTweaks());
+			new MouseTweaks(),
+			new MiniPlayer());
 		
 	}
 	
