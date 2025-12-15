@@ -20,7 +20,6 @@ import fr.honertis.module.ModuleBase;
 import fr.honertis.module.ModulesManager;
 import fr.honertis.module.modules.FreeLook;
 import fr.honertis.module.modules.Zoom;
-import fr.honertis.utils.MC;
 import fr.honertis.utils.TimeUtils;
 import fr.honertis.utils.WebUtils;
 
@@ -1278,7 +1277,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     		}
         }
         
-        if (MC.mc.currentScreen == null && Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop").isEnabled()) {
+        if (currentScreen == null && Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop").isEnabled()) {
 	        if (Keyboard.getEventKey() == gameSettings.keyBindDrop.getKeyCode() && Keyboard.getEventKeyState()) {
 	        	if (gameSettings.keyBindDrop.isPressed() && !this.thePlayer.isSpectator()) {
 		            boolean delayResetDone = false;

@@ -11,7 +11,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LangManager implements MC{
+import net.minecraft.client.Minecraft;
+
+public class LangManager{
 	private static final Map<String, String> translations = new HashMap<String, String>();
 	private static final Map<String, String> fallback = new HashMap<String, String>();
 	private static String currentLang = "";
@@ -62,8 +64,8 @@ public class LangManager implements MC{
     }
 	
 	public static String format(String key) {
-		if (!mc.gameSettings.language.equals(currentLang)) {
-	        currentLang = mc.gameSettings.language;
+		if (!Minecraft.getMinecraft().gameSettings.language.equals(currentLang)) {
+	        currentLang = Minecraft.getMinecraft().gameSettings.language;
 	        loadLang(currentLang);
 	    }
         return translations.getOrDefault(key, fallback.getOrDefault(key, key));

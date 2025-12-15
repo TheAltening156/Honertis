@@ -15,7 +15,6 @@ import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.settings.BooleanSettings;
 import fr.honertis.settings.NumberSettings;
-import fr.honertis.utils.MC;
 import fr.honertis.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -32,14 +31,14 @@ public class KeyStrokes extends ModuleBase{
 		this.addSettings(delay, space);
 	}
 	
-	public enum Keys implements MC{
-		W(mc.gameSettings.keyBindForward, 23, 70),
-		A(mc.gameSettings.keyBindLeft, 0, 93),
-		S(mc.gameSettings.keyBindBack, 23, 93),
-		D(mc.gameSettings.keyBindRight, 46, 93),
-		JUMP(mc.gameSettings.keyBindJump, 0, 116),
-		LMB(mc.gameSettings.keyBindAttack, 0, 130),
-		RMB(mc.gameSettings.keyBindUseItem, 35, 130);
+	public enum Keys{
+		W(Minecraft.getMinecraft().gameSettings.keyBindForward, 23, 70),
+		A(Minecraft.getMinecraft().gameSettings.keyBindLeft, 0, 93),
+		S(Minecraft.getMinecraft().gameSettings.keyBindBack, 23, 93),
+		D(Minecraft.getMinecraft().gameSettings.keyBindRight, 46, 93),
+		JUMP(Minecraft.getMinecraft().gameSettings.keyBindJump, 0, 116),
+		LMB(Minecraft.getMinecraft().gameSettings.keyBindAttack, 0, 130),
+		RMB(Minecraft.getMinecraft().gameSettings.keyBindUseItem, 35, 130);
 		public KeyBinding key;
 		public int posX;
 		public int posY;
@@ -75,7 +74,7 @@ public class KeyStrokes extends ModuleBase{
 			
 			float colorValue = progress / 255.0f;
 			int color = new Color(colorValue, colorValue, colorValue, colorValue).getRGB();
-			FontRenderer fr = mc.fontRendererObj;
+			FontRenderer fr = Minecraft.getMinecraft().fontRendererObj;
 			int x1 = 22;
 			int y1 = 22;
 			if (this == Keys.JUMP) {
@@ -146,7 +145,7 @@ public class KeyStrokes extends ModuleBase{
 	        }
 
 	        public void isKeyPressed(boolean key) {
-	        	if (mc.currentScreen == null) {
+	        	if (Minecraft.getMinecraft().currentScreen == null) {
 		            if (key != pressed) {
 		                lastPress = System.currentTimeMillis();
 		                pressed = key;

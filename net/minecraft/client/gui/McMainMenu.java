@@ -20,8 +20,8 @@ import org.lwjgl.util.glu.Project;
 import com.google.common.collect.Lists;
 
 import fr.honertis.Honertis;
+import fr.honertis.guis.GuiHonertisCredits;
 import fr.honertis.guis.GuiHonertisOptions;
-import fr.honertis.utils.MC;
 import fr.honertis.utils.WebUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -237,7 +237,8 @@ public class McMainMenu extends GuiScreen implements GuiYesNoCallback
     {
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer", new Object[0])));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer", new Object[0])));
-        this.buttonList.add(new GuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, "Honertis Options"));
+        this.buttonList.add(new GuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, 98, 20, "Honertis Options"));
+        this.buttonList.add(new GuiButton(15, this.width / 2 + 2, p_73969_1_ + p_73969_2_ * 2, 98, 20, "Credits"));
     }
 
     /**
@@ -284,6 +285,10 @@ public class McMainMenu extends GuiScreen implements GuiYesNoCallback
         if (button.id == 14)
         {
             this.mc.displayGuiScreen(new GuiHonertisOptions(this));
+        }
+        if (button.id == 15)
+        {
+            this.mc.displayGuiScreen(new GuiHonertisCredits(this));
         }
 
         if (button.id == 4)

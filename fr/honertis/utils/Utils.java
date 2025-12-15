@@ -11,6 +11,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
 import fr.honertis.guis.resourcePacks.GuiScreenPackManager;
+import fr.honertis.settings.NumberSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.Util;
@@ -91,6 +92,25 @@ public class Utils {
 			LogManager.getLogger().info("Opening via system class!");
 			Sys.openURL("file://" + s);
 		}
+	}
+	
+	public static void cantBeOut(double posX, double posY, double minX, double maxX, double minY, double maxY) {
+		if (posX < minX) {
+			posX = minX;
+		}
+		if (posX > maxX) {
+			posX = maxX;
+		}
+		if (posY < minY) {
+			posY = minY;
+		}
+		if (posY > maxY) {
+			posY = maxY;
+		}
+	}
+	
+	public static void cantBeOut(NumberSettings x, NumberSettings y) {
+		cantBeOut(x.getValue(), y.getValue(), x.getMin(), x.getMax(), y.getMin(), y.getMax());
 	}
 	
 }

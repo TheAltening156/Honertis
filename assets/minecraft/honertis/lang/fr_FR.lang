@@ -71,5 +71,11 @@ gui.honertis.options.name=Options Honertis
 gui.honertis.options.scroll=Vous pouvez utiliser le scroll de la souris
 gui.honertis.options.scroll1=si vous ne voyez pas certain paramètre / module
 
+# Credits Screen
+gui.honertis.credits.text1=Merci à LCCRAFT pour l'icone et boutons du lecteur de musique.
+gui.honertis.credits.text2=Merci à Yalter pour m'avoir donné l'autorisation de l'utilisation
+gui.honertis.credits.text3=de son mod "Yalter's MouseTweaks".
+gui.honertis.credits.text4=Et aussi merci à alfaa pour m'avoir redonné envie de développer ce client pvp.
+
 gui.musicPlayer.name=Lecteur de musique
 gui.musicPlayer.search=Recherche...

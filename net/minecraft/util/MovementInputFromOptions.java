@@ -2,7 +2,7 @@ package net.minecraft.util;
 
 import fr.honertis.Honertis;
 import fr.honertis.module.modules.ToggleSneak;
-import fr.honertis.utils.MC;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 
 public class MovementInputFromOptions extends MovementInput
@@ -43,7 +43,7 @@ public class MovementInputFromOptions extends MovementInput
         ToggleSneak toggleSneak = (ToggleSneak) Honertis.INSTANCE.modulesManager.getModuleByName("ToggleSneak");
         boolean hold = toggleSneak.isEnabled() ? toggleSneak.holdActive : false;
         if (hold) {
-        	hold = MC.mc.currentScreen != null? false : hold;
+        	hold = Minecraft.getMinecraft().currentScreen != null? false : hold;
         }
         this.sneak = hold ? hold : this.gameSettings.keyBindSneak.isKeyDown();
 

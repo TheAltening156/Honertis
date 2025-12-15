@@ -4,6 +4,7 @@ import fr.honertis.event.EventUpdate;
 import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.settings.NumberSettings;
+import fr.honertis.utils.Utils;
 import net.minecraft.client.gui.ScaledResolution;
 
 public class MiniPlayer extends ModuleBase{
@@ -25,18 +26,7 @@ public class MiniPlayer extends ModuleBase{
 		ScaledResolution scale = new ScaledResolution(mc);
 		posX.setMax(scale.getScaledWidth() - 225);
 		posY.setMax(scale.getScaledHeight() - 40);
-		if (posX.getValue() < posX.getMin()) {
-			posX.setValue(posX.getMin());
-		}
-		if (posY.getValue() < posY.getMin()) {
-			posY.setValue(posY.getMin());
-		}
-		if (posX.getValue() > posX.getMax()) {
-			posX.setValue(posX.getMax());
-		}
-		if (posY.getValue() > posY.getMax()) {
-			posY.setValue(posY.getMax());
-		}
+		Utils.cantBeOut(posX, posY);
 	}
 	
 	

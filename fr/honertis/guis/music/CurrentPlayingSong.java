@@ -60,7 +60,7 @@ public class CurrentPlayingSong {
         mc.fontRendererObj.drawStringWithShadow(millisecToTime(musicPlayer.durationMillis), (int)posX + 277 - mc.fontRendererObj.getStringWidth(millisecToTime(musicPlayer.durationMillis)), (int)posY + 244, -1);
         if (!ytState.isEmpty() || !ytState.equals("")) {
         	drawRoundedRect((double)width - mc.fontRendererObj.getStringWidth(ytState + "    "), (double)height-30D,(double) width - 2D, (double)height -12D, 5D, Color.DARK_GRAY.getRGB());
-        	mc.fontRendererObj.drawString(ytState, width - mc.fontRendererObj.getStringWidth(ytState + "    "), height - 25, -1);
+        	mc.fontRendererObj.drawString(ytState, width - mc.fontRendererObj.getStringWidth(ytState + "    ") + 5, height - 25, -1);
         }
         if (mode != 0) posY += 6;
 	}

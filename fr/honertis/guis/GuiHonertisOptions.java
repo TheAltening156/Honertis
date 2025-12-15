@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import fr.honertis.Honertis;
 import fr.honertis.module.Category;
@@ -19,6 +20,7 @@ import fr.honertis.settings.Settings;
 import fr.honertis.utils.AnimUtils;
 import fr.honertis.utils.DrawUtils;
 import fr.honertis.utils.LangManager;
+import fr.honertis.utils.Utils;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -71,7 +73,7 @@ public class GuiHonertisOptions extends GuiScreen {
 			for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
 				int settsX = modX - 95;
 				int settsY = modY + 25;
-				if (m.getCat() == c && m.shown) {					
+				if (m.getCat() == c && m.shown) {
 					mc.fontRendererObj.drawStringWithShadow(m.getName(), modX - 175, modY, -1);
 					GlStateManager.pushMatrix();
 					GlStateManager.scale(0.5, 0.5, 1);

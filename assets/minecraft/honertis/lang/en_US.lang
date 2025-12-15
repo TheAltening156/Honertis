@@ -71,5 +71,11 @@ gui.honertis.options.name=Honertis Options
 gui.honertis.options.scroll=You can use mouse scroll
 gui.honertis.options.scroll1=if you can't see some parameter / module
 
+# Credits Screen
+gui.honertis.credits.text1=Thanks to LCCRAFT for the icon and all Music Player buttons.
+gui.honertis.credits.text2=Thanks to Yalter for giving me the permission to use
+gui.honertis.credits.text3="Yalter's MouseTweaks" mod.
+gui.honertis.credits.text4=And thanks also to Alfaa for giving me back the motivation to develop this PvP client.
+
 gui.musicPlayer.name=Music player
 gui.musicPlayer.search=Search...
