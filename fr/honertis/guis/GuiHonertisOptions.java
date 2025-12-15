@@ -3,6 +3,7 @@ package fr.honertis.guis;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import org.lwjgl.input.Keyboard;
@@ -33,6 +34,9 @@ public class GuiHonertisOptions extends GuiScreen {
 	public boolean clicked;
 	public String currentDesc;
 	private	int mouse = 0;
+	private int mouseMax;
+	
+	private int maxScroll = 0;
 	
 	public GuiHonertisOptions(GuiScreen parent) {
 		this.parent = parent;
@@ -51,20 +55,56 @@ public class GuiHonertisOptions extends GuiScreen {
 	
 	@Override
 	public void handleMouseInput() throws IOException {
-		super.handleMouseInput();
-		int dwheel = Mouse.getDWheel();
-		if (dwheel != 0) {
-			double scrollDir = dwheel > 0 ? (dwheel/8) : (dwheel/8);
-			mouse += scrollDir;
-		}
+	    super.handleMouseInput();
+
+	    int dwheel = Mouse.getDWheel();
+	    if (dwheel != 0) {
+	    	mouse += dwheel / 8;
+	    }
+
+	    if (mouse > 0) mouse = 0;
+	    if (mouse < -maxScroll) mouse = -maxScroll;
 	}
 	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawDefaultBackground();
+		
+		int contentHeight = 0;
+
+		for (Category c : Category.values()) {
+		    contentHeight += 25;
+
+		    for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
+		        if (m.getCat() == c && m.shown) {
+		            contentHeight += 25;
+
+		            if (m.showSettings()) {
+		                for (Settings s : m.settings) {
+		                    if (s.show) {
+		                        contentHeight += 25;
+		                    }
+		                }
+		            }
+		        }
+		    }
+		}
+
+		int visibleHeight = (height - 72) - 15;
+		maxScroll = Math.max(0, contentHeight - visibleHeight);
+		
+		int color = new Color(0,0,0,55).getRGB();
+		drawRect(0,0,width, 45, color);
+		drawRect(0, height - 27, width, height, color);
+		drawGradientRect(0, 45, width, 70, color, 0);
+    	drawGradientRect(0, height - 72, width, height - 27, 0, color);
 		mc.fontRendererObj.drawCenteredStringWithShadow(LangManager.format("gui.honertis.options.name"), this.width / 2, 10, -1);
 		mc.fontRendererObj.drawCenteredStringWithShadow(LangManager.format("gui.honertis.options.scroll"), this.width / 2, 24, -1);
 		mc.fontRendererObj.drawCenteredStringWithShadow(LangManager.format("gui.honertis.options.scroll1"), this.width / 2, 32, -1);
+    	
+		GlStateManager.pushMatrix();
+    	GL11.glEnable(GL11.GL_SCISSOR_TEST);
+    	Utils.scissorGui(0, 45, width, height - 72);
 		int posY = 50 + mouse;
 		for (Category c : Category.values()) {
 			mc.fontRendererObj.drawCenteredStringWithShadow(c.getName(), this.width / 2, posY, -1);
@@ -76,7 +116,7 @@ public class GuiHonertisOptions extends GuiScreen {
 				if (m.getCat() == c && m.shown) {
 					mc.fontRendererObj.drawStringWithShadow(m.getName(), modX - 175, modY, -1);
 					GlStateManager.pushMatrix();
-					GlStateManager.scale(0.5, 0.5, 1);
+					GlStateManager.scale(0.5, 0.5, 0);
 					GlStateManager.translate(modX - 175, modY, 1);
 					mc.fontRendererObj.drawStringWithShadow(m.getDesc(), modX - 165, modY + 21, -1);
 					GlStateManager.popMatrix();
@@ -96,7 +136,6 @@ public class GuiHonertisOptions extends GuiScreen {
 							mc.fontRendererObj.drawString("rendu :", settsX + 160, settsY, -1);
 						}
 					}
-					
 					for (Settings s : m.settings) {
 						if (!m.settings.isEmpty() && m.showSettings() && s.show) {
 							int width = settsX + 127;
@@ -120,6 +159,12 @@ public class GuiHonertisOptions extends GuiScreen {
 									num.setValue(val);
 								}
 		                      
+							}
+							if (m.getCat() == Category.ANCIEN_MODULES) {
+								drawRect(modX, modY, modX + 50, modY + 25, -1);
+								if (mouse >= modY + 25) {
+									mouse=modY+25;
+								}
 							}
 							if (s instanceof BooleanSettings) {
 								BooleanSettings ss = (BooleanSettings) s;
@@ -148,6 +193,8 @@ public class GuiHonertisOptions extends GuiScreen {
 			}
 			posY += 25;
 		}
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+    	GlStateManager.popMatrix();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 	
@@ -161,55 +208,56 @@ public class GuiHonertisOptions extends GuiScreen {
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		if (isHovered(this.width / 2 - 100, this.height - 25, this.width / 2 + 100, this.height - 5, mouseX, mouseY)) return;
-		int posY = 50 + mouse;
-		for (Category c : Category.values()) {
-			int modX = this.width / 2 + 60;
-			int modY = posY + 23;
-			for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
-				int settsX = modX - 95;
-				int settsY = modY + 25;
-				if (m.getCat() == c && m.shown) {
-					if (mouseButton == 0) {
-						if (isHovered(modX + 35, modY - 5, modX + 66, modY + 12, mouseX, mouseY)) {
-							m.toggle();
+		if (isHovered(0, 45, width, height - 27, mouseX, mouseY)) {
+			int posY = 50 + mouse;
+			for (Category c : Category.values()) {
+				int modX = this.width / 2 + 60;
+				int modY = posY + 23;
+				for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
+					int settsX = modX - 95;
+					int settsY = modY + 25;
+					if (m.getCat() == c && m.shown) {
+						if (mouseButton == 0) {
+							if (isHovered(modX + 35, modY - 5, modX + 66, modY + 12, mouseX, mouseY)) {
+								m.toggle();
+							}
+							if (isHovered(modX + 8, modY - 5, (modX + 8) + 18, (modY - 5) + 18, mouseX, mouseY)) {
+								m.toggleShowSettings();
+							}
 						}
-						if (isHovered(modX + 8, modY - 5, (modX + 8) + 18, (modY - 5) + 18, mouseX, mouseY)) {
-							m.toggleShowSettings();
+						for (Settings s : m.settings) {
+							if (!m.settings.isEmpty() && m.showSettings() && s.show) {
+								if (s instanceof NumberSettings) {
+									if (isHovered(settsX - 3, settsY - 3, settsX + 127, settsY + 13, mouseX, mouseY) && mouseButton == 0) {
+										clicked = true;
+									}
+								}
+								if (s instanceof BooleanSettings) {
+									BooleanSettings ss = (BooleanSettings) s; 
+									if (isHovered(settsX + 118, settsY - 5, settsX + 147, settsY + 12, mouseX, mouseY) && mouseButton == 0) {
+										ss.toggle();
+									}
+								}
+								if (s instanceof KeyBindSettings) {
+									KeyBindSettings ss = (KeyBindSettings) s;
+									String sn = ss.getName() + "  :  " + Keyboard.getKeyName(ss.getKey());
+									int sx = settsX + 36;
+									int sy = settsY;
+									if (isHovered(sx - 31, sy, sx + mc.fontRendererObj.getStringWidth(ss.getName() + "  :  " + Keyboard.getKeyName(ss.getKey())) - 26, sy + 10, mouseX, mouseY)) {
+										ss.change();
+									}
+								}
+								posY += 25;
+								modY += 25;
+			                    settsY += 25;
+							}
 						}
+						modY += 25;
+						posY += 25;
 					}
-					for (Settings s : m.settings) {
-						if (!m.settings.isEmpty() && m.showSettings() && s.show) {
-							if (s instanceof NumberSettings) {
-								if (isHovered(settsX - 3, settsY - 3, settsX + 127, settsY + 13, mouseX, mouseY) && mouseButton == 0) {
-									clicked = true;
-								}
-							}
-							if (s instanceof BooleanSettings) {
-								BooleanSettings ss = (BooleanSettings) s; 
-								if (isHovered(settsX + 118, settsY - 5, settsX + 147, settsY + 12, mouseX, mouseY) && mouseButton == 0) {
-									ss.toggle();
-								}
-							}
-							if (s instanceof KeyBindSettings) {
-								KeyBindSettings ss = (KeyBindSettings) s;
-								String sn = ss.getName() + "  :  " + Keyboard.getKeyName(ss.getKey());
-								int sx = settsX + 36;
-								int sy = settsY;
-								if (isHovered(sx - 31, sy, sx + mc.fontRendererObj.getStringWidth(ss.getName() + "  :  " + Keyboard.getKeyName(ss.getKey())) - 26, sy + 10, mouseX, mouseY)) {
-									ss.change();
-								}
-							}
-							posY += 25;
-							modY += 25;
-		                    settsY += 25;
-						}
-					}
-					modY += 25;
-					posY += 25;
 				}
+				posY += 25;
 			}
-			posY += 25;
 		}
 	}
 	

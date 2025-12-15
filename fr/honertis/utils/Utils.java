@@ -95,22 +95,25 @@ public class Utils {
 	}
 	
 	public static void cantBeOut(double posX, double posY, double minX, double maxX, double minY, double maxY) {
-		if (posX < minX) {
-			posX = minX;
-		}
-		if (posX > maxX) {
-			posX = maxX;
-		}
-		if (posY < minY) {
-			posY = minY;
-		}
-		if (posY > maxY) {
-			posY = maxY;
-		}
+		NumberSettings x = new NumberSettings("", posX, minX, maxX, 0);
+		NumberSettings y = new NumberSettings("", posY, minY, maxY, 0);
+		cantBeOut(x,y);
 	}
 	
-	public static void cantBeOut(NumberSettings x, NumberSettings y) {
-		cantBeOut(x.getValue(), y.getValue(), x.getMin(), x.getMax(), y.getMin(), y.getMax());
+	public static void cantBeOut(NumberSettings posX, NumberSettings posY) {
+		if (posX.getValue() < posX.getMin()) {
+			posX.setValue(posX.getMin());
+		}
+		if (posY.getValue() < posY.getMin()) {
+			posY.setValue(posY.getMin());
+		}
+		if (posX.getValue() > posX.getMax()) {
+			posX.setValue(posX.getMax());
+		}
+		if (posY.getValue() > posY.getMax()) {
+			posY.setValue(posY.getMax());
+		}
+		//cantBeOut(x.getValue(), y.getValue(), x.getMin(), x.getMax(), y.getMin(), y.getMax());
 	}
 	
 }
