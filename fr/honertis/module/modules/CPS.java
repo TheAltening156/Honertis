@@ -9,13 +9,14 @@ import com.google.common.collect.Lists;
 import fr.honertis.event.EventRenderGui;
 import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
+import fr.honertis.utils.Utils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
 
 public class CPS extends ModuleBase {
     public List<Long> lCps = Lists.newArrayList();
     public List<Long> rCps = Lists.newArrayList();
-    public int posX = 10;
-    public int posY = 30;
     
     private PressState leftButtonState;
     private PressState rightButtonState;
@@ -34,9 +35,12 @@ public class CPS extends ModuleBase {
         String lmb = "LMB: " + lCps.size();
         String rmb = "RMB: " + rCps.size();
         String text = lmb + " " + rmb;
-        
-        Gui.drawRect(posX - 4, posY - 4, posX + mc.fontRendererObj.getStringWidth(text) + 4, posY + 11, 0x90000000);
-        mc.fontRendererObj.drawStringWithShadow(text, posX, posY, -1);
+        double width =  mc.fontRendererObj.getStringWidth(text) + 8;
+        double height = 15;
+        Gui.drawRect(posX.getValue(), posY.getValue(), posX.getValue() + width, posY.getValue() + height, 0x90000000);
+        mc.fontRendererObj.drawStringWithShadow(text, posX.getValue() + 4, posY.getValue() + 4, -1);
+
+		Utils.calculate(width, height, posX, posY, new ScaledResolution(Minecraft.getMinecraft()));
     }
     
     public class PressState {
