@@ -8,6 +8,12 @@ public class BooleanSettings extends Settings{
 		this.toggled = toggled;
 	}
 
+	public BooleanSettings(String name, boolean toggled, boolean show) {
+		this.name = name;
+		this.toggled = toggled;
+		this.show = show;
+	}
+	
 	public void setToggled(boolean t) {
 		this.toggled = t;
 	}

@@ -5,15 +5,10 @@ import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.settings.NumberSettings;
 import fr.honertis.utils.Utils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 
 public class MiniPlayer extends ModuleBase{
-	public boolean isClicked;
-	public double oldX;
-	public double oldY;
-	
-	public NumberSettings posX = new NumberSettings("posX", 0, 0, 1920, 1);
-	public NumberSettings posY = new NumberSettings("posY", 0, 0, 1080, 1);
 	
 	public MiniPlayer() {
 		super("MiniPlayer", "MiniPlayer position", Category.UTILITIES, false);
@@ -23,10 +18,7 @@ public class MiniPlayer extends ModuleBase{
 	@Override
 	public void onUpdate(EventUpdate e) {
 		if (!e.isPre()) return;
-		ScaledResolution scale = new ScaledResolution(mc);
-		posX.setMax(scale.getScaledWidth() - 225);
-		posY.setMax(scale.getScaledHeight() - 40);
-		Utils.cantBeOut(posX, posY);
+		Utils.calculate(225, 40, posX, posY, new ScaledResolution(Minecraft.getMinecraft()));
 	}
 	
 	

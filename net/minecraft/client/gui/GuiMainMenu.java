@@ -33,10 +33,6 @@ public class GuiMainMenu extends GuiScreen {
 
 		mc.fontRendererObj.drawCenteredString(LangManager.format("gui.new"), this.width / 2, this.height / 2 - 50, -1);
 		mc.fontRendererObj.drawCenteredString(LangManager.format("gui.still") + " " + instance.version + ", " + LangManager.format("gui.current") + " " + WebUtils.newVersion, this.width / 2, this.height / 2 - 50 + mc.fontRendererObj.FONT_HEIGHT, -1);
-		if (update) {
-			mc.fontRendererObj.drawCenteredString("Ouverture de la page web ...", this.width / 2, this.height / 2 + 1, -1);
-			
-		}
 	}
 	
 	@Override
@@ -51,7 +47,7 @@ public class GuiMainMenu extends GuiScreen {
 				WebUtils.browseWebsite("https://github.com/TheAltening156/HonertisLauncher/releases/");
 			}
 			try {
-				Thread.sleep(1500L);
+				Thread.sleep(250L);
 				update = false;
 			} catch (InterruptedException e) {
 				e.printStackTrace();

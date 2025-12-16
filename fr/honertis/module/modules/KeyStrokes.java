@@ -19,29 +19,30 @@ import fr.honertis.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.KeyBinding;
 
 public class KeyStrokes extends ModuleBase{    
 	public static BooleanSettings space = new BooleanSettings("module.keystrokes.spacebar", true);
     public static NumberSettings delay = new NumberSettings("module.keystrokes.delay", 50, 1, 500, 1);
-    
+
     public KeyStrokes() {
 		super("Keystrokes", "module.keystrokes", Category.UTILITIES);
-		this.addSettings(delay, space);
+		this.addSettings(delay, space, posX, posY);
 	}
 	
 	public enum Keys{
-		W(Minecraft.getMinecraft().gameSettings.keyBindForward, 23, 70),
-		A(Minecraft.getMinecraft().gameSettings.keyBindLeft, 0, 93),
-		S(Minecraft.getMinecraft().gameSettings.keyBindBack, 23, 93),
-		D(Minecraft.getMinecraft().gameSettings.keyBindRight, 46, 93),
-		JUMP(Minecraft.getMinecraft().gameSettings.keyBindJump, 0, 116),
-		LMB(Minecraft.getMinecraft().gameSettings.keyBindAttack, 0, 130),
-		RMB(Minecraft.getMinecraft().gameSettings.keyBindUseItem, 35, 130);
+		W(Minecraft.getMinecraft().gameSettings.keyBindForward, 23, 0),
+		A(Minecraft.getMinecraft().gameSettings.keyBindLeft, 0, 23),
+		S(Minecraft.getMinecraft().gameSettings.keyBindBack, 23, 23),
+		D(Minecraft.getMinecraft().gameSettings.keyBindRight, 46, 23),
+		JUMP(Minecraft.getMinecraft().gameSettings.keyBindJump, 0, 46),
+		LMB(Minecraft.getMinecraft().gameSettings.keyBindAttack, 0, 60),
+		RMB(Minecraft.getMinecraft().gameSettings.keyBindUseItem, 35, 60);
 		public KeyBinding key;
-		public int posX;
-		public int posY;
+		public double posX;
+		public double posY;
 		private float colorProgress = 0f;
 	    private boolean animating = false;
 	    private boolean toWhite = true;
@@ -68,7 +69,7 @@ public class KeyStrokes extends ModuleBase{
 			rightButtonState = new PressState(rCps);
 		}
 		
-		private void drawRect(int progress, int keyCode, int x, int y) {
+		private void drawRect(int progress, int keyCode, double x, double y) {
 			leftButtonState.isKeyPressed(Mouse.isButtonDown(0));
 			rightButtonState.isKeyPressed(Mouse.isButtonDown(1));
 			
@@ -102,7 +103,7 @@ public class KeyStrokes extends ModuleBase{
 	        } else if (this == Keys.LMB || this == Keys.RMB) {
 	        	y-=2;
 	        	GlStateManager.pushMatrix();
-				GlStateManager.scale(0.5, 0.5, 1);
+				GlStateManager.scale(0.5, 0.5, 0);
 				GlStateManager.translate(x, y, 1);
 		        fr.drawCenteredString(((this == Keys.LMB) ? lCps.size() : rCps.size()) + " CPS", x + 16, y +21, colorCode);
 				GlStateManager.popMatrix();
@@ -164,8 +165,8 @@ public class KeyStrokes extends ModuleBase{
 	public void onGuiRender(EventRenderGui e) {
 	    for (Keys k : Keys.values()) {
 	        if (!space.isToggled() && k == Keys.JUMP) continue;
-	        int posX = k.posX;
-	        int posY = k.posY;
+	        double posX = this.posX.getValue() + k.posX;
+	        double posY = this.posY.getValue() + k.posY;
 	        KeyBinding keys = k.key;
 	        boolean isDown = keys.isKeyDown();
 
@@ -177,11 +178,7 @@ public class KeyStrokes extends ModuleBase{
 	        k.updateAnimation();		
 	        k.drawRect((int) k.colorProgress, keys.getKeyCode(), posX, posY);
 	    }
-	}
-	
-	@Override
-	public void onUpdate(EventUpdate e) {
-		
+	    Utils.calculate(68, 84, this.posX, this.posY, new ScaledResolution(Minecraft.getMinecraft()));
 	}
 
 }

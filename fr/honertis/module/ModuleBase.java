@@ -25,6 +25,12 @@ public class ModuleBase extends Events{
 	private boolean showSettings;
 	public boolean shown;
 	
+	public NumberSettings posX = new NumberSettings("posX", 0, 0, 1920, 1, false);
+	public NumberSettings posY = new NumberSettings("posY", 0, 0, 1080, 1, false);
+	public boolean isClicked;
+	public double oldX;
+	public double oldY;
+	
 	public ModuleBase(String name, String desc, Category cat) {
 		this.name = name;
 		this.desc = desc;
@@ -38,7 +44,7 @@ public class ModuleBase extends Events{
 		this.cat = cat;
 		this.shown = shown;
 	}
-	
+
 	public void addSettings(Settings... s) {
 		settings.addAll(Arrays.asList(s));
 		settings.sort(Comparator.comparingInt(ss -> ss instanceof BooleanSettings ? 1 : -1));

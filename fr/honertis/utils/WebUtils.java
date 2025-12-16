@@ -33,7 +33,7 @@ public class WebUtils{
 	public static String newVersion = Honertis.INSTANCE.version;
 	
 	public static boolean update() {
-		return Honertis.INSTANCE.version.equals(newVersion = visitSite("https://raw.githubusercontent.com/TheAltening156/idk/refs/heads/main/hver.txt")) ? false : true;
+		return !Honertis.INSTANCE.version.equals(newVersion = visitSite("https://raw.githubusercontent.com/TheAltening156/idk/refs/heads/main/hver.txt"));
 	}
 	
 	public static String visitSite(String urly) {

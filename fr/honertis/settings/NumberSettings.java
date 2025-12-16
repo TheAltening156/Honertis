@@ -12,9 +12,17 @@ public class NumberSettings extends Settings{
 		this.min = min;
 		this.max = max;
 		this.increment = increment;
-		
+		this.show = true;
 	}
-
+	public NumberSettings(String name, double val, double min, double max, double increment, boolean show) {
+		this.name = name;
+		this.defValue = val;
+		this.min = min;
+		this.max = max;
+		this.increment = increment;
+		this.show = show;
+	}
+	
 	public void setValue(double val) {
 		double precision = 1.0 / this.increment;
 		this.defValue = Math.round(Math.max(this.min, Math.min(this.max, val)) * precision) / precision;
@@ -75,4 +83,14 @@ public class NumberSettings extends Settings{
 			this.defValue = (Double) value;
 		}
 	}
+	public double size = 0;
+	
+	public void setSize(double size) {
+		this.size = size;
+	}
+
+	public double getSize() {
+		return size;
+	}
+
 }

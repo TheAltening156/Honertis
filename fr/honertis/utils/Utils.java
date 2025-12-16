@@ -101,7 +101,7 @@ public class Utils {
 	}
 	
 	public static void cantBeOut(NumberSettings posX, NumberSettings posY) {
-		if (posX.getValue() < posX.getMin()) {
+		/*if (posX.getValue() < posX.getMin()) {
 			posX.setValue(posX.getMin());
 		}
 		if (posY.getValue() < posY.getMin()) {
@@ -112,8 +112,36 @@ public class Utils {
 		}
 		if (posY.getValue() > posY.getMax()) {
 			posY.setValue(posY.getMax());
-		}
-		//cantBeOut(x.getValue(), y.getValue(), x.getMin(), x.getMax(), y.getMin(), y.getMax());
+		}*/
+		calc2(posX);
+		calc2(posY);
 	}
+	
+	/**
+	 * I dont know how to name this
+	 */
+	public static void calculate(double x, double y, NumberSettings posX, NumberSettings posY, ScaledResolution scale) {
+		
+		posX.setSize(x);
+		posY.setSize(y);
+		
+		posX.setMax(scale.getScaledWidth() - x);
+		posY.setMax(scale.getScaledHeight() - y);
+		cantBeOut(posX, posY);
+	}
+
+	/*
+	 * I dont know how to name this too
+	 */
+	
+	public static void calc2(NumberSettings posX) {
+		if (posX.getValue() < posX.getMin()) {
+			posX.setValue(posX.getMin());
+		}
+		if (posX.getValue() > posX.getMax()) {
+			posX.setValue(posX.getMax());
+		}
+	}
+	
 	
 }

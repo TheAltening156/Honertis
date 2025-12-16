@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 
 import fr.honertis.Honertis;
 import fr.honertis.guis.music.MusicPlayerGui;
+import fr.honertis.module.ModuleBase;
 import fr.honertis.module.addons.MiniPlayer;
 import fr.honertis.utils.LangManager;
 
@@ -181,9 +182,6 @@ public class GuiChat extends GuiScreen
             this.mc.ingameGUI.getChatGUI().scroll(i);
         }
     }
-
-	public MiniPlayer player = (MiniPlayer) Honertis.INSTANCE.modulesManager.getModuleByName("MiniPlayer");
-
     
     /**
      * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
@@ -199,16 +197,18 @@ public class GuiChat extends GuiScreen
                 return;
             }
         }
-
-        if (isHovered(player.posX.getValue(), player.posY.getValue(), player.posX.getValue() + 225, player.posY.getValue() + 40, mouseX, mouseY)) player.isClicked = true;
-        
+        for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
+        	if (isHovered(m.posX.getValue(), m.posY.getValue(), m.posX.getValue() + m.posX.getSize(), m.posY.getValue() + m.posY.getSize(), mouseX, mouseY) && m.isEnabled()) m.isClicked = true;
+        }
         this.inputField.mouseClicked(mouseX, mouseY, mouseButton);
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
-    	player.isClicked = false;
+    	for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) 
+    		if (m.isEnabled())
+    			m.isClicked = false;
     }
     
     /**
@@ -325,14 +325,18 @@ public class GuiChat extends GuiScreen
      * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    {
-    	if (player.isClicked) {
-			player.posX.setDefValue(player.posX.getDefValue() + mouseX - player.oldX);
-			player.posY.setDefValue(player.posY.getDefValue() + mouseY - player.oldY);
-		}
-		player.oldX = mouseX;
-		player.oldY = mouseY;
-        drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
+    { 
+    	for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
+    		if (m.isEnabled()) {
+		    	if (m.isClicked) {
+					m.posX.setDefValue(m.posX.getDefValue() + mouseX - m.oldX);
+					m.posY.setDefValue(m.posY.getDefValue() + mouseY - m.oldY);
+				}
+				m.oldX = mouseX;
+				m.oldY = mouseY;
+		    }
+    	}
+		drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
         this.inputField.drawTextBox();
         IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
 

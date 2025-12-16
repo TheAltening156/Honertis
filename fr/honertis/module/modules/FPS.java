@@ -9,27 +9,29 @@ import fr.honertis.event.EventUpdate;
 import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.settings.BooleanSettings;
+import fr.honertis.utils.Utils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
 
 public class FPS extends ModuleBase{
-	public int posX = 50,
-			   posY = 50,
-			   oldX,
-			   oldY;
 	public List<Long> list = Lists.newArrayList();
 	
 	public BooleanSettings realTime = new BooleanSettings("module.fps.realtime", false);
 	public FPS() {
 		super("FPS", "module.fps", Category.UTILITIES);
-		this.addSettings(realTime);
+		this.addSettings(realTime, posX, posY);
 	}
 	
 	@Override
 	public void onGuiRender(EventRenderGui e) {
-		posX = posY = 10;
 		String name = "FPS : " + (realTime.isToggled() ? list.size() : mc.getDebugFPS());
-		Gui.drawRect(posX - 4, posY - 4, posX + mc.fontRendererObj.getStringWidth(name) + 4, posY + 11, 0x90000000);
-		mc.fontRendererObj.drawStringWithShadow(name, posX, posY, -1);
+		double width = mc.fontRendererObj.getStringWidth(name) + 8;
+		double height = 15;
+		Gui.drawRect(posX.getValue(), posY.getValue(), posX.getValue() + width, posY.getValue() + height, 0x90000000);
+		mc.fontRendererObj.drawStringWithShadow(name, posX.getValue() + 4, posY.getValue() + 4, -1);
+		
+		Utils.calculate(width, height, posX, posY, new ScaledResolution(Minecraft.getMinecraft()));
 	}
 	
 	@Override
@@ -37,5 +39,6 @@ public class FPS extends ModuleBase{
 		list.add(System.currentTimeMillis());
 		list.removeIf(aLong -> aLong + 1000 < System.currentTimeMillis());
 	}
+
 	
 }

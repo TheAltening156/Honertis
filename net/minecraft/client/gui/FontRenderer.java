@@ -366,7 +366,7 @@ public class FontRenderer implements IResourceManagerReloadListener
     /**
      * Draws the specified string with a shadow.
      */
-    public int drawStringWithShadow(String text, float x, float y, int color)
+    public int drawStringWithShadow(String text, double x, double y, int color)
     {
         return this.drawString(text, x, y, color, true);
     }
@@ -1078,10 +1078,10 @@ public class FontRenderer implements IResourceManagerReloadListener
     {
         return Minecraft.getMinecraft().getResourceManager().getResource(p_getResourceInputStream_1_).getInputStream();
     }
-    public void drawCenteredString(String text, int x, int y, int color) {
+    public void drawCenteredString(String text, double x, double y, int color) {
 		this.drawString(text, x - getStringWidth(text)/2, y, color);
 	}
-	public void drawCenteredStringWithShadow(String text, int x, int y, int color) {
+	public void drawCenteredStringWithShadow(String text, double x, double y, int color) {
 		this.drawStringWithShadow(text, x - getStringWidth(text)/2, y, color);
 	}
 }
