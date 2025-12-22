@@ -645,28 +645,29 @@ public class EntityRenderer implements IResourceManagerReloadListener
 	 	                Config.zoomMode = true;
 	            		this.mc.gameSettings.smoothCamera = true;
 	 	            }
+            		int i1 = Mouse.getDWheel();
+            		float target = flag ? size : 0f;
+			        float zoomSpeed = (float) Math.pow(1f - (zoom.zoomSpeed.getFloatValue() - 0.05f) / (1 - 0.05f), 2); 
+		            hoverProgress += (target - hoverProgress) * zoomSpeed;
+
 	            	if (zoom.isZooming) { 
-	            		int i1 = Mouse.getDWheel();
 	            		if (i1 != 0) {
-		                    if (i1 > 0 && size <= 4.0f)
+		                    if (i1 > 0 && size <= 6.0f)
 		                    {
 		                        size += 0.25F;
+		                    	hoverProgress = Math.min(size, hoverProgress);
 		                    }
 		                    if (i1 < 0 && size >= 0.50f)
 		                    {
 		                        size -= 0.25F;
+		                        hoverProgress = Math.max(0f, hoverProgress);
 		                    }
 	            		}
-	            	}
 	            	
-		            float target = flag ? size : 0f;
-		            float zoomSpeed = (float) Math.pow(1f - (zoom.zoomSpeed.getFloatValue() - 0.05f) / (1 - 0.05f), 2); 
-
-		            hoverProgress += (target - hoverProgress) * zoomSpeed;
-		            hoverProgress = Math.max(0f, Math.min(hoverProgress, size));
-		
+	            	}
 		            float zoomFactor = 1f + 3f * hoverProgress;
 		            f /= zoomFactor;
+	            	
             	}
             } else {
             	if (flag) {

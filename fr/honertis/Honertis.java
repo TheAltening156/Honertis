@@ -23,6 +23,7 @@ public class Honertis {
 	public boolean update;
 	public MusicPlayerGui musicPlayer;
 	public CurrentPlayingSong playingSong;
+	public boolean isLauncher;
 	
 	public void start() {
 		name = "Honertis";

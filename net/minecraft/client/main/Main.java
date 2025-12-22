@@ -10,6 +10,7 @@ import com.google.gson.*;
 import com.mojang.authlib.properties.*;
 import com.mojang.authlib.properties.PropertyMap.*;
 
+import fr.honertis.Honertis;
 import joptsimple.*;
 import net.minecraft.client.*;
 import net.minecraft.client.main.*;
@@ -44,6 +45,9 @@ public class Main
         OptionSpec<String> optionspec16 = optionparser.accepts("profileProperties").withRequiredArg().defaultsTo("{}", new String[0]);
         OptionSpec<String> optionspec17 = optionparser.accepts("assetIndex").withRequiredArg();
         OptionSpec<String> optionspec18 = optionparser.accepts("userType").withRequiredArg().defaultsTo("legacy", new String[0]);
+        
+        OptionSpec<String> optionspec20 = optionparser.accepts("launcherVersion").withRequiredArg().defaultsTo("-1", new String[0]);
+        
         OptionSpec<String> optionspec19 = optionparser.nonOptions();
         OptionSet optionset = optionparser.parse(p_main_0_);
         List<String> list = optionset.valuesOf(optionspec19);
@@ -100,6 +104,9 @@ public class Main
         Integer integer = (Integer)optionset.valueOf(optionspec1);
         Session session = new Session((String)optionspec9.value(optionset), s4, (String)optionspec11.value(optionset), (String)optionspec18.value(optionset));
         GameConfiguration gameconfiguration = new GameConfiguration(new GameConfiguration.UserInformation(session, propertymap, propertymap1, proxy), new GameConfiguration.DisplayInformation(i, j, flag, flag1), new GameConfiguration.FolderInformation(file1, file3, file2, s5), new GameConfiguration.GameInformation(flag2, s3), new GameConfiguration.ServerInformation(s6, integer.intValue()));
+        
+        Honertis.INSTANCE.isLauncher = optionspec20.value(optionset) != "-1";
+                
         Runtime.getRuntime().addShutdownHook(new Thread("Client Shutdown Thread")
         {
             public void run()

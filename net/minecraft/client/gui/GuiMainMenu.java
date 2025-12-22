@@ -17,7 +17,7 @@ public class GuiMainMenu extends GuiScreen {
 	@Override
 	public void initGui() {
 		super.initGui();
-		if (instance.update) {
+		if (instance.update && !Honertis.INSTANCE.isLauncher) {
 			this.buttonList.add(new GuiButton(0, this.width / 2 - 105, this.height / 2 + 40, 100, 20, LangManager.format("gui.update")));
 			this.buttonList.add(new GuiButton(1, this.width / 2 + 5, this.height / 2 + 40, 100, 20, LangManager.format("gui.ignore")));
 			this.buttonList.add(new GuiButton(2, this.width / 2 - 105, this.height / 2 + 62, 210, 20, LangManager.format("gui.launcher")));

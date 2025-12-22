@@ -4,7 +4,7 @@ import net.minecraft.client.main.Main;
 
 public class Start {
 	public static void main(String[] args) {
-		Main.main(concat(new String[] {"--version", "1.8", "--accessToken", "0"}, args));
+		Main.main(concat(new String[] {"--version", "1.8", "--accessToken", "0", "--launcherVersion", "1"}, args));
 	}
 	
 	public static <T> T[] concat(T[] first, T[] second) {
