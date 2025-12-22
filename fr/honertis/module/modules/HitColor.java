@@ -20,7 +20,7 @@ public class HitColor extends ModuleBase{
 	}
 	@Override
 	public void update() {
-		r.show = g.show = b.show = a.show = bypass.show = custom.isToggled();
+		r.show = g.show = b.show = a.show = bypass.show = custom.isEnabled();
 	}
 	
 }

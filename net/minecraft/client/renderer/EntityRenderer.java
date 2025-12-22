@@ -636,10 +636,10 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 flag = GameSettings.isKeyDown(this.mc.gameSettings.ofKeyBindZoom);
             }
             Zoom zoom = (Zoom) Honertis.INSTANCE.modulesManager.getModuleByName("Zoom");
-    		zoom.isZooming = flag && zoom.scroll.isToggled();
+    		zoom.isZooming = flag && zoom.scroll.isEnabled();
             if (zoom.isEnabled()) {
             	if (mc.currentScreen == null) {
-            		if (!zoom.scroll.isToggled()) size = 1;
+            		if (!zoom.scroll.isEnabled()) size = 1;
 	            	if (!Config.zoomMode)
 	 	            {
 	 	                Config.zoomMode = true;

@@ -220,7 +220,7 @@ public class GuiPlayerTabOverlay extends Gui
                         this.drawScoreboardValues(scoreObjectiveIn, k2, gameprofile.getName(), k5, l5, networkplayerinfo1);
                     }
                 }
-                if (((Ping)Honertis.INSTANCE.modulesManager.getModuleByName("Ping")).tab.isToggled()) {
+                if (((Ping)Honertis.INSTANCE.modulesManager.getModuleByName("Ping")).tab.isEnabled()) {
 	                GlStateManager.pushMatrix();
 	                GlStateManager.scale(0.5, 0.5, 0);
 	                GlStateManager.translate(i1 + j2 - (flag ? 9 : 0) - 11, k2,0);

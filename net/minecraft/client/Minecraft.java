@@ -18,6 +18,7 @@ import fr.honertis.Honertis;
 import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.module.ModulesManager;
+import fr.honertis.module.modules.DropSwing;
 import fr.honertis.module.modules.FreeLook;
 import fr.honertis.module.modules.Zoom;
 import fr.honertis.utils.TimeUtils;
@@ -1255,7 +1256,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         	m.update();
         	FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook");
             
-    		if (mod.hold.isToggled()) {
+    		if (mod.hold.isEnabled()) {
     			if (currentScreen == null) {
 	    			if (Keyboard.getEventKey() == mod.key.getKey()) {
 	    				if (Keyboard.getEventKeyState()) {
@@ -1277,7 +1278,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     		}
         }
         
-        if (currentScreen == null && Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop").isEnabled()) {
+        DropSwing newDrop = (DropSwing) Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop");
+        
+        if (currentScreen == null && (newDrop.isEnabled() && newDrop.fastDropping.isEnabled())) {
 	        if (Keyboard.getEventKey() == gameSettings.keyBindDrop.getKeyCode() && Keyboard.getEventKeyState()) {
 	        	if (gameSettings.keyBindDrop.isPressed() && !this.thePlayer.isSpectator()) {
 		            boolean delayResetDone = false;
@@ -2037,7 +2040,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     	
                     	FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook");
                         
-                		if (!mod.hold.isToggled()) {
+                		if (!mod.hold.isEnabled()) {
                 			if (k == mod.key.getKey())
                 				mod.toggle();
                 		}
@@ -2202,14 +2205,16 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     this.displayGuiScreen(new GuiInventory(this.thePlayer));
                 }
             }
-            if (!Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop").isEnabled()) {
+            DropSwing newDrop = (DropSwing) Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop");
+            
+            if (!newDrop.isEnabled() || (newDrop.isEnabled() && !newDrop.fastDropping.isEnabled())) {
             	while (this.gameSettings.keyBindDrop.isPressed())
             	{
 	            	if (!this.thePlayer.isSpectator())
 	            	{
 	                	this.thePlayer.dropOneItem(GuiScreen.isCtrlKeyDown());
 	            	}	
-        		}
+            	}
             }
 
             while (this.gameSettings.keyBindChat.isPressed() && flag)

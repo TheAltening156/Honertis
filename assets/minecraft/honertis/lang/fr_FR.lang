@@ -59,7 +59,8 @@ module.sneak=Sneak automatiquement quand le sneak est appuyé moins d'une second
 
 module.sprint=Sprint automatiquement
 
-module.dropSwing=Réajoute le mouvement du bras quand on jette un objet (comme en 1.15)
+module.dropSwing=Réajoute le drop rapide et mouvement du bras quand on jette un objet (comme en 1.15+)
+module.dropSwing.arm=Mouvement du bras
 
 module.zoom=Zoom smooth (zoom/dézoom smooth)
 module.zoom.zoomspeed=Vitesse de Zoom

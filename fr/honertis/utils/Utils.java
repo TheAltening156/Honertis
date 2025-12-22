@@ -10,9 +10,12 @@ import org.apache.logging.log4j.LogManager;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 
+import fr.honertis.Honertis;
 import fr.honertis.guis.resourcePacks.GuiScreenPackManager;
+import fr.honertis.module.ModuleBase;
 import fr.honertis.settings.NumberSettings;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.Util;
 
@@ -143,5 +146,33 @@ public class Utils {
 		}
 	}
 	
+	public static class Modules {
+		public static void mouseClicked(int mouseX, int mouseY) {
+			for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
+	        	if (GuiScreen.isHovered(m.posX.getValue(), m.posY.getValue(), m.posX.getValue() + m.posX.getSize(), m.posY.getValue() + m.posY.getSize(), mouseX, mouseY) && m.isEnabled()) m.isClicked = true;
+	        }
+		}
+
+		public static void mouseReleased(int mouseX, int mouseY) {
+	    	for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) 
+	    		if (m.isEnabled())
+	    			m.isClicked = false;
+	    }
+		
+		public static void drawScreen(int mouseX, int mouseY)
+	    { 
+	    	for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
+	    		if (m.isEnabled()) {
+			    	if (m.isClicked) {
+						m.posX.setDefValue(m.posX.getDefValue() + mouseX - m.oldX);
+						m.posY.setDefValue(m.posY.getDefValue() + mouseY - m.oldY);
+					}
+					m.oldX = mouseX;
+					m.oldY = mouseY;
+			    }
+	    	}
+		}
+		
+	}
 	
 }

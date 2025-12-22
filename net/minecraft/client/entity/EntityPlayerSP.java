@@ -9,6 +9,7 @@ import fr.honertis.Honertis;
 import fr.honertis.event.EventType;
 import fr.honertis.event.EventUpdate;
 import fr.honertis.module.ModuleBase;
+import fr.honertis.module.modules.DropSwing;
 import fr.honertis.module.modules.MoreParticles;
 import fr.honertis.utils.TimeUtils;
 import fr.honertis.utils.Utils;
@@ -300,7 +301,9 @@ public class EntityPlayerSP extends AbstractClientPlayer
     {
     	if (getCurrentEquippedItem() != null) {
 	        C07PacketPlayerDigging.Action c07packetplayerdigging$action = dropAll ? C07PacketPlayerDigging.Action.DROP_ALL_ITEMS : C07PacketPlayerDigging.Action.DROP_ITEM;
-	        if (Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop").isEnabled()) {
+	        DropSwing newDrop = (DropSwing) Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop");
+	        
+	        if (newDrop.isEnabled() && newDrop.armSwing.isEnabled()) {
 	        	swingItem();
 	        }
 	        this.sendQueue.addToSendQueue(new C07PacketPlayerDigging(c07packetplayerdigging$action, BlockPos.ORIGIN, EnumFacing.DOWN));

@@ -59,7 +59,8 @@ module.sneak=Automatically sneak when sneak key is pressed under 1 second
 
 module.sprint=Automatically sprints
 
-module.dropSwing=Bring back the arm swing when dropping an item (1.15)
+module.dropSwing=Bring back the fast drop and arm swing when dropping an item (1.15)
+module.dropSwing.arm=Swinging arm
 
 module.zoom=Smooth zoom (ease in/out)
 module.zoom.zoomspeed=Zoom Speed

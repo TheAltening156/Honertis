@@ -7,6 +7,7 @@ import fr.honertis.guis.music.MusicPlayerGui;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.module.addons.MiniPlayer;
 import fr.honertis.utils.LangManager;
+import fr.honertis.utils.Utils;
 
 import java.io.IOException;
 import java.util.List;
@@ -197,18 +198,14 @@ public class GuiChat extends GuiScreen
                 return;
             }
         }
-        for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
-        	if (isHovered(m.posX.getValue(), m.posY.getValue(), m.posX.getValue() + m.posX.getSize(), m.posY.getValue() + m.posY.getSize(), mouseX, mouseY) && m.isEnabled()) m.isClicked = true;
-        }
+        Utils.Modules.mouseClicked(mouseX, mouseY);
         this.inputField.mouseClicked(mouseX, mouseY, mouseButton);
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
-    	for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) 
-    		if (m.isEnabled())
-    			m.isClicked = false;
+    	Utils.Modules.mouseReleased(mouseX, mouseY);
     }
     
     /**
@@ -326,16 +323,7 @@ public class GuiChat extends GuiScreen
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     { 
-    	for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
-    		if (m.isEnabled()) {
-		    	if (m.isClicked) {
-					m.posX.setDefValue(m.posX.getDefValue() + mouseX - m.oldX);
-					m.posY.setDefValue(m.posY.getDefValue() + mouseY - m.oldY);
-				}
-				m.oldX = mouseX;
-				m.oldY = mouseY;
-		    }
-    	}
+    	Utils.Modules.drawScreen(mouseX, mouseY);
 		drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
         this.inputField.drawTextBox();
         IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());

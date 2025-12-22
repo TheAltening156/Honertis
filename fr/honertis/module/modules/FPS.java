@@ -25,7 +25,7 @@ public class FPS extends ModuleBase{
 	
 	@Override
 	public void onGuiRender(EventRenderGui e) {
-		String name = "FPS : " + (realTime.isToggled() ? list.size() : mc.getDebugFPS());
+		String name = "FPS : " + (realTime.isEnabled() ? list.size() : mc.getDebugFPS());
 		double width = mc.fontRendererObj.getStringWidth(name) + 8;
 		double height = 15;
 		Gui.drawRect(posX.getValue(), posY.getValue(), posX.getValue() + width, posY.getValue() + height, 0x90000000);

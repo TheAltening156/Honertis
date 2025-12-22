@@ -31,8 +31,6 @@ public class FileManager {
 	
 	public static void save() {
 		saveConfigFile();
-		System.out.println("Fichier config sauvegardé.");
-
 	}
 	
 	public static InputStream getFile(String path) {

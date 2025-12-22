@@ -114,11 +114,11 @@ public class GuiHonertisOptions extends GuiScreen {
 				int settsX = modX - 95;
 				int settsY = modY + 25;
 				if (m.getCat() == c && m.shown) {
-					mc.fontRendererObj.drawStringWithShadow(m.getName(), modX - 175, modY, -1);
+					mc.fontRendererObj.drawStringWithShadow(m.getName(), modX - 175, modY - 2.5, -1);
 					GlStateManager.pushMatrix();
 					GlStateManager.scale(0.5, 0.5, 0);
 					GlStateManager.translate(modX - 175, modY, 1);
-					mc.fontRendererObj.drawStringWithShadow(m.getDesc(), modX - 165, modY + 21, -1);
+					mc.fontRendererObj.drawStringWithShadow(m.getDesc(), modX - 165, modY + 15, -1);
 					GlStateManager.popMatrix();
 					drawRect(modX + 35, modY - 4, modX + 65, modY + 11, m.isEnabled() ? new Color(0, 205, 0, 190).getRGB() : new Color(205, 0, 0, 190).getRGB() );
 					mc.fontRendererObj.drawCenteredString(m.isEnabled() ? "I" : "O", modX + 50, modY, -1);
@@ -131,7 +131,7 @@ public class GuiHonertisOptions extends GuiScreen {
 			
 					if (m.showSettings()) {
 						HitColor clr = (HitColor) Honertis.INSTANCE.modulesManager.getModuleByName("HitColor");
-						if (m.getName().equals(clr.getName()) && clr.custom.isToggled()) {
+						if (m.getName().equals(clr.getName()) && clr.custom.isEnabled()) {
 							drawRect(settsX + 165, settsY + 15, settsX + 190, settsY + 40, new Color((int)clr.r.getDefValue(), (int)clr.g.getDefValue(), (int)clr.b.getDefValue(), (int)clr.a.getDefValue()).getRGB());
 							mc.fontRendererObj.drawString("rendu :", settsX + 160, settsY, -1);
 						}
@@ -168,9 +168,9 @@ public class GuiHonertisOptions extends GuiScreen {
 							}
 							if (s instanceof BooleanSettings) {
 								BooleanSettings ss = (BooleanSettings) s;
-								drawRect(settsX + 118, settsY - 4, settsX + 147, settsY + 11, ss.isToggled() ? new Color(0, 205, 0, 190).getRGB() : new Color(205, 0, 0, 190).getRGB() );
-								mc.fontRendererObj.drawCenteredString(ss.isToggled() ? "I" : "O", settsX + 132, settsY, -1);
-								drawRect(  settsX + 95 - 12 + (ss.isToggled() ? 60 : 34), settsY - 5, settsX + 95 - 12 + (ss.isToggled() ? 66 : 40), settsY + 12, -1);
+								drawRect(settsX + 118, settsY - 4, settsX + 147, settsY + 11, ss.isEnabled() ? new Color(0, 205, 0, 190).getRGB() : new Color(205, 0, 0, 190).getRGB() );
+								mc.fontRendererObj.drawCenteredString(ss.isEnabled() ? "I" : "O", settsX + 132, settsY, -1);
+								drawRect(  settsX + 95 - 12 + (ss.isEnabled() ? 60 : 34), settsY - 5, settsX + 95 - 12 + (ss.isEnabled() ? 66 : 40), settsY + 12, -1);
 							}
 							if (s instanceof KeyBindSettings) {
 								KeyBindSettings ss = (KeyBindSettings) s;

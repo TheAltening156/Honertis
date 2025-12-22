@@ -22,7 +22,7 @@ public class YamlUtils {
 			try {
 				out.add(new ConfigMod(s, (Map<String, Object>)mods.get(s)));
 			} catch (InvalidConfig i) {
-				System.out.println("Une erreur dans la configuration a été détectée. Rien de grave, nous nous en occupons");
+				System.out.println("Error in the config, dont worry it's beign fixed.");
 			}
 		}
 		return out;
@@ -31,14 +31,14 @@ public class YamlUtils {
 	public static class ConfigMod {
 		private ModuleBase module;
 		private Map<Settings, Object> setts;
-		private boolean toggled;
+		private boolean enabled;
 		
 		public ConfigMod(String modName, Map<String, Object> mod) throws InvalidConfig{
 			this.setts = Maps.newHashMap();
 			if (!(mod.get("enabled") instanceof Boolean) || !(mod.get("settings") instanceof Map)) throw new InvalidConfig();
 			this.module = Honertis.INSTANCE.modulesManager.getModuleByName(modName);
 			if (this.module == null) throw new InvalidConfig();
-			this.toggled = (boolean) mod.get("enabled");
+			this.enabled = (boolean) mod.get("enabled");
 			Map<String, Object> setts = (Map<String, Object>) mod.get("settings");
 			for (String key : setts.keySet()) {
 				for (Settings s : this.module.settings) {
@@ -62,11 +62,11 @@ public class YamlUtils {
 		public void setSetts(Map<Settings, Object> setts) {
 			this.setts = setts;
 		}
-		public boolean isToggled() {
-			return toggled;
+		public boolean isEnabled() {
+			return enabled;
 		}
-		public void setToggled(boolean toggled) {
-			this.toggled = toggled;
+		public void setEnabled(boolean enabled) {
+			this.enabled = enabled;
 		}
 		
 	}

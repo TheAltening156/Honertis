@@ -1,46 +1,46 @@
 package fr.honertis.settings;
 
 public class BooleanSettings extends Settings{
-	public boolean toggled;
+	public boolean enabled;
 	
-	public BooleanSettings(String name, boolean toggled) {
+	public BooleanSettings(String name, boolean enabled) {
 		this.name = name;
-		this.toggled = toggled;
+		this.enabled = enabled;
 	}
 
-	public BooleanSettings(String name, boolean toggled, boolean show) {
+	public BooleanSettings(String name, boolean enabled, boolean show) {
 		this.name = name;
-		this.toggled = toggled;
+		this.enabled = enabled;
 		this.show = show;
 	}
 	
-	public void setToggled(boolean t) {
-		this.toggled = t;
+	public void setEnabled(boolean t) {
+		this.enabled = t;
 	}
 	
-	public boolean isToggled() {
-		return toggled;
+	public boolean isEnabled() {
+		return enabled;
 	}
 	
 	public void toggle() {
-		this.toggled = !toggled;
+		this.enabled = !enabled;
 	}
 	
 	@Override
 	public Boolean getValue() {
-		return isToggled();
+		return isEnabled();
 	}
 	public void setValue(Object o) {
 		if (o instanceof String) {
 			String s = (String) o;
 			if(s.equalsIgnoreCase("true")) {
-				this.toggled = true;
+				this.enabled = true;
 			} else if (s.equalsIgnoreCase("false")) {
-				this.toggled = false;
+				this.enabled = false;
 			}
 		}
 		if (o instanceof Boolean) {
-			this.toggled = (boolean) o;
+			this.enabled = (boolean) o;
 		}
 	}
 }

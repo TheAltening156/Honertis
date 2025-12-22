@@ -69,7 +69,7 @@ public class ModulesManager {
 	}
 	
 	public static void loadModSett(ConfigMod mod) {
-		mod.getModule().setEnabled(mod.isToggled());
+		mod.getModule().setEnabled(mod.isEnabled());
 		for (Settings s : mod.getSetts().keySet()) {
 			mod.getModule().settings.remove(s);
 			mod.getModule().settings.add(s);

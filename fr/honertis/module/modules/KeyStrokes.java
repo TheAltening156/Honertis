@@ -164,7 +164,7 @@ public class KeyStrokes extends ModuleBase{
 	@Override
 	public void onGuiRender(EventRenderGui e) {
 	    for (Keys k : Keys.values()) {
-	        if (!space.isToggled() && k == Keys.JUMP) continue;
+	        if (!space.isEnabled() && k == Keys.JUMP) continue;
 	        double posX = this.posX.getValue() + k.posX;
 	        double posY = this.posY.getValue() + k.posY;
 	        KeyBinding keys = k.key;
