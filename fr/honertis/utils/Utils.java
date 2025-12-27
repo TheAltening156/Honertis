@@ -1,5 +1,6 @@
 package fr.honertis.utils;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -175,4 +176,14 @@ public class Utils {
 		
 	}
 	
+	/*
+	 * 
+	 * Colors
+	 * 
+	 */
+	public static int getRainbow(float seconds, float saturation, float brightness, long speed) {
+	    float hue = (float)((System.currentTimeMillis() + speed) % (long)((int)(seconds * 1000.0F))) / (seconds * 1000.0F);
+	    int color = Color.HSBtoRGB(hue, saturation, brightness);
+	    return color;
+	}
 }

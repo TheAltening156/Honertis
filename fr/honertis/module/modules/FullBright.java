@@ -8,7 +8,7 @@ public class FullBright extends ModuleBase{
 	public float currentGamma;
 	
 	public FullBright() {
-		super("FullBight", "module.bright", Category.UTILITIES);
+		super("FullBright", "module.bright", Category.UTILITIES);
 	}
 	
 	@Override

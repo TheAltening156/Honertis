@@ -86,16 +86,21 @@ public class ScreenShotHelper
 		            IChatComponent ichatcomponent = new ChatComponentText(file2.getName());
 		            ichatcomponent.getChatStyle().setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, file2.getAbsolutePath()));
 		            ichatcomponent.getChatStyle().setUnderlined(Boolean.valueOf(true));
-		            Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentTranslation("screenshot.success", new Object[] {ichatcomponent})));
+		            printMessage(new ChatComponentTranslation("screenshot.success", new Object[] {ichatcomponent}));
 		        }
 		        catch (Exception exception)
 		        {
 		            logger.warn((String)"Couldn\'t save screenshot", (Throwable)exception);
-		            Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentTranslation("screenshot.failure", new Object[] {exception.getMessage()})));
+		            printMessage(new ChatComponentTranslation("screenshot.failure", new Object[] {exception.getMessage()}));
 		        }
         	}
         }.start();
     }
+    
+    public static void printMessage(ChatComponentTranslation c) {
+        Minecraft.getMinecraft().addScheduledTask(() -> Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(c));
+    }
+    
     private static void otherThing(int width, int height, Framebuffer buffer, File gameDirectory, File file1) {
         if (OpenGlHelper.isFramebufferEnabled())
         {

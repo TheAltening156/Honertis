@@ -15,12 +15,12 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 
 public enum Buttons {
-	MINIPLAYER(new ResourceLocation("honertis/music/miniPlayer.png")),
-	REPEAT(new ResourceLocation("honertis/music/repeat.png")),
-	BACK(new ResourceLocation("honertis/music/back.png")),
-	PLAY(new ResourceLocation("honertis/music/play.png")),
-	FASTFORWARD(new ResourceLocation("honertis/music/ff.png")),
-	VOLUME(new ResourceLocation("honertis/music/volume.png"));
+	MINIPLAYER,
+	REPEAT,
+	BACK,
+	PLAY,
+	FASTFORWARD,
+	VOLUME;
 	
 	public ResourceLocation res;
 	
@@ -28,16 +28,12 @@ public enum Buttons {
     public double hoverProgress = 0;
     public boolean hover;
     public boolean volumeClicked;
-    
-	Buttons(ResourceLocation res) {
-		this.res = res;
-	}
 	
 	public void draw(double posX, double posY, double pos, MusicPlayer player, boolean repeat, boolean miniPayer, int mouseX, int mouseY) {
 		long currentTime = System.currentTimeMillis();
         float delta = (currentTime - lastTime);
 	    if (this != VOLUME) {
-			
+	    	res = new ResourceLocation("honertis/music/buttons.png");
 	    	posX -= 50;
 			hover = GuiScreen.isHovered(posX + 148 + pos, posY + 225, posX + 148 + pos + 18, posY + 225 + 18, mouseX, mouseY);
 	        delta /=  2.5f;
@@ -49,22 +45,28 @@ public enum Buttons {
 	        }
 	        double offset = -1 * hoverProgress;
 	        double extra = 2 * hoverProgress;
-	        if (this == REPEAT) {
-	        	res = new ResourceLocation("honertis/music/repeat" + (repeat ? "On" : "Off") + ".png");
-	        }
-	        if (this == MINIPLAYER) {
-	        	res = new ResourceLocation("honertis/music/miniPlayer" + (miniPayer ? "On" : "Off") + ".png");
-	        }
-	        if (this == PLAY) {
-	        	res = new ResourceLocation("honertis/music/" + (player.paused ? "play" : "pause") + ".png");
-	        }
-	        
 	        enableBlend();
 	        disableLighting();
 	        color(1,1,1f, 1f);
-	    	drawImage(posX + 148 + pos + offset, posY + 225 + offset, 18 + extra, 18 + extra, res);
+	        double x = 18 + extra;
+	        int index;
+
+	        if (this == REPEAT) {
+	            index = repeat ? 7 : 6;
+	        } else if (this == PLAY) {
+	            index = player.paused ? 5 : 4;
+	        } else if (this == BACK) {
+	            index = 0;
+	        } else if (this == FASTFORWARD) {
+	            index = 1;
+	        } else {
+	            index = miniPayer ? 3 : 2;
+	        }
+	        drawImage(posX + 148 + pos + offset, posY + 225 + offset, 0.0f, x*index, x, x ,x ,x*8, res);
+	       
 	    	disableBlend();
 		} else {
+			res = new ResourceLocation("honertis/music/volume.png");
 			posX += 8;
 			hover = GuiScreen.isHovered(posX + 89 + pos, posY + 225, posX + 84 + pos + 18 + 45, posY + 225 + 18, mouseX, mouseY);
 			

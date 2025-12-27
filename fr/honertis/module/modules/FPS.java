@@ -31,7 +31,7 @@ public class FPS extends ModuleBase{
 		Gui.drawRect(posX.getValue(), posY.getValue(), posX.getValue() + width, posY.getValue() + height, 0x90000000);
 		mc.fontRendererObj.drawStringWithShadow(name, posX.getValue() + 4, posY.getValue() + 4, -1);
 		
-		Utils.calculate(width, height, posX, posY, new ScaledResolution(Minecraft.getMinecraft()));
+		Utils.calculate(width, height, posX, posY, new ScaledResolution(mc));
 	}
 	
 	@Override

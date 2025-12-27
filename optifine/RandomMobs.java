@@ -48,10 +48,12 @@ public class RandomMobs
                     if (entity instanceof EntityLiving)
                     {
                         EntityLiving entityliving1 = (EntityLiving)entity;
-                        UUID uuid = entityliving1.getUniqueID();
-                        long i = uuid.getLeastSignificantBits();
-                        int j = (int)(i & 2147483647L);
-                        entityliving.randomMobsId = j;
+                        if (entityliving1.getUniqueID() != null) {
+	                        UUID uuid = entityliving1.getUniqueID();
+	                        long i = uuid.getLeastSignificantBits();
+	                        int j = (int)(i & 2147483647L);
+	                        entityliving.randomMobsId = j;
+	                    }
                     }
                 }
             }

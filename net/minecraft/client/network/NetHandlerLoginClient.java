@@ -80,6 +80,8 @@ public class NetHandlerLoginClient implements INetHandlerLoginClient
             {
                 this.networkManager.closeChannel(new ChatComponentTranslation("disconnect.loginFailedInfo", new Object[] {authenticationexception.getMessage()}));
                 return;
+            } finally {
+                this.networkManager.closeChannel(new ChatComponentTranslation("disconnect.loginFailedInfo", new Object[] {new ChatComponentTranslation("disconnect.loginFailedInfo.invalidSession", new Object[0])}));
             }
         }
 

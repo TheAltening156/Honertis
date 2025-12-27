@@ -48,6 +48,7 @@ import org.lwjgl.opengl.GL11;
 import fr.honertis.Honertis;
 import fr.honertis.manager.FileManager;
 import fr.honertis.module.addons.MiniPlayer;
+import fr.honertis.settings.NumberSettings;
 import fr.honertis.utils.DrawUtils;
 import fr.honertis.utils.LangManager;
 import fr.honertis.utils.Utils;
@@ -118,6 +119,13 @@ public class MusicPlayerGui extends GuiScreen {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        ScaledResolution sr = new ScaledResolution(mc);
+        NumberSettings x = new NumberSettings("", 0, 0, sr.getScaledWidth(), 0);
+        NumberSettings y = new NumberSettings("", 0, 0, sr.getScaledHeight(), 0);
+        posX += x.getValue();
+        posY += y.getValue();
+        //Utils.calculate(281, 255, x, y, sr);
+
 		if (isYoutube && songs != lastSongs)
 			lastSongs = songs;
 		if (!localSongs.exists()) localSongs.mkdirs();
@@ -133,7 +141,7 @@ public class MusicPlayerGui extends GuiScreen {
         }
         drawRoundedRect(posX + 5, posY + 5, posX + 280, posY + 254, 5, new Color(50, 50, 50).getRGB());
         drawRect(posX + 5, posY + 25, posX + 280, posY + 26, new Color(25, 25, 25).getRGB());
-        
+                
         drawRect(posX + 5, posY + 210, posX + 280, posY + 211, new Color(25, 25, 25).getRGB());
         if (isYoutube)
         	text.draw(mc);
@@ -163,7 +171,6 @@ public class MusicPlayerGui extends GuiScreen {
         int totalRows = (int) Math.ceil(songs.size() / (double) imagesPerRow);
         maxScroll = (int) Math.max(0, totalRows * (imageHeight + 5 + lineSpacing * 2) - contentHeight);
         
-        ScaledResolution sr = new ScaledResolution(mc);
         int scaleFactor = sr.getScaleFactor();
 
         int scissorX = (int) ((posX + 8) * scaleFactor);

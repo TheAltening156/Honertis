@@ -19,6 +19,9 @@ public class Event<T> {
 				if (e instanceof EventRender2D) {
 					m.onRender2D((EventRender2D) e);
 				}
+				if (e instanceof EventMouseClick) {
+					m.onMouseClicked((EventMouseClick) e);
+				}
 			}
 		}
 	}
