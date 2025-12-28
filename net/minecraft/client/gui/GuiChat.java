@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import fr.honertis.Honertis;
 import fr.honertis.guis.music.MusicPlayerGui;
 import fr.honertis.module.ModuleBase;
-import fr.honertis.module.addons.MiniPlayer;
 import fr.honertis.utils.LangManager;
 import fr.honertis.utils.Utils;
 

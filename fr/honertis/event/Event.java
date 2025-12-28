@@ -22,6 +22,9 @@ public class Event<T> {
 				if (e instanceof EventMouseClick) {
 					m.onMouseClicked((EventMouseClick) e);
 				}
+				if (e instanceof EventMouseClickMove) {
+					m.onMouseClickedMove((EventMouseClickMove)e);
+				}
 			}
 		}
 	}

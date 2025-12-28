@@ -6,6 +6,7 @@ import com.google.common.collect.Sets;
 
 import fr.honertis.Honertis;
 import fr.honertis.event.EventMouseClick;
+import fr.honertis.event.EventMouseClickMove;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.ClipboardOwner;
@@ -494,7 +495,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
      */
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
     {
-    	EventMouseClick e = new EventMouseClick(mouseButton);
+    	EventMouseClick e = new EventMouseClick(mouseX, mouseY, mouseButton);
     	Honertis.INSTANCE.event.onEvent(e);
     	
         if (mouseButton == 0)
@@ -531,6 +532,8 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
      */
     protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick)
     {
+    	EventMouseClickMove e = new EventMouseClickMove(mouseX, mouseY, clickedMouseButton);
+    	Honertis.INSTANCE.event.onEvent(e);
     }
 
     /**

@@ -1474,7 +1474,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 this.renderEndNanoTime = System.nanoTime();
                 TileEntityRendererDispatcher.instance.renderEngine = this.mc.getTextureManager();
             }
-            MiniPlayer player = mc.ingameGUI.player;
+            MiniPlayer player = Honertis.INSTANCE.musicPlayer.player;
             if (!this.mc.gameSettings.showDebugInfo) {            	
         		MusicPlayerGui musicPlayer = Honertis.INSTANCE.musicPlayer;
             	if (player.isEnabled()) {

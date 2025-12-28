@@ -54,7 +54,7 @@ public class GuiHonertisCredits extends GuiScreen {
 		int color = new Color(90, 0, 180, 60).getRGB();
 		int color1 = 0;
 		drawDefaultBackground();
-		drawGradientRect(0, 0, width, height/2, color, color1);
+		/*drawGradientRect(0, 0, width, height/2, color, color1);
 		drawGradientRect(0, height/2, width, height, color1, color);
 		GlStateManager.pushMatrix();
 		GlStateManager.rotate(90.0F, 0.0F, 0.0F, 1.0F);
@@ -63,7 +63,7 @@ public class GuiHonertisCredits extends GuiScreen {
 		GlStateManager.pushMatrix();
 		GlStateManager.rotate(90.0F, 0.0F, 0.0F, 1.0F);
 		drawGradientRect(0, -width, height, 0, color, color1);
-		GlStateManager.popMatrix();
+		GlStateManager.popMatrix();*/
 				
 		int posY = 0;
 		for (String txt : new String[] {"gui.honertis.credits.text1", "gui.honertis.credits.text2", "gui.honertis.credits.text3", "gui.honertis.credits.text4"}) {

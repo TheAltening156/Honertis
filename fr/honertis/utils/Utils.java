@@ -133,6 +133,13 @@ public class Utils {
 		posY.setMax(scale.getScaledHeight() - y);
 		cantBeOut(posX, posY);
 	}
+	
+	/**
+	 * I dont know how to name this
+	 */
+	public static void calculate(NumberSettings posX, NumberSettings posY, ScaledResolution scale) {
+		calculate(posX.getSize(), posY.getSize(), posX, posY, scale);
+	}
 
 	/*
 	 * I dont know how to name this too

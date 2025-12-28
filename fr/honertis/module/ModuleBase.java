@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 
+import fr.honertis.event.EventMouseClickMove;
 import fr.honertis.event.Events;
 import fr.honertis.module.modules.FreeLook;
 import fr.honertis.settings.*;

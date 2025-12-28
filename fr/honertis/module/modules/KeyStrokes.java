@@ -92,10 +92,10 @@ public class KeyStrokes extends ModuleBase{
 			Gui.drawRect(x, y, x + x1, y + y1, color);
 
 			int textColorValue = 255 - progress;
-	        //int colorCode = new Color(textColorValue, textColorValue, textColorValue).getRGB();
-			int colorCode = Utils.getRainbow(5f, 1, 1, (long) (-10 * (y + (x * 0.5f))));
+	        int colorCode = new Color(textColorValue, textColorValue, textColorValue).getRGB();
+			//int colorCode = Utils.getRainbow(5f, 1, 1, (long) (-10 * (y + (x * 0.5f))));
 	        
-			Gui.drawRect(x, y, 25 + x, 25 + y, colorCode);
+			//Gui.drawRect(x, y, 25 + x, 25 + y, colorCode);
 			String name = this == Keys.JUMP ? "Jump" : this == Keys.LMB ? "LMB" : this == Keys.RMB ? "RMB" : Keyboard.getKeyName(keyCode);
 	        x+=8;
 	        y+=7;

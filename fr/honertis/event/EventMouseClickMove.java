@@ -1,11 +1,11 @@
 package fr.honertis.event;
 
-public class EventMouseClick extends Event<EventMouseClick> {
+public class EventMouseClickMove extends Event<EventMouseClickMove> {
 	public int mouseX;
 	public int mouseY;
 	public int mouseButton;
 	
-	public EventMouseClick(int mouseX, int mouseY, int mouseButton) {
+	public EventMouseClickMove(int mouseX, int mouseY, int mouseButton) {
 		this.mouseX = mouseX;
 		this.mouseY = mouseY;
 		this.mouseButton = mouseButton;

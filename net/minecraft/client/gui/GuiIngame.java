@@ -16,7 +16,6 @@ import fr.honertis.event.EventRenderGui;
 import fr.honertis.event.EventType;
 import fr.honertis.guis.music.CurrentPlayingSong;
 import fr.honertis.guis.music.MusicPlayerGui;
-import fr.honertis.module.addons.MiniPlayer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -123,7 +122,6 @@ public class GuiIngame extends Gui
         this.field_175192_A = 70;
         this.field_175193_B = 20;
     }
-	public MiniPlayer player = (MiniPlayer) Honertis.INSTANCE.modulesManager.getModuleByName("MiniPlayer");
 
     public void renderGameOverlay(float partialTicks)
     {

@@ -24,6 +24,9 @@ public class ObfuscatedName {
             case FORGE: {
                 return this.forgeName;
             }
+            case VANILLA: {
+            	return this.vanillaName;
+            }
         }
         return this.vanillaName;
     }

@@ -236,9 +236,6 @@ public class Main {
         List<Slot> slots = handler.getSlots();
         if (isCraftingOutput) {
             if (!pushItems) return;
-            if (originalStack == null) {
-                return;
-            }
             Slot applicableSlot = Main.findWheelApplicableSlot(slots, selectedSlot, pushItems);
             int i = 0;
             while (true) {
