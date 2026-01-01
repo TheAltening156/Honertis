@@ -11,6 +11,7 @@ import fr.honertis.event.EventUpdate;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.module.modules.DropSwing;
 import fr.honertis.module.modules.MoreParticles;
+import fr.honertis.module.modules.ToggleSprint;
 import fr.honertis.utils.TimeUtils;
 import fr.honertis.utils.Utils;
 import net.minecraft.client.Minecraft;
@@ -301,7 +302,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     {
     	if (getCurrentEquippedItem() != null) {
 	        C07PacketPlayerDigging.Action c07packetplayerdigging$action = dropAll ? C07PacketPlayerDigging.Action.DROP_ALL_ITEMS : C07PacketPlayerDigging.Action.DROP_ITEM;
-	        DropSwing newDrop = (DropSwing) Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop");
+	        DropSwing newDrop = (DropSwing) Honertis.INSTANCE.modulesManager.getMobuleByClass(DropSwing.class);
 	        
 	        if (newDrop.isEnabled() && newDrop.armSwing.isEnabled()) {
 	        	swingItem();
@@ -711,14 +712,14 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void onCriticalHit(Entity entityHit)
     {
-    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.modulesManager.getModuleByName("MoreParticles");
+    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.modulesManager.getMobuleByClass(MoreParticles.class);
         for (int integer : new int[p.isEnabled() ? (int) p.particles.getDefValue() : 1])
         this.mc.effectRenderer.emitParticleAtEntity(entityHit, EnumParticleTypes.CRIT);
     }
 
     public void onEnchantmentCritical(Entity entityHit)
     {
-    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.modulesManager.getModuleByName("MoreParticles");
+    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.modulesManager.getMobuleByClass(MoreParticles.class);
         for (int integer : new int[p.isEnabled() ? (int) p.particles.getDefValue() : 1])
         this.mc.effectRenderer.emitParticleAtEntity(entityHit, EnumParticleTypes.CRIT_MAGIC);
     }
@@ -855,7 +856,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
             }
         }
 
-        if (!this.isSprinting() && this.movementInput.moveForward >= f && flag3 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness) && (Honertis.INSTANCE.modulesManager.getModuleByName("ToggleSprint").isEnabled() || this.mc.gameSettings.keyBindSprint.isKeyDown()))
+        if (!this.isSprinting() && this.movementInput.moveForward >= f && flag3 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness) && (Honertis.INSTANCE.modulesManager.getMobuleByClass(ToggleSprint.class).isEnabled() || this.mc.gameSettings.keyBindSprint.isKeyDown()))
         {
             this.setSprinting(true);
         }

@@ -5,10 +5,12 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.text.Normalizer;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.lwjgl.Sys;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import fr.honertis.Honertis;
@@ -59,7 +61,27 @@ public class Utils {
 
 	    GL11.glScissor(x, y, width, height);
 	}
+	
+	private static String[] getVersionParts() {
+		String version = System.getProperty("os.version");
+	    String[] parts = version.split("\\.");
+	    return parts;
+	}
+	
+	public static int getVersionFromInt(int i) {
+		return getVersionParts().length > i ? Integer.parseInt(getVersionParts()[i]) : 0;
+	}
+	public static boolean isMacOSAtLeast(int major, int minor) {
+	    int vMajor = getVersionFromInt(0);
+	    int vMinor = getVersionFromInt(1);
 
+	    if (vMajor > major) return true;
+	    if (vMajor == major && vMinor >= minor) return true;
+
+	    return false;
+	}
+	
+	
 	public static void openPath(String s, File file1) {
 		if (Util.getOSType() == Util.EnumOS.OSX) {
 			try {
@@ -98,29 +120,10 @@ public class Utils {
 		}
 	}
 	
-	public static void cantBeOut(double posX, double posY, double minX, double maxX, double minY, double maxY) {
-		NumberSettings x = new NumberSettings("", posX, minX, maxX, 0);
-		NumberSettings y = new NumberSettings("", posY, minY, maxY, 0);
-		cantBeOut(x,y);
-	}
-	
 	public static void cantBeOut(NumberSettings posX, NumberSettings posY) {
-		/*if (posX.getValue() < posX.getMin()) {
-			posX.setValue(posX.getMin());
-		}
-		if (posY.getValue() < posY.getMin()) {
-			posY.setValue(posY.getMin());
-		}
-		if (posX.getValue() > posX.getMax()) {
-			posX.setValue(posX.getMax());
-		}
-		if (posY.getValue() > posY.getMax()) {
-			posY.setValue(posY.getMax());
-		}*/
 		calc2(posX);
 		calc2(posY);
 	}
-	
 	/**
 	 * I dont know how to name this
 	 */
@@ -145,42 +148,13 @@ public class Utils {
 	 * I dont know how to name this too
 	 */
 	
-	public static void calc2(NumberSettings posX) {
-		if (posX.getValue() < posX.getMin()) {
-			posX.setValue(posX.getMin());
+	public static void calc2(NumberSettings pos) {
+		if (pos.getValue() < pos.getMin()) {
+			pos.setValue(pos.getMin());
 		}
-		if (posX.getValue() > posX.getMax()) {
-			posX.setValue(posX.getMax());
+		if (pos.getValue() > pos.getMax()) {
+			pos.setValue(pos.getMax());
 		}
-	}
-	
-	public static class Modules {
-		public static void mouseClicked(int mouseX, int mouseY) {
-			for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
-	        	if (GuiScreen.isHovered(m.posX.getValue(), m.posY.getValue(), m.posX.getValue() + m.posX.getSize(), m.posY.getValue() + m.posY.getSize(), mouseX, mouseY) && m.isEnabled()) m.isClicked = true;
-	        }
-		}
-
-		public static void mouseReleased(int mouseX, int mouseY) {
-	    	for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) 
-	    		if (m.isEnabled())
-	    			m.isClicked = false;
-	    }
-		
-		public static void drawScreen(int mouseX, int mouseY)
-	    { 
-	    	for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
-	    		if (m.isEnabled()) {
-			    	if (m.isClicked) {
-						m.posX.setDefValue(m.posX.getDefValue() + mouseX - m.oldX);
-						m.posY.setDefValue(m.posY.getDefValue() + mouseY - m.oldY);
-					}
-					m.oldX = mouseX;
-					m.oldY = mouseY;
-			    }
-	    	}
-		}
-		
 	}
 	
 	/*

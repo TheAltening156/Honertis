@@ -8,7 +8,7 @@ public class Event<T> {
 	public EventType type;
 	
 	public void onEvent(T e) {
-		for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
+		for (ModuleBase m : Honertis.INSTANCE.modulesManager.getModulesPriority()) {
 			if (m.isEnabled()) {
 				if (e instanceof EventUpdate) {
 					m.onUpdate((EventUpdate) e);
@@ -18,12 +18,6 @@ public class Event<T> {
 				}
 				if (e instanceof EventRender2D) {
 					m.onRender2D((EventRender2D) e);
-				}
-				if (e instanceof EventMouseClick) {
-					m.onMouseClicked((EventMouseClick) e);
-				}
-				if (e instanceof EventMouseClickMove) {
-					m.onMouseClickedMove((EventMouseClickMove)e);
 				}
 			}
 		}

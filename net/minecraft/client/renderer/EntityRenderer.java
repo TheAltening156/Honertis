@@ -635,7 +635,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 GameSettings gamesettings = this.mc.gameSettings;
                 flag = GameSettings.isKeyDown(this.mc.gameSettings.ofKeyBindZoom);
             }
-            Zoom zoom = (Zoom) Honertis.INSTANCE.modulesManager.getModuleByName("Zoom");
+            Zoom zoom = (Zoom) Honertis.INSTANCE.modulesManager.getMobuleByClass(Zoom.class);
     		zoom.isZooming = flag && zoom.scroll.isEnabled();
             if (zoom.isEnabled()) {
             	if (mc.currentScreen == null) {
@@ -1334,7 +1334,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         return i > 200 ? 1.0F : 0.7F + MathHelper.sin(((float)i - partialTicks) * (float)Math.PI * 0.2F) * 0.3F;
     }
 
-	public FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook");
+	public FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getMobuleByClass(FreeLook.class);
     
     public void func_181560_a(float p_181560_1_, long p_181560_2_)
     {
@@ -1474,9 +1474,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 this.renderEndNanoTime = System.nanoTime();
                 TileEntityRendererDispatcher.instance.renderEngine = this.mc.getTextureManager();
             }
-            MiniPlayer player = Honertis.INSTANCE.musicPlayer.player;
+    		MusicPlayerGui musicPlayer = Honertis.INSTANCE.musicPlayer;
+            MiniPlayer player = musicPlayer.player;
             if (!this.mc.gameSettings.showDebugInfo) {            	
-        		MusicPlayerGui musicPlayer = Honertis.INSTANCE.musicPlayer;
             	if (player.isEnabled()) {
             		ScaledResolution sr = new ScaledResolution(mc);
             	    DrawUtils.drawRoundedRect(player.posX.getValue(), player.posY.getValue(), player.posX.getValue() + 225, player.posY.getValue() + 40, 14, new Color(45,45,45).getRGB());

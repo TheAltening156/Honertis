@@ -1,20 +1,24 @@
 package fr.honertis.module;
 
-import java.awt.Color;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import org.lwjgl.input.Mouse;
+
 import com.google.common.collect.Lists;
 
-import fr.honertis.event.EventMouseClickMove;
 import fr.honertis.event.Events;
 import fr.honertis.module.modules.FreeLook;
-import fr.honertis.settings.*;
+import fr.honertis.settings.BooleanSettings;
+import fr.honertis.settings.KeyBindSettings;
+import fr.honertis.settings.NumberSettings;
 import fr.honertis.settings.Settings;
-import fr.honertis.utils.AnimUtils;
 import fr.honertis.utils.LangManager;
+import fr.honertis.utils.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 
 public class ModuleBase extends Events{
 	private String name,
@@ -102,4 +106,32 @@ public class ModuleBase extends Events{
 	public void toggleShowSettings() {
 		showSettings = !showSettings;
 	}
+	
+	public boolean mouseClicked(int mouseX, int mouseY) {
+    	if (GuiScreen.isHovered(posX.getValue(), posY.getValue(), posX.getValue() + posX.getSize(), posY.getValue() + posY.getSize(), mouseX, mouseY) && isEnabled()) {
+    		return isClicked = true;
+    	}
+    	return false;
+    }
+	
+	public boolean mouseReleased(int mouseX, int mouseY) {
+		if (isEnabled())
+			return isClicked = false;
+		return false;
+    }
+	
+	public boolean drawScreen(int mouseX, int mouseY) { 
+		if (isEnabled()) {
+	    	if (isClicked) {
+				posX.setDefValue(posX.getDefValue() + mouseX - oldX);
+				posY.setDefValue(posY.getDefValue() + mouseY - oldY);
+				Utils.calculate(posX, posY, new ScaledResolution(mc));
+			}
+			oldX = mouseX;
+			oldY = mouseY;
+			return true;
+	    }	
+		return false;
+	}
+
 }

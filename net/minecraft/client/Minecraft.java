@@ -18,6 +18,7 @@ import fr.honertis.Honertis;
 import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.module.ModulesManager;
+import fr.honertis.module.modules.BlockTap;
 import fr.honertis.module.modules.DropSwing;
 import fr.honertis.module.modules.FreeLook;
 import fr.honertis.module.modules.Zoom;
@@ -520,8 +521,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.setWindowIcon();
         this.setInitialDisplayMode();
         Honertis.INSTANCE.start();
-        if (Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook").isEnabled())
-        	Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook").setEnabled(false);
+        FreeLook fr = (FreeLook) Honertis.INSTANCE.modulesManager.getMobuleByClass(FreeLook.class);
+        if (fr.isEnabled())
+        	fr.setEnabled(false);
         this.createDisplay();
         OpenGlHelper.initializeTextures();
         this.framebufferMc = new Framebuffer(this.displayWidth, this.displayHeight, true);
@@ -1254,7 +1256,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.mcProfiler.startSection("display_update");
         for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
         	m.update();
-        	FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook");
+        	FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getMobuleByClass(FreeLook.class);
             
     		if (mod.hold.isEnabled()) {
     			if (currentScreen == null) {
@@ -1278,7 +1280,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     		}
         }
         
-        DropSwing newDrop = (DropSwing) Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop");
+        DropSwing newDrop = (DropSwing) Honertis.INSTANCE.modulesManager.getMobuleByClass(DropSwing.class);
         
         if (currentScreen == null && (newDrop.isEnabled() && newDrop.fastDropping.isEnabled())) {
 	        if (Keyboard.getEventKey() == gameSettings.keyBindDrop.getKeyCode() && Keyboard.getEventKeyState()) {
@@ -1601,7 +1603,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 		this.effectRenderer.addBlockHitEffects(blockpos, this.objectMouseOver.sideHit);
     	                this.thePlayer.swingItem();	
                 	}
-                	if (Honertis.INSTANCE.modulesManager.getModuleByName("BlockTap").isEnabled() && thePlayer.isUsingItem()) {
+                	if (Honertis.INSTANCE.modulesManager.getMobuleByClass(BlockTap.class).isEnabled() && thePlayer.isUsingItem()) {
                 		this.effectRenderer.addBlockHitEffects(blockpos, this.objectMouseOver.sideHit);
     	                this.thePlayer.swingItem();	
                 	}
@@ -1968,7 +1970,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                         }
                         else
                         {
-                        	Zoom zoom = (Zoom) Honertis.INSTANCE.modulesManager.getModuleByName("Zoom");
+                        	Zoom zoom = (Zoom) Honertis.INSTANCE.modulesManager.getMobuleByClass(Zoom.class);
                         	if (!zoom.isZooming)
                             this.thePlayer.inventory.changeCurrentItem(j);
                         }
@@ -2038,7 +2040,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     else
                     {
                     	
-                    	FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getModuleByName("FreeLook");
+                    	FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getMobuleByClass(FreeLook.class);
                         
                 		if (!mod.hold.isEnabled()) {
                 			if (k == mod.key.getKey())
@@ -2205,7 +2207,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     this.displayGuiScreen(new GuiInventory(this.thePlayer));
                 }
             }
-            DropSwing newDrop = (DropSwing) Honertis.INSTANCE.modulesManager.getModuleByName("1.15 Drop");
+            DropSwing newDrop = (DropSwing) Honertis.INSTANCE.modulesManager.getMobuleByClass(DropSwing.class);
             
             if (!newDrop.isEnabled() || (newDrop.isEnabled() && !newDrop.fastDropping.isEnabled())) {
             	while (this.gameSettings.keyBindDrop.isPressed())

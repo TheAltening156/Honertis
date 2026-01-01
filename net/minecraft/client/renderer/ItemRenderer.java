@@ -39,6 +39,9 @@ import org.lwjgl.opengl.GL11;
 
 import fr.honertis.Honertis;
 import fr.honertis.module.ModulesManager;
+import fr.honertis.module.modules.BlockHit;
+import fr.honertis.module.modules.FishingRod;
+import fr.honertis.module.modules.LowFire;
 import fr.honertis.utils.TimeUtils;
 import shadersmod.client.Shaders;
 
@@ -330,6 +333,8 @@ public class ItemRenderer
         GlStateManager.rotate(60.0F, 0.0F, 1.0F, 0.0F);
     }
 
+    public BlockHit blockhit = (BlockHit) Honertis.INSTANCE.modulesManager.getMobuleByClass(BlockHit.class);
+    
     /**
      * Renders the active item in the player's hand when in first person mode. Args: partialTickTime
      */
@@ -364,14 +369,14 @@ public class ItemRenderer
                     case EAT: 
                     case DRINK:
                     	this.func_178104_a(entityplayersp, partialTicks);
-                    	if (Honertis.INSTANCE.modulesManager.getModuleByName("BlockHit").isEnabled()) {
+                    	if (blockhit.isEnabled()) {
                         	this.transformFirstPersonItem(0, f1);
                     	} else
                         	this.transformFirstPersonItem(f, 0.0F);
                         break;
 
                     case BLOCK:
-                    	if (Honertis.INSTANCE.modulesManager.getModuleByName("BlockHit").isEnabled()) {
+                    	if (blockhit.isEnabled()) {
                         	GlStateManager.scale(0.71, 0.71, 0.81);
                         	GlStateManager.translate(0, 0.02, 0);
                         	this.transformFirstPersonItem(0, f1);
@@ -381,7 +386,7 @@ public class ItemRenderer
                         break;
 
                     case BOW:
-                    	if (Honertis.INSTANCE.modulesManager.getModuleByName("BlockHit").isEnabled()) {
+                    	if (blockhit.isEnabled()) {
                         	this.transformFirstPersonItem(0, f1);
                         } else
                         	this.transformFirstPersonItem(f, 0.0F);
@@ -393,7 +398,7 @@ public class ItemRenderer
                 this.func_178105_d(f1);
                 this.transformFirstPersonItem(f, f1);
             }
-           if (Honertis.INSTANCE.modulesManager.getModuleByName("FishingRod").isEnabled()) {
+           if (Honertis.INSTANCE.modulesManager.getMobuleByClass(FishingRod.class).isEnabled()) {
 	            if (this.itemToRender.getItem() instanceof ItemFishingRod) {
 	            	GlStateManager.translate(0, 0.33, 0);
 	            	GlStateManager.scale(0.65, 0.65, 0.65);
@@ -554,7 +559,7 @@ public class ItemRenderer
             float f4 = textureatlassprite.getMaxV();
             float f5 = (0.0F - f) / 2.0F;
             float f6 = f5 + f;
-            float f7 = 0.0F - f / (Honertis.INSTANCE.modulesManager.getModuleByName("LowFire").isEnabled() ? 1.15F : 2.0f);
+            float f7 = 0.0F - f / (Honertis.INSTANCE.modulesManager.getMobuleByClass(LowFire.class).isEnabled() ? 1.15F : 2.0f);
             float f8 = f7 + f;
             float f9 = -0.5F;
             GlStateManager.translate((float)(-(i * 2 - 1)) * 0.24F, -0.3F, 0.0F);

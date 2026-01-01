@@ -4,10 +4,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-import fr.honertis.Honertis;
-import fr.honertis.event.EventMouseClick;
-import fr.honertis.event.EventMouseClickMove;
-
 import java.awt.Toolkit;
 import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
@@ -494,10 +490,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
      * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
      */
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException
-    {
-    	EventMouseClick e = new EventMouseClick(mouseX, mouseY, mouseButton);
-    	Honertis.INSTANCE.event.onEvent(e);
-    	
+    {	
         if (mouseButton == 0)
         {
             for (int i = 0; i < this.buttonList.size(); ++i)
@@ -532,8 +525,6 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback
      */
     protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick)
     {
-    	EventMouseClickMove e = new EventMouseClickMove(mouseX, mouseY, clickedMouseButton);
-    	Honertis.INSTANCE.event.onEvent(e);
     }
 
     /**

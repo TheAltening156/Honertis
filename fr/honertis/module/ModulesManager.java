@@ -1,6 +1,9 @@
 package fr.honertis.module;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.honertis.Honertis;
@@ -55,7 +58,12 @@ public class ModulesManager {
 		
 	}
 	
-	
+	public List<ModuleBase> getModulesPriority() {
+	    CopyOnWriteArrayList<ModuleBase> modules = Honertis.INSTANCE.modulesManager.modules;
+	    List<ModuleBase> reversed = new ArrayList<>(modules);
+	    Collections.reverse(reversed);
+	    return reversed;
+	}
 	
 	private void add(ModuleBase... m) {
 		modules.addAll(Arrays.asList(m));
@@ -64,6 +72,14 @@ public class ModulesManager {
 	public ModuleBase getModuleByName(String name) {
 		for(ModuleBase m : modules) 
 			if (m.getName().equalsIgnoreCase(name)) return m;
+		
+		return null;
+	}
+	
+	public ModuleBase getMobuleByClass(Class<?> clazz) {
+		for (ModuleBase m : modules) 
+			if (m.getClass().equals(clazz))
+				return m;
 		
 		return null;
 	}

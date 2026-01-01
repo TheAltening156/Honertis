@@ -24,6 +24,8 @@ import java.util.concurrent.Executors;
 
 import javax.imageio.ImageIO;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.util.ResourceLocation;
 
 public class DrawUtils{

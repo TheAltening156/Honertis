@@ -79,4 +79,5 @@ gui.honertis.credits.text3="Yalter's MouseTweaks" mod.
 gui.honertis.credits.text4=And thanks also to Alfaa for giving me back the motivation to develop this PvP client.
 
 gui.musicPlayer.name=Music player
-gui.musicPlayer.search=Search...
+gui.musicPlayer.search=Search... (YouTube)
+gui.musicPlayer.wav=Put your ".wav" files in the folder

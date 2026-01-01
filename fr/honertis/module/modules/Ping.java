@@ -16,7 +16,7 @@ public class Ping extends ModuleBase{
 
 	public Ping() {
 		super("Ping", "module.ping", Category.UTILITIES);
-		this.addSettings(tab);
+		this.addSettings(tab, posX, posY);
 	}
 	
 	@Override

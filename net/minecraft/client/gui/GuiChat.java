@@ -197,15 +197,22 @@ public class GuiChat extends GuiScreen
                 return;
             }
         }
-        Utils.Modules.mouseClicked(mouseX, mouseY);
+        for (ModuleBase m : Honertis.INSTANCE.modulesManager.getModulesPriority()) {
+    		if (m.mouseClicked(mouseX, mouseY))
+    			break;
+        }
         this.inputField.mouseClicked(mouseX, mouseY, mouseButton);
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
-    	Utils.Modules.mouseReleased(mouseX, mouseY);
+    	for (ModuleBase m : Honertis.INSTANCE.modulesManager.getModulesPriority()) {
+    		if (m.mouseReleased(mouseX, mouseY))
+    			break;
+    	}
     }
+    
     
     /**
      * Sets the text of the chat
@@ -322,7 +329,9 @@ public class GuiChat extends GuiScreen
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
     { 
-    	Utils.Modules.drawScreen(mouseX, mouseY);
+    	for (ModuleBase m : Honertis.INSTANCE.modulesManager.getModulesPriority()) {
+    		m.drawScreen(mouseX, mouseY);
+    	}
 		drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
         this.inputField.drawTextBox();
         IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());

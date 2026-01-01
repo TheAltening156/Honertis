@@ -130,7 +130,7 @@ public class GuiHonertisOptions extends GuiScreen {
 					}
 			
 					if (m.showSettings()) {
-						HitColor clr = (HitColor) Honertis.INSTANCE.modulesManager.getModuleByName("HitColor");
+						HitColor clr = (HitColor) Honertis.INSTANCE.modulesManager.getMobuleByClass(HitColor.class);
 						if (m.getName().equals(clr.getName()) && clr.custom.isEnabled()) {
 							drawRect(settsX + 165, settsY + 15, settsX + 190, settsY + 40, new Color((int)clr.r.getDefValue(), (int)clr.g.getDefValue(), (int)clr.b.getDefValue(), (int)clr.a.getDefValue()).getRGB());
 							mc.fontRendererObj.drawString("rendu :", settsX + 160, settsY, -1);

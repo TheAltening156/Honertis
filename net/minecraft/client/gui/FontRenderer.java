@@ -429,7 +429,6 @@ public class FontRenderer implements IResourceManagerReloadListener
         this.underlineStyle = false;
         this.strikethroughStyle = false;
     }
-
     /**
      * Render a single line string at the current (posX,posY) and update posX
      */
@@ -500,7 +499,6 @@ public class FontRenderer implements IResourceManagerReloadListener
                     this.italicStyle = false;
                     this.setColor(this.red, this.blue, this.green, this.alpha);
                 }
-
                 ++i;
             }
             else
@@ -646,7 +644,7 @@ public class FontRenderer implements IResourceManagerReloadListener
             this.setColor(this.red, this.blue, this.green, this.alpha);
             this.posX = (float)x;
             this.posY = (float)y;
-            this.renderStringAtPos(text, dropShadow);
+        	this.renderStringAtPos(text, dropShadow);
             return (int)this.posX;
         }
     }

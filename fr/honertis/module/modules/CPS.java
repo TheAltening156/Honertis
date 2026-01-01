@@ -23,6 +23,7 @@ public class CPS extends ModuleBase {
     
     public CPS() {
         super("CPS", "module.cps", Category.ANCIEN_MODULES);
+        this.addSettings(posX, posY);
         leftButtonState = new PressState(lCps);
         rightButtonState = new PressState(rCps);
     }
