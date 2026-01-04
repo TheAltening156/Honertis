@@ -7,7 +7,7 @@ import fr.honertis.settings.NumberSettings;
 
 public class Zoom extends ModuleBase{
 	public BooleanSettings scroll = new BooleanSettings("Scroll", true);
-	public NumberSettings zoomSpeed = new NumberSettings("module.zoom.zoomspeed", 0.75, 0.01, 0.99, 0.01);
+	public NumberSettings zoomSpeed = new NumberSettings("module.zoom.zoomspeed", 0.50, 0, 1, 0.01);
 	public boolean isZooming;
 	
 	public Zoom() {

@@ -219,16 +219,31 @@ public abstract class GuiSlot
         }
     }
 
+	public float smoothScroll;
+
     public void drawScreen(int mouseXIn, int mouseYIn, float p_148128_3_)
     {
         if (this.field_178041_q)
         {
+        	smoothScroll += (amountScrolled - smoothScroll) * 0.25f;
+        	int scrollI = MathHelper.floor_float(smoothScroll);
             this.mouseX = mouseXIn;
             this.mouseY = mouseYIn;
             this.drawBackground();
             int i = this.getScrollBarX();
             int j = i + 6;
-            this.bindAmountScrolled();
+            this.bindAmountScrolled();//TODO: modif
+            
+            float maxScroll = this.func_148135_f();
+            this.amountScrolled += scrollVelocity;
+            
+            float dt = Minecraft.getDebugFPS() > 0 ? 60f / Minecraft.getDebugFPS() : 1f;
+            scrollVelocity *= Math.pow(0.85f, dt);
+            
+            if (Math.abs(scrollVelocity) < 0.01f) {
+            	scrollVelocity = 0;
+            }
+            
             GlStateManager.disableLighting();
             GlStateManager.disableFog();
             Tessellator tessellator = Tessellator.getInstance();
@@ -237,13 +252,13 @@ public abstract class GuiSlot
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             float f = 32.0F;
             worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-            worldrenderer.pos((double)this.left, (double)this.bottom, 0.0D).tex((double)((float)this.left / f), (double)((float)(this.bottom + (int)this.amountScrolled) / f)).color(32, 32, 32, 255).endVertex();
-            worldrenderer.pos((double)this.right, (double)this.bottom, 0.0D).tex((double)((float)this.right / f), (double)((float)(this.bottom + (int)this.amountScrolled) / f)).color(32, 32, 32, 255).endVertex();
-            worldrenderer.pos((double)this.right, (double)this.top, 0.0D).tex((double)((float)this.right / f), (double)((float)(this.top + (int)this.amountScrolled) / f)).color(32, 32, 32, 255).endVertex();
-            worldrenderer.pos((double)this.left, (double)this.top, 0.0D).tex((double)((float)this.left / f), (double)((float)(this.top + (int)this.amountScrolled) / f)).color(32, 32, 32, 255).endVertex();
+            worldrenderer.pos((double)this.left, (double)this.bottom, 0.0D).tex((double)((float)this.left / f), (double)((float)(this.bottom + scrollI) / f)).color(32, 32, 32, 255).endVertex();
+            worldrenderer.pos((double)this.right, (double)this.bottom, 0.0D).tex((double)((float)this.right / f), (double)((float)(this.bottom + scrollI) / f)).color(32, 32, 32, 255).endVertex();
+            worldrenderer.pos((double)this.right, (double)this.top, 0.0D).tex((double)((float)this.right / f), (double)((float)(this.top + scrollI) / f)).color(32, 32, 32, 255).endVertex();
+            worldrenderer.pos((double)this.left, (double)this.top, 0.0D).tex((double)((float)this.left / f), (double)((float)(this.top + scrollI) / f)).color(32, 32, 32, 255).endVertex();
             tessellator.draw();
             int k = this.left + this.width / 2 - this.getListWidth() / 2 + 2;
-            int l = this.top + 4 - (int)this.amountScrolled;
+            int l = this.top + 4 - scrollI;
 
             if (this.hasListHeader)
             {
@@ -272,13 +287,12 @@ public abstract class GuiSlot
             worldrenderer.pos((double)this.right, (double)(this.bottom - i1), 0.0D).tex(1.0D, 0.0D).color(0, 0, 0, 0).endVertex();
             worldrenderer.pos((double)this.left, (double)(this.bottom - i1), 0.0D).tex(0.0D, 0.0D).color(0, 0, 0, 0).endVertex();
             tessellator.draw();
-            int j1 = this.func_148135_f();
 
-            if (j1 > 0)
+            if (maxScroll > 0)
             {
                 int k1 = (this.bottom - this.top) * (this.bottom - this.top) / this.getContentHeight();
                 k1 = MathHelper.clamp_int(k1, 32, this.bottom - this.top - 8);
-                int l1 = (int)this.amountScrolled * (this.bottom - this.top - k1) / j1 + this.top;
+                int l1 = (int)(scrollI * (this.bottom - this.top - k1) / maxScroll) + this.top;
 
                 if (l1 < this.top)
                 {
@@ -412,7 +426,14 @@ public abstract class GuiSlot
 
             if (i2 != 0)
             {
-                if (i2 > 0)
+            	if (i2 > 0) {
+            		scrollVelocity -= this.slotHeight * 0.35f;
+            	}
+            	if (i2 < 0) {
+            		scrollVelocity += this.slotHeight * 0.35f;
+            	}
+            	
+            	/*if (i2 > 0)
                 {
                     i2 = -1;
                 }
@@ -421,11 +442,12 @@ public abstract class GuiSlot
                     i2 = 1;
                 }
 
-                this.amountScrolled += (float)(i2 * this.slotHeight / 2);
+                this.amountScrolled += (float)(i2 * this.slotHeight / 2);*/
             }
         }
     }
-
+    
+    private float scrollVelocity = 0f;
     public void setEnabled(boolean enabledIn)
     {
         this.enabled = enabledIn;

@@ -69,8 +69,8 @@ module.mouseTweaks=Mod Mouse Tweaks de Yalter
 
 # Honertis Menu
 gui.honertis.options.name=Options Honertis
-gui.honertis.options.scroll=Vous pouvez utiliser le scroll de la souris
-gui.honertis.options.scroll1=si vous ne voyez pas certain paramètre / module
+gui.honertis.gui.options.name=Options de Gui
+gui.honertis.module.options.name=Options de Modules
 
 # Credits Screen
 gui.honertis.credits.text1=Merci à LCCRAFT pour l'icone et boutons du lecteur de musique.

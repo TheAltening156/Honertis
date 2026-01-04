@@ -600,8 +600,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
         }
     }
 
-    private float hoverProgress = 0f; // 0 = pas de zoom, 1 = zoom max
-    private float size = 1f;
+    private float zoomTarget = 1f;
+    private float zoomValue = 0f;
 
     
     /**
@@ -639,34 +639,33 @@ public class EntityRenderer implements IResourceManagerReloadListener
     		zoom.isZooming = flag && zoom.scroll.isEnabled();
             if (zoom.isEnabled()) {
             	if (mc.currentScreen == null) {
-            		if (!zoom.scroll.isEnabled()) size = 1;
-	            	if (!Config.zoomMode)
-	 	            {
+            		
+            		if (!zoom.scroll.isEnabled()) zoomTarget = 1;
+	            	
+            		if (!Config.zoomMode) {
 	 	                Config.zoomMode = true;
 	            		this.mc.gameSettings.smoothCamera = true;
 	 	            }
-            		int i1 = Mouse.getDWheel();
-            		float target = flag ? size : 0f;
-			        float zoomSpeed = (float) Math.pow(1f - (zoom.zoomSpeed.getFloatValue() - 0.05f) / (1 - 0.05f), 2); 
-		            hoverProgress += (target - hoverProgress) * zoomSpeed;
-
-	            	if (zoom.isZooming) { 
-	            		if (i1 != 0) {
-		                    if (i1 > 0 && size <= 6.0f)
-		                    {
-		                        size += 0.25F;
-		                    	hoverProgress = Math.min(size, hoverProgress);
-		                    }
-		                    if (i1 < 0 && size >= 0.50f)
-		                    {
-		                        size -= 0.25F;
-		                        hoverProgress = Math.max(0f, hoverProgress);
-		                    }
-	            		}
-	            	
+            		
+	            	int i1 = Mouse.getDWheel();
+            		
+            		if (zoom.isZooming && i1 != 0) { 
+            			zoomTarget += Math.signum(i1) * 0.25f;
+	            		zoomTarget = MathHelper.clamp_float(zoomTarget, 0.5f, 6.0f);
 	            	}
-		            float zoomFactor = 1f + 3f * hoverProgress;
-		            f /= zoomFactor;
+            		
+            		float slider = zoom.zoomSpeed.getFloatValue(); 
+            		float t = MathHelper.clamp_float((slider - 0.15f) / 0.85f, 0f, 1f);
+            		float response = (float) Math.pow(t, 3f);
+            		
+            		float dt = Minecraft.getDebugFPS() > 0 ? 60f / Minecraft.getDebugFPS() : 1f;
+            		float smooth = 1f - (float)Math.pow(1f - response, dt);
+
+            		float target = flag ? zoomTarget : 0f;
+            		zoomValue += (target - zoomValue) * smooth;
+			        
+			        float zoomFactor = 1f + 3f * zoomValue;
+			        f /= zoomFactor;
 	            	
             	}
             } else {
