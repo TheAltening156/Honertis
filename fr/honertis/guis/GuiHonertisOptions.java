@@ -17,6 +17,7 @@ public class GuiHonertisOptions extends GuiScreen {
 	
 	@Override
 	public void initGui() {
+		this.mc.displayGuiScreen(new GuiModuleOptions(parent));
 		buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height - 25, I18n.format("gui.back", new Object[0])));
 		buttonList.add(new GuiButton(1, this.width / 2 - 152, this.height/3 + 35 - 10, 150, 20, LangManager.format("gui.honertis.module.options.name")));
 		buttonList.add(new GuiButton(2, this.width / 2 + 2,   this.height/3 + 35 - 10, 150, 20, LangManager.format("gui.honertis.gui.options.name")));
