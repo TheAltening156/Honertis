@@ -24,6 +24,7 @@ public class Honertis {
 	public MusicPlayerGui musicPlayer;
 	public CurrentPlayingSong playingSong;
 	public boolean isLauncher;
+	public String launcherVersion;
 	
 	public void start() {
 		name = "Honertis";

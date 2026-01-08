@@ -489,7 +489,8 @@ public class MusicPlayerGui extends GuiScreen {
 					downloadFile(FFMPEG_URL, ffmpeg);
 					ffmpeg.setExecutable(true);
 					try {
-						new ProcessBuilder("chmod", "+x", ffmpeg.getAbsolutePath()).start().waitFor();
+						if (Util.getOSType() != EnumOS.WINDOWS)
+							new ProcessBuilder("chmod", "+x", ffmpeg.getAbsolutePath()).start().waitFor();
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
