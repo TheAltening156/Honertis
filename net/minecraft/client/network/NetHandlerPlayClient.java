@@ -537,17 +537,13 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
      */
     public void handleSpawnPlayer(S0CPacketSpawnPlayer packetIn)
     {
-    	NetworkPlayerInfo playerInfo = this.getPlayerInfo(packetIn.getPlayer());
-    	 if (playerInfo == null) {
-    		 return;
-    	 }
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
         double d0 = (double)packetIn.getX() / 32.0D;
         double d1 = (double)packetIn.getY() / 32.0D;
         double d2 = (double)packetIn.getZ() / 32.0D;
         float f = (float)(packetIn.getYaw() * 360) / 256.0F;
         float f1 = (float)(packetIn.getPitch() * 360) / 256.0F;
-        EntityOtherPlayerMP entityotherplayermp = new EntityOtherPlayerMP(this.gameController.theWorld, playerInfo.getGameProfile());
+        EntityOtherPlayerMP entityotherplayermp = new EntityOtherPlayerMP(this.gameController.theWorld, getPlayerInfo(packetIn.getPlayer()).getGameProfile());
         entityotherplayermp.prevPosX = entityotherplayermp.lastTickPosX = (double)(entityotherplayermp.serverPosX = packetIn.getX());
         entityotherplayermp.prevPosY = entityotherplayermp.lastTickPosY = (double)(entityotherplayermp.serverPosY = packetIn.getY());
         entityotherplayermp.prevPosZ = entityotherplayermp.lastTickPosZ = (double)(entityotherplayermp.serverPosZ = packetIn.getZ());

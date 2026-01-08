@@ -85,7 +85,7 @@ public class S0CPacketSpawnPlayer implements Packet<INetHandlerPlayClient>
 
     public List<DataWatcher.WatchableObject> func_148944_c()
     {
-        if (this.field_148958_j == null && (this.watcher != null && this.watcher.getAllWatched() != null))
+        if (this.field_148958_j == null)
         {
             this.field_148958_j = this.watcher.getAllWatched();
         }
