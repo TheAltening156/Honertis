@@ -124,8 +124,8 @@ public class MusicPlayerGui extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		if (isYoutube && Util.getOSType() == EnumOS.OSX && !Utils.isMacOSAtLeast(10,15)) {
 			SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null,
-					"Votre version Mac est trop ancienne (" + getVersionFromInt(0) + "." + Utils.getVersionFromInt(1) + ") pour la recherche YouTube, \nVeuillez mettre à jour votre Mac vers une version plus récente (10.15 Catalina).",
-					"Erreur", JOptionPane.ERROR_MESSAGE));
+					LangManager.format("gui.musicPlayer.macTooOld1") + getVersionFromInt(0) + "." + Utils.getVersionFromInt(1) + LangManager.format("gui.musicPlayer.macTooOld2"),
+					LangManager.format("gui.error"), JOptionPane.ERROR_MESSAGE));
 			isYoutube = false;
 			refreshSongList();
 		}
@@ -165,7 +165,7 @@ public class MusicPlayerGui extends GuiScreen {
         	drawRoundedRect(position + 5, posY + 6, position + 13 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, 5, isHovered(position + 5, posY + 6, position + 13 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open")), posY + 24, mouseX, mouseY) ? new Color(150,150,150).getRGB() : new Color(100,100,100).getRGB());
         	mc.fontRendererObj.drawStringWithShadow(LangManager.format("gui.open"), (int)position + 10, (int)posY + 11, -1);
         	if (songs == songList && songList.size() < 1) {
-        		mc.fontRendererObj.drawCenteredStringWithShadow("Placez vos fichiers \".wav\" dans le dossier", posX + 280/2 + 5, posY + (210 + mc.fontRendererObj.FONT_HEIGHT)/2 + 5, -1);
+        		mc.fontRendererObj.drawCenteredStringWithShadow(LangManager.format("gui.musicPlayer.wav"), posX + 280/2 + 5, posY + (210 + mc.fontRendererObj.FONT_HEIGHT)/2 + 5, -1);
             	drawRoundedRect(posX + 280/2 - mc.fontRendererObj.getStringWidth(LangManager.format("gui.open"))/2, posY + 120 + 5f, posX + 280/2 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open"))/2 + 7.5f, posY + 120 + 18 + 5f, 5, isHovered(posX + 280/2 - mc.fontRendererObj.getStringWidth(LangManager.format("gui.open"))/2, posY + 120 + 5f, posX + 280/2 + mc.fontRendererObj.getStringWidth(LangManager.format("gui.open"))/2 + 7.5f, posY + 120 + 18 + 5f, mouseX, mouseY) ? new Color(150,150,150).getRGB() : new Color(100,100,100).getRGB());
             	//drawRoundedRect(posX + 280/2 - 60, posY + (210 + mc.fontRendererObj.FONT_HEIGHT)/2 - 2, posX + 280/2 + 60, posY + (210 + mc.fontRendererObj.FONT_HEIGHT)/2 + 10, 2, -1);
             	mc.fontRendererObj.drawCenteredStringWithShadow(LangManager.format("gui.open"), posX + 285/2 + 2.5f, posY + 121 + mc.fontRendererObj.FONT_HEIGHT/2 + 5f, -1);
@@ -470,15 +470,7 @@ public class MusicPlayerGui extends GuiScreen {
 	
 	        File ytDlp = new File(BIN_DIR, ytdlp);
 	        if (!ytDlp.exists()) {
-	           downloadYtDlp(ytDlp);
-	           ytDlp.setExecutable(true);
-		        try {
-					new ProcessBuilder("chmod", "+x", ytDlp.getAbsolutePath()).start().waitFor();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+	        	downloadYtDlpAndSetExecutable(ytDlp);
 	        }
 	
 	        File ffmpeg = new File(BIN_DIR, this.ffmpeg);
@@ -500,12 +492,7 @@ public class MusicPlayerGui extends GuiScreen {
 	        }
 	        if (isYoutube) {
 	        	ytState = "Getting song from link: " + videoUrl;
-		        ProcessBuilder pb = new ProcessBuilder(
-		        		BIN_DIR + "/" + ytdlp,
-		                "-x", "--audio-format", "wav",
-		                "-o", songDir + "/" + outputName,
-		                "--", videoUrl
-		        );
+		        ProcessBuilder pb = ytdlpProcessBuilder(outputName, ffmpeg, videoUrl);
 		        pb.redirectErrorStream(true);
 		        try {
 			        Process process = pb.start();
@@ -516,14 +503,10 @@ public class MusicPlayerGui extends GuiScreen {
 			                System.out.println(line);
 			                ytState = line;
 			                if (line.startsWith("ERROR:")) {
-			                	downloadYtDlp(ytDlp);
+			                	downloadYtDlpAndSetExecutable(ytDlp);
 			                	ytState = "Getting song from link: " + videoUrl;
-			     		        pb = new ProcessBuilder(
-			     		        		BIN_DIR + "/" + ytdlp,
-			     		                "-x", "--audio-format", "wav",
-			     		                "-o", songDir + "/" + outputName,
-			     		                "--", videoUrl
-			     		        );
+			     		        pb = ytdlpProcessBuilder(outputName, ffmpeg, videoUrl);
+			     		        
 			     		        pb.redirectErrorStream(true);
 			     		        try {
 			     			        process = pb.start();
@@ -563,6 +546,28 @@ public class MusicPlayerGui extends GuiScreen {
 	        songName = song.getTitle();
 			thumbnail = song.getThumbnailUrl();
         }).start();
+	}
+	
+	private void downloadYtDlpAndSetExecutable(File ytDlp) {
+		downloadYtDlp(ytDlp);
+		ytDlp.setExecutable(true);
+		try {
+			new ProcessBuilder("chmod", "+x", ytDlp.getAbsolutePath()).start().waitFor();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public ProcessBuilder ytdlpProcessBuilder(String outputName, File ffmpeg, String videoUrl) {
+		return new ProcessBuilder(
+        		BIN_DIR + "/" + ytdlp,
+                "-x", "--audio-format", "wav",
+                "-o", songDir + "/" + outputName,
+                "--ffmpeg-location", ffmpeg.getAbsolutePath(),
+                "--", videoUrl
+        );
 	}
 	
 	private void downloadYtDlp(File ytDlp) {

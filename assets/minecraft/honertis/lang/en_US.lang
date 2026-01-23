@@ -10,6 +10,7 @@ gui.new=A new version of Honertis is available !
 gui.still=You're still on
 gui.current=the current version is
 gui.open=Open song folder
+gui.error=Error
 
 # Other
 color.red=Red
@@ -80,4 +81,8 @@ gui.honertis.credits.text4=And thanks also to Alfaa for giving me back the motiv
 
 gui.musicPlayer.name=Music player
 gui.musicPlayer.search=Search... (YouTube)
+
 gui.musicPlayer.wav=Put your ".wav" files in the folder
+
+gui.musicPlayer.macTooOld1=Your mac version is too old (
+gui.musicPlayer.macTooOld2=) for youtube research, \nPlease update you mac to a later version (10.15 Catalina minimum).
