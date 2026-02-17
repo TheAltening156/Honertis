@@ -2,6 +2,7 @@ package fr.honertis.utils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.crash.CrashReport;
 
 import static net.minecraft.client.renderer.GlStateManager.*;
 
@@ -97,57 +98,58 @@ public class DrawUtils{
 			}
 		});
 	}
-	private static ResourceLocation PLACEHOLDER;
+	private static ResourceLocation PLACEHOLDER = bindPlaceHolder();
 
 	public static void drawImageFromYoutubeURL(double x, double y, double width, double height, String urlString) {
 	    pushMatrix();
-	    try {
-	        BufferedImage pending = pendingImages.remove(urlString);
-	        if (pending != null) {
-	            DynamicTexture dynamicTexture = new DynamicTexture(pending);
-	            ResourceLocation res = Minecraft.getMinecraft()
-	                    .getTextureManager()
-	                    .getDynamicTextureLocation("thumb_" + urlString.hashCode(), dynamicTexture);
-	            thumbnailCache.put(urlString, res);
-	        }
-
-	        ResourceLocation resource = thumbnailCache.get(urlString);
-	        if (resource == null) {
-	            loadThumbnailAsync(urlString);
-	            if (PLACEHOLDER == null) {
-	            	try {
-	        	        BufferedImage img = ImageIO.read(new URL("https://pixelpc.fr/art169.png"));
-	        	        DynamicTexture tex = new DynamicTexture(img);
-	        	        PLACEHOLDER = Minecraft.getMinecraft()
-	        	                .getTextureManager()
-	        	                .getDynamicTextureLocation("placeholder_art169", tex);
-	        	    } catch (IOException e) {
-	        	        e.printStackTrace();
-	        	        PLACEHOLDER = null;
-	        	    }
-	            }
-	            if (PLACEHOLDER != null) {
-	                enableBlend();
-	                Minecraft.getMinecraft().getTextureManager().bindTexture(PLACEHOLDER);
-	                tryBlendFuncSeparate(770, 771, 1, 0);
-	                color(1, 1, 1);
-	                drawModalRectWithCustomSizedTexture(x, y, 0.0f, 0.0f, width, height, (float) width, (float) height);
-	                disableBlend();
-	            }
-	            return;
-	        }
-
-	        enableBlend();
-	        Minecraft.getMinecraft().getTextureManager().bindTexture(resource);
-	        tryBlendFuncSeparate(770, 771, 1, 0);
-	        color(1, 1, 1);
-	        drawModalRectWithCustomSizedTexture(x, y, 0.0f, 0.0f, width, height, (float) width, (float) height);
-	        disableBlend();
-	    } finally {
-	        glPopMatrix();
-	    }
+	    if (urlString == null) {
+	    	bindImage(PLACEHOLDER, x, y, width, height);
+	    	popMatrix();
+	    } else {
+		    try {
+		        BufferedImage pending = pendingImages.remove(urlString);
+		        if (pending != null) {
+		            DynamicTexture dynamicTexture = new DynamicTexture(pending);
+		            ResourceLocation res = Minecraft.getMinecraft()
+		                    .getTextureManager()
+		                    .getDynamicTextureLocation("thumb_" + urlString.hashCode(), dynamicTexture);
+		            thumbnailCache.put(urlString, res);
+		        }
+	
+		        ResourceLocation resource = thumbnailCache.get(urlString);
+		        if (resource == null) {
+		            loadThumbnailAsync(urlString);
+		            if (PLACEHOLDER == null) {
+		            	PLACEHOLDER = bindPlaceHolder();
+		            }
+		            if (PLACEHOLDER != null) {
+		                bindImage(PLACEHOLDER, x, y, width, height);
+		            }
+		            return;
+		        }
+	
+		        bindImage(resource, x, y, width, height);
+		    } catch (Exception e) {
+		    	Minecraft.getMinecraft().crashed(new CrashReport("Impossible to bind placeholder image.", e));
+		    } finally {
+		    	popMatrix();
+		    }
+	    }    
 	}
     
+	public static ResourceLocation bindPlaceHolder() {
+		return new ResourceLocation("minecraft", "honertis/music/pl169.png");
+	}
+	
+	public static void bindImage(ResourceLocation resource, double x, double y, double width, double height) {
+		enableBlend();
+        Minecraft.getMinecraft().getTextureManager().bindTexture(resource);
+        tryBlendFuncSeparate(770, 771, 1, 0);
+        color(1, 1, 1);
+        drawModalRectWithCustomSizedTexture(x, y, 0.0f, 0.0f, width, height, (float) width, (float) height);
+        disableBlend();
+	}
+	
 	private static BufferedImage resize(BufferedImage img, int newW, int newH) {
 	    BufferedImage resized = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
 	    resized.getGraphics().drawImage(img.getScaledInstance(newW, newH, java.awt.Image.SCALE_SMOOTH), 0, 0, null);

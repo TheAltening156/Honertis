@@ -5,6 +5,7 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 import static fr.honertis.utils.Utils.*;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +28,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -61,6 +63,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.Util.EnumOS;
@@ -419,7 +422,7 @@ public class MusicPlayerGui extends GuiScreen {
 		for (File f : files) {
 			if (f.isFile() && f.getName().endsWith(".wav")) {
 				ytState = "Found " + f.getName();
-				songs.add(new SongItem("", f.getName(), "https://pixelpc.fr/art169.png"));	
+				songs.add(new SongItem("", f.getName(), null));	
 			}
 		}
 		ytState = "";
@@ -473,26 +476,9 @@ public class MusicPlayerGui extends GuiScreen {
 	        	downloadYtDlpAndSetExecutable(ytDlp);
 	        }
 	
-	        File ffmpeg = new File(BIN_DIR, this.ffmpeg);
-	        
-	        if (!ffmpeg.exists()) {
-	            try {
-		        	ytState = "Downloding ffmpeg ... ";
-					downloadFile(FFMPEG_URL, ffmpeg);
-					ffmpeg.setExecutable(true);
-					try {
-						if (Util.getOSType() != EnumOS.WINDOWS)
-							new ProcessBuilder("chmod", "+x", ffmpeg.getAbsolutePath()).start().waitFor();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-	        }
 	        if (isYoutube) {
 	        	ytState = "Getting song from link: " + videoUrl;
-		        ProcessBuilder pb = ytdlpProcessBuilder(outputName, ffmpeg, videoUrl);
+		        ProcessBuilder pb = ytdlpProcessBuilder(outputName, null, videoUrl);
 		        pb.redirectErrorStream(true);
 		        try {
 			        Process process = pb.start();
@@ -503,6 +489,23 @@ public class MusicPlayerGui extends GuiScreen {
 			                System.out.println(line);
 			                ytState = line;
 			                if (line.startsWith("ERROR:")) {
+								File ffmpeg = new File(BIN_DIR, this.ffmpeg);
+
+								if (!ffmpeg.exists()) {
+									try {
+										ytState = "Downloding ffmpeg... ";
+										downloadFile(FFMPEG_URL, ffmpeg);
+										ffmpeg.setExecutable(true);
+										try {
+											if (Util.getOSType() != EnumOS.WINDOWS)
+												new ProcessBuilder("chmod", "+x", ffmpeg.getAbsolutePath()).start().waitFor();
+										} catch (InterruptedException e) {
+											e.printStackTrace();
+										}
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+								}
 			                	downloadYtDlpAndSetExecutable(ytDlp);
 			                	ytState = "Getting song from link: " + videoUrl;
 			     		        pb = ytdlpProcessBuilder(outputName, ffmpeg, videoUrl);
@@ -518,6 +521,13 @@ public class MusicPlayerGui extends GuiScreen {
 			     			                ytState = line1;
 			     			                if (line1.startsWith("ERROR:")) {
 			     			     				ytState = "Unable to play song.";
+			     			     				if (line1.contains("ffmpeg")) {
+			     			     					if (!ffmpeg.exists()) {
+			    			     			        	SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, 
+			    			     			        			LangManager.format("gui.ffmpegNotFound"),
+			    			     			        			LangManager.format("gui.error"), JOptionPane.ERROR_MESSAGE));
+			    			     			        }
+			     			     				}
 			     			                }
 			     			            }
 			     			        }
@@ -552,7 +562,8 @@ public class MusicPlayerGui extends GuiScreen {
 		downloadYtDlp(ytDlp);
 		ytDlp.setExecutable(true);
 		try {
-			new ProcessBuilder("chmod", "+x", ytDlp.getAbsolutePath()).start().waitFor();
+			if (Util.getOSType() != EnumOS.WINDOWS)
+				new ProcessBuilder("chmod", "+x", ytDlp.getAbsolutePath()).start().waitFor();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -652,7 +663,7 @@ public class MusicPlayerGui extends GuiScreen {
             	songs.add(new SongItem(videoId, title, "https://i.ytimg.com/vi/" + videoId + "/maxresdefault.jpg"));
             }
         } else {
-        	songs.add(new SongItem("--", "Error while getting videos", "https://pixelpc.fr/art169.png"));
+        	songs.add(new SongItem("--", "Error while getting videos", null));
         }
         return songs;
     }

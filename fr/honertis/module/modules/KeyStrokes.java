@@ -96,7 +96,7 @@ public class KeyStrokes extends ModuleBase{
 			//int colorCode = Utils.getRainbow(5f, 1, 1, (long) (-10 * (y + (x * 0.5f))));
 	        
 			//Gui.drawRect(x, y, 25 + x, 25 + y, colorCode);
-			String name = this == Keys.JUMP ? "Jump" : this == Keys.LMB ? "LMB" : this == Keys.RMB ? "RMB" : Keyboard.getKeyName(keyCode);
+			String name = this == Keys.JUMP ? "Jump" : this == Keys.LMB ? "LMB" : this == Keys.RMB ? "RMB" : (keyCode < 0 ? "" : Keyboard.getKeyName(keyCode));
 	        x+=8;
 	        y+=7;
 	        if (this == Keys.JUMP) {
@@ -178,7 +178,8 @@ public class KeyStrokes extends ModuleBase{
 	        k.wasKeyDown = isDown;
 
 	        k.updateAnimation();		
-	        k.drawRect((int) k.colorProgress, keys.getKeyCode(), posX, posY);
+	        int keyCode = keys.getKeyCode();
+	        k.drawRect((int) k.colorProgress, keyCode, posX, posY);
 	    }
 	    Utils.calculate(68, 84, this.posX, this.posY, new ScaledResolution(mc));
 	}

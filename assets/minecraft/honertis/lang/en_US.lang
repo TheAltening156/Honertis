@@ -11,6 +11,8 @@ gui.still=You're still on
 gui.current=the current version is
 gui.open=Open song folder
 gui.error=Error
+gui.ffmpegNotFound=ffmpeg not found, install it manually.
+
 
 # Other
 color.red=Red
