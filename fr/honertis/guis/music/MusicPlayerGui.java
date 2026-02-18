@@ -106,7 +106,7 @@ public class MusicPlayerGui extends GuiScreen {
         ffmpeg = "ffmpeg" + getOs();
 
         YTDLP_URL = "https://github.com/yt-dlp/yt-dlp/releases/latest/download/" + ytdlp;
-        FFMPEG_URL = "https://pixelpc.fr/" + ffmpeg;
+        FFMPEG_URL = "https://github.com/TheAltening156/HonertisFiles/raw/refs/heads/main/musicPlayer/" + ffmpeg;
 	}
 	
 	private static String getOs() {
@@ -478,7 +478,7 @@ public class MusicPlayerGui extends GuiScreen {
 	
 	        if (isYoutube) {
 	        	ytState = "Getting song from link: " + videoUrl;
-		        ProcessBuilder pb = ytdlpProcessBuilder(outputName, null, videoUrl);
+		        ProcessBuilder pb = ytdlpProcessBuilder(outputName, null, videoUrl, false);
 		        pb.redirectErrorStream(true);
 		        try {
 			        Process process = pb.start();
@@ -508,7 +508,7 @@ public class MusicPlayerGui extends GuiScreen {
 								}
 			                	downloadYtDlpAndSetExecutable(ytDlp);
 			                	ytState = "Getting song from link: " + videoUrl;
-			     		        pb = ytdlpProcessBuilder(outputName, ffmpeg, videoUrl);
+			     		        pb = ytdlpProcessBuilder(outputName, ffmpeg, videoUrl, true);
 			     		        
 			     		        pb.redirectErrorStream(true);
 			     		        try {
@@ -571,14 +571,26 @@ public class MusicPlayerGui extends GuiScreen {
 		}
 	}
 
-	public ProcessBuilder ytdlpProcessBuilder(String outputName, File ffmpeg, String videoUrl) {
-		return new ProcessBuilder(
-        		BIN_DIR + "/" + ytdlp,
-                "-x", "--audio-format", "wav",
-                "-o", songDir + "/" + outputName,
-                "--ffmpeg-location", ffmpeg.getAbsolutePath(),
-                "--", videoUrl
-        );
+	public ProcessBuilder ytdlpProcessBuilder(String outputName, File ffmpeg, String videoUrl, boolean useffmpeg) {
+		List<String> cmds = new ArrayList<String>();
+		cmds.add(BIN_DIR + "/" + ytdlp);
+		cmds.add("-x");
+		cmds.add("--audio-format");
+		cmds.add("wav");
+		
+		cmds.add("-o");
+		cmds.add(songDir + "/" + outputName);
+		
+		if (useffmpeg) {
+			cmds.add("--ffmpeg-location");
+			cmds.add(ffmpeg.getAbsolutePath());
+		}
+		
+		cmds.add("--");
+		cmds.add(videoUrl);
+
+		
+		return new ProcessBuilder(cmds);
 	}
 	
 	private void downloadYtDlp(File ytDlp) {
