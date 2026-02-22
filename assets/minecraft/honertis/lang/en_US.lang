@@ -70,6 +70,12 @@ module.zoom.zoomspeed=Zoom Speed
 
 module.mouseTweaks=Yalter's Mouse Tweaks Mod
 
+module.itemPhysics=Changes the physics of dropped items on the ground
+module.itemPhysics.rotSpeed=Rotation Speed
+
+module.noCamHurt=Disable the moving camera/hand while getting hit
+module.noCamHurt.hand=Hand move
+
 # Honertis Menu
 gui.honertis.options.name=Honertis Options
 gui.honertis.gui.options.name=Gui Options

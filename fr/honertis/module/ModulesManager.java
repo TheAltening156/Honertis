@@ -19,10 +19,12 @@ import fr.honertis.module.modules.FishingRod;
 import fr.honertis.module.modules.FreeLook;
 import fr.honertis.module.modules.FullBright;
 import fr.honertis.module.modules.HitColor;
+import fr.honertis.module.modules.ItemPhysics;
 import fr.honertis.module.modules.KeyStrokes;
 import fr.honertis.module.modules.LowFire;
 import fr.honertis.module.modules.MoreParticles;
 import fr.honertis.module.modules.MouseTweaks;
+import fr.honertis.module.modules.NorCamHurt;
 import fr.honertis.module.modules.Ping;
 import fr.honertis.module.modules.ToggleSneak;
 import fr.honertis.module.modules.ToggleSprint;
@@ -54,7 +56,9 @@ public class ModulesManager {
 			new ToggleSneak(),
 			new Zoom(),
 			new MouseTweaks(),
-			new MiniPlayer());
+			new MiniPlayer(),
+			new ItemPhysics(),
+			new NorCamHurt());
 		
 	}
 	

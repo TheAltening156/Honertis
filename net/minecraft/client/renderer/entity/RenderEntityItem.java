@@ -1,6 +1,11 @@
 package net.minecraft.client.renderer.entity;
 
 import java.util.Random;
+
+import fr.honertis.Honertis;
+import fr.honertis.module.ModulesManager;
+import fr.honertis.module.modules.ItemPhysics;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -23,11 +28,16 @@ public class RenderEntityItem extends Render<EntityItem>
         this.shadowSize = 0.15F;
         this.shadowOpaque = 0.75F;
     }
+    
+    public ItemPhysics ip = (ItemPhysics) Honertis.INSTANCE.modulesManager.getMobuleByClass(ItemPhysics.class);
 
     private int func_177077_a(EntityItem itemIn, double p_177077_2_, double p_177077_4_, double p_177077_6_, float p_177077_8_, IBakedModel p_177077_9_)
     {
         ItemStack itemstack = itemIn.getEntityItem();
         Item item = itemstack.getItem();
+        
+        if (ip.isEnabled())
+        	p_177077_8_ = -itemIn.getAge();
 
         if (item == null)
         {
@@ -56,11 +66,78 @@ public class RenderEntityItem extends Render<EntityItem>
                 GlStateManager.translate(f6, f4, f5);
             }
 
+            if (ip.isEnabled())
+            	rotateItem(itemIn, itemstack, f1,f2);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             return i;
         }
     }
+    
+    public double rotationValue;
 
+	public void rotateItem(Object entityItem, Object itemStack, float f1, float f2) {
+		GlStateManager.translate(0.0D, -(f1 + 0.25D * f2) + 0.25D, 0.0D);
+		float f3 = ((EntityItem) entityItem).hoverStart * 57.295776F;
+		GlStateManager.rotate(f3, 0.0F, 1.0F, 0.0F);
+		animateItem((EntityItem) entityItem);
+	}
+    
+	private void animateItem(EntityItem entityItem) {
+		rotationValue = System.nanoTime() / 300000000.0D * ip.rotSpeed.getValue();
+		if (entityItem.rotationPitch > 360.0F)
+			entityItem.rotationPitch = 0.0F;
+		boolean flag1 = (entityItem != null && !Double.isNaN(entityItem.posX) && !Double.isNaN(entityItem.posY)
+				&& !Double.isNaN(entityItem.posZ) && entityItem.getEntityWorld() != null);
+		if (flag1)
+			if (entityItem.onGround) {
+				boolean flag2 = (entityItem.rotationPitch != 0.0F && entityItem.rotationPitch != 90.0F && entityItem.rotationPitch != 180.0F
+						&& entityItem.rotationPitch != 270.0F);
+				if (flag2) {
+					double var1 = Math.abs(entityItem.rotationPitch);
+					double var2 = Math.abs(entityItem.rotationPitch - 90.0F);
+					double var3 = Math.abs(entityItem.rotationPitch - 180.0F);
+					double var4 = Math.abs(entityItem.rotationPitch - 270.0F);
+					if (var1 <= var2 && var1 <= var3 && var1 <= var4)
+						if (entityItem.rotationPitch < 0.0F) {
+							entityItem.rotationPitch += (float) (rotationValue);
+						} else {
+							entityItem.rotationPitch -= (float) (rotationValue);
+						}
+					if (var2 < var1 && var2 <= var3 && var2 <= var4)
+						if (entityItem.rotationPitch - 90.0F < 0.0F) {
+							entityItem.rotationPitch += (float) (rotationValue);
+						} else {
+							entityItem.rotationPitch -= (float) (rotationValue);
+						}
+					if (var3 < var2 && var3 < var1 && var3 <= var4)
+						if (entityItem.rotationPitch - 180.0F < 0.0F) {
+							entityItem.rotationPitch += (float) (rotationValue);
+						} else {
+							entityItem.rotationPitch -= (float) (rotationValue);
+						}
+					if (var4 < var2 && var4 < var3 && var4 < var1)
+						if (entityItem.rotationPitch - 270.0F < 0.0F) {
+							entityItem.rotationPitch += (float) (rotationValue);
+						} else {
+							entityItem.rotationPitch -= (float) (rotationValue);
+						}
+				}
+			} else {
+				int blockIdUp = Block
+						.getIdFromBlock(entityItem.getEntityWorld().getBlockState(entityItem.getPosition().up()).getBlock());
+				int blockId = Block.getIdFromBlock(entityItem.getEntityWorld().getBlockState(entityItem.getPosition()).getBlock());
+				boolean inWater = entityItem.isInWater();
+				int waterId = 9;
+				if (inWater | blockIdUp == waterId | blockId == waterId | inWater) {
+					entityItem.rotationPitch += (float) (rotationValue / 4.0D);
+				} else {
+					entityItem.rotationPitch += (float) (rotationValue *2);
+				}
+			}
+		GlStateManager.rotate(entityItem.rotationYaw, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(entityItem.rotationPitch + 90.0F, 1.0F, 0.0F, 0.0F);
+	}
+	
     private int func_177078_a(ItemStack stack)
     {
         int i = 1;

@@ -16,6 +16,8 @@ import fr.honertis.event.EventRenderGui;
 import fr.honertis.event.EventType;
 import fr.honertis.guis.music.CurrentPlayingSong;
 import fr.honertis.guis.music.MusicPlayerGui;
+import fr.honertis.module.addons.MiniPlayer;
+import fr.honertis.utils.DrawUtils;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -366,6 +368,7 @@ public class GuiIngame extends Gui
         GlStateManager.disableLighting();
         GlStateManager.enableAlpha();
     }
+    public MusicPlayerGui musicPlayer = Honertis.INSTANCE.musicPlayer;
 
     protected void renderTooltip(ScaledResolution sr, float partialTicks)
     {

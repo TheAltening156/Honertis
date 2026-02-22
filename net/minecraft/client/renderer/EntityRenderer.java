@@ -8,6 +8,7 @@ import fr.honertis.event.EventRender2D;
 import fr.honertis.guis.music.MusicPlayerGui;
 import fr.honertis.module.addons.MiniPlayer;
 import fr.honertis.module.modules.FreeLook;
+import fr.honertis.module.modules.NorCamHurt;
 import fr.honertis.module.modules.Zoom;
 import fr.honertis.utils.DrawUtils;
 
@@ -602,6 +603,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
     private float zoomTarget = 1f;
     private float zoomValue = 0f;
+    public Zoom zoom = (Zoom) Honertis.INSTANCE.modulesManager.getMobuleByClass(Zoom.class);
 
     
     /**
@@ -635,7 +637,6 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 GameSettings gamesettings = this.mc.gameSettings;
                 flag = GameSettings.isKeyDown(this.mc.gameSettings.ofKeyBindZoom);
             }
-            Zoom zoom = (Zoom) Honertis.INSTANCE.modulesManager.getMobuleByClass(Zoom.class);
     		zoom.isZooming = flag && zoom.scroll.isEnabled();
             if (zoom.isEnabled()) {
             	if (mc.currentScreen == null) {
@@ -936,6 +937,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
         this.cloudFog = this.mc.renderGlobal.hasCloudFog(d0, d1, d2, partialTicks);
     }
 
+    public NorCamHurt camHurt = (NorCamHurt) Honertis.INSTANCE.modulesManager.getMobuleByClass(NorCamHurt.class);
+    
     /**
      * sets up projection, view effects, camera position/rotation
      */
@@ -989,8 +992,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
             GlStateManager.translate((float)(pass * 2 - 1) * 0.1F, 0.0F, 0.0F);
         }
 
-        this.hurtCameraEffect(partialTicks);
-
+        if (!camHurt.isEnabled())
+        	this.hurtCameraEffect(partialTicks);
+        
         if (this.mc.gameSettings.viewBobbing)
         {
             this.setupViewBobbing(partialTicks);
@@ -1082,7 +1086,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
             if (p_renderHand_3_)
             {
                 GlStateManager.pushMatrix();
-                this.hurtCameraEffect(p_renderHand_1_);
+                if (!camHurt.isEnabled() || (camHurt.isEnabled() && !camHurt.hand.isEnabled()))
+                	this.hurtCameraEffect(p_renderHand_1_);
 
                 if (this.mc.gameSettings.viewBobbing)
                 {
@@ -1121,7 +1126,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
             if (this.mc.gameSettings.thirdPersonView == 0 && !flag)
             {
                 this.itemRenderer.renderOverlays(p_renderHand_1_);
-                this.hurtCameraEffect(p_renderHand_1_);
+                if (!camHurt.isEnabled() || (camHurt.isEnabled() && !camHurt.hand.isEnabled()))
+                	this.hurtCameraEffect(p_renderHand_1_);
             }
 
             if (this.mc.gameSettings.viewBobbing)
@@ -1334,7 +1340,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
     }
 
 	public FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getMobuleByClass(FreeLook.class);
-    
+    public MusicPlayerGui musicPlayer = Honertis.INSTANCE.musicPlayer;
+
+	
     public void func_181560_a(float p_181560_1_, long p_181560_2_)
     {
         this.frameInit();
@@ -1473,7 +1481,6 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 this.renderEndNanoTime = System.nanoTime();
                 TileEntityRendererDispatcher.instance.renderEngine = this.mc.getTextureManager();
             }
-    		MusicPlayerGui musicPlayer = Honertis.INSTANCE.musicPlayer;
             MiniPlayer player = musicPlayer.player;
             if (!this.mc.gameSettings.showDebugInfo) {            	
             	if (player.isEnabled()) {

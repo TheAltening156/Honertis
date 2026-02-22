@@ -470,13 +470,11 @@ public class MusicPlayerGui extends GuiScreen {
         new Thread(() -> {
 	        if (!BIN_DIR.exists()) BIN_DIR.mkdirs();
 	        if (!songDir.exists()) songDir.mkdirs();
-	
-	        File ytDlp = new File(BIN_DIR, ytdlp);
-	        if (!ytDlp.exists()) {
-	        	downloadYtDlpAndSetExecutable(ytDlp);
-	        }
-	
 	        if (isYoutube) {
+	        	File ytDlp = new File(BIN_DIR, ytdlp);
+		        if (!ytDlp.exists()) {
+		        	downloadYtDlpAndSetExecutable(ytDlp);
+		        }
 	        	ytState = "Getting song from link: " + videoUrl;
 		        ProcessBuilder pb = ytdlpProcessBuilder(outputName, null, videoUrl, false);
 		        pb.redirectErrorStream(true);

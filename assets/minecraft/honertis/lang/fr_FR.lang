@@ -69,6 +69,12 @@ module.zoom.zoomspeed=Vitesse de Zoom
 
 module.mouseTweaks=Mod Mouse Tweaks de Yalter
 
+module.itemPhysics=Modifie la physique des objets droppés au sol
+module.itemPhysics.rotSpeed=Vitesse de rotation
+
+module.noCamHurt=Enlève le mouvement de camera lors d'un coup
+module.noCamHurt.hand=Mouvement de main
+
 # Honertis Menu
 gui.honertis.options.name=Options Honertis
 gui.honertis.gui.options.name=Options de Gui
