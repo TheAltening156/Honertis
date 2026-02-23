@@ -29,7 +29,7 @@ public class RenderEntityItem extends Render<EntityItem>
         this.shadowOpaque = 0.75F;
     }
     
-    public ItemPhysics ip = (ItemPhysics) Honertis.INSTANCE.modulesManager.getMobuleByClass(ItemPhysics.class);
+    public ItemPhysics ip = Honertis.INSTANCE.modulesManager.getModuleByClass(ItemPhysics.class);
 
     private int func_177077_a(EntityItem itemIn, double p_177077_2_, double p_177077_4_, double p_177077_6_, float p_177077_8_, IBakedModel p_177077_9_)
     {

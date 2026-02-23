@@ -333,7 +333,7 @@ public class ItemRenderer
         GlStateManager.rotate(60.0F, 0.0F, 1.0F, 0.0F);
     }
 
-    public BlockHit blockhit = (BlockHit) Honertis.INSTANCE.modulesManager.getMobuleByClass(BlockHit.class);
+    public BlockHit blockhit = Honertis.INSTANCE.modulesManager.getModuleByClass(BlockHit.class);
     
     /**
      * Renders the active item in the player's hand when in first person mode. Args: partialTickTime
@@ -398,7 +398,7 @@ public class ItemRenderer
                 this.func_178105_d(f1);
                 this.transformFirstPersonItem(f, f1);
             }
-           if (Honertis.INSTANCE.modulesManager.getMobuleByClass(FishingRod.class).isEnabled()) {
+           if (Honertis.INSTANCE.modulesManager.getModuleByClass(FishingRod.class).isEnabled()) {
 	            if (this.itemToRender.getItem() instanceof ItemFishingRod) {
 	            	GlStateManager.translate(0, 0.33, 0);
 	            	GlStateManager.scale(0.65, 0.65, 0.65);
@@ -559,7 +559,7 @@ public class ItemRenderer
             float f4 = textureatlassprite.getMaxV();
             float f5 = (0.0F - f) / 2.0F;
             float f6 = f5 + f;
-            float f7 = 0.0F - f / (Honertis.INSTANCE.modulesManager.getMobuleByClass(LowFire.class).isEnabled() ? 1.15F : 2.0f);
+            float f7 = 0.0F - f / (Honertis.INSTANCE.modulesManager.getModuleByClass(LowFire.class).isEnabled() ? 1.15F : 2.0f);
             float f8 = f7 + f;
             float f9 = -0.5F;
             GlStateManager.translate((float)(-(i * 2 - 1)) * 0.24F, -0.3F, 0.0F);

@@ -80,10 +80,10 @@ public class ModulesManager {
 		return null;
 	}
 	
-	public ModuleBase getMobuleByClass(Class<?> clazz) {
+	public <T extends ModuleBase> T getModuleByClass(Class<T> clazz) {
 		for (ModuleBase m : modules) 
 			if (m.getClass().equals(clazz))
-				return m;
+				return clazz.cast(m);
 		
 		return null;
 	}

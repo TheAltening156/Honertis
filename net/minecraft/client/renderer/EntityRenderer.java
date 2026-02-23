@@ -5,6 +5,8 @@ import com.google.gson.JsonSyntaxException;
 
 import fr.honertis.Honertis;
 import fr.honertis.event.EventRender2D;
+import fr.honertis.event.EventRenderGui;
+import fr.honertis.event.EventType;
 import fr.honertis.guis.music.MusicPlayerGui;
 import fr.honertis.module.addons.MiniPlayer;
 import fr.honertis.module.modules.FreeLook;
@@ -603,7 +605,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
     private float zoomTarget = 1f;
     private float zoomValue = 0f;
-    public Zoom zoom = (Zoom) Honertis.INSTANCE.modulesManager.getMobuleByClass(Zoom.class);
+    public Zoom zoom = Honertis.INSTANCE.modulesManager.getModuleByClass(Zoom.class);
 
     
     /**
@@ -937,7 +939,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         this.cloudFog = this.mc.renderGlobal.hasCloudFog(d0, d1, d2, partialTicks);
     }
 
-    public NorCamHurt camHurt = (NorCamHurt) Honertis.INSTANCE.modulesManager.getMobuleByClass(NorCamHurt.class);
+    public NorCamHurt camHurt = Honertis.INSTANCE.modulesManager.getModuleByClass(NorCamHurt.class);
     
     /**
      * sets up projection, view effects, camera position/rotation
@@ -1339,7 +1341,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         return i > 200 ? 1.0F : 0.7F + MathHelper.sin(((float)i - partialTicks) * (float)Math.PI * 0.2F) * 0.3F;
     }
 
-	public FreeLook mod = (FreeLook) Honertis.INSTANCE.modulesManager.getMobuleByClass(FreeLook.class);
+	public FreeLook mod = Honertis.INSTANCE.modulesManager.getModuleByClass(FreeLook.class);
     public MusicPlayerGui musicPlayer = Honertis.INSTANCE.musicPlayer;
 
 	

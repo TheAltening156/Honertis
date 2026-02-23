@@ -302,7 +302,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     {
     	if (getCurrentEquippedItem() != null) {
 	        C07PacketPlayerDigging.Action c07packetplayerdigging$action = dropAll ? C07PacketPlayerDigging.Action.DROP_ALL_ITEMS : C07PacketPlayerDigging.Action.DROP_ITEM;
-	        DropSwing newDrop = (DropSwing) Honertis.INSTANCE.modulesManager.getMobuleByClass(DropSwing.class);
+	        DropSwing newDrop = Honertis.INSTANCE.modulesManager.getModuleByClass(DropSwing.class);
 	        
 	        if (newDrop.isEnabled() && newDrop.armSwing.isEnabled()) {
 	        	swingItem();
@@ -324,20 +324,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void sendChatMessage(String message)
     {
-    	boolean var = false;
-    	String[] messages = new String[] {"fdp", "f d p", "fd p", "f dp", "connard", "c0nnard", "c o n n a r d"};
-    	
-    	for (String msgs : messages) {
-    		if (message.equalsIgnoreCase(msgs)) {
-    			var = true;
-    			break;
-    		}
-    	}
-    	
-    	if (!var) {
-	        this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
-    	}
-
+        this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
     }
 
     /**
@@ -712,14 +699,14 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void onCriticalHit(Entity entityHit)
     {
-    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.modulesManager.getMobuleByClass(MoreParticles.class);
+    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.modulesManager.getModuleByClass(MoreParticles.class);
         for (int integer : new int[p.isEnabled() ? (int) p.particles.getDefValue() : 1])
         this.mc.effectRenderer.emitParticleAtEntity(entityHit, EnumParticleTypes.CRIT);
     }
 
     public void onEnchantmentCritical(Entity entityHit)
     {
-    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.modulesManager.getMobuleByClass(MoreParticles.class);
+    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.modulesManager.getModuleByClass(MoreParticles.class);
         for (int integer : new int[p.isEnabled() ? (int) p.particles.getDefValue() : 1])
         this.mc.effectRenderer.emitParticleAtEntity(entityHit, EnumParticleTypes.CRIT_MAGIC);
     }
@@ -856,7 +843,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
             }
         }
 
-        if (!this.isSprinting() && this.movementInput.moveForward >= f && flag3 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness) && (Honertis.INSTANCE.modulesManager.getMobuleByClass(ToggleSprint.class).isEnabled() || this.mc.gameSettings.keyBindSprint.isKeyDown()))
+        if (!this.isSprinting() && this.movementInput.moveForward >= f && flag3 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness) && (Honertis.INSTANCE.modulesManager.getModuleByClass(ToggleSprint.class).isEnabled() || this.mc.gameSettings.keyBindSprint.isKeyDown()))
         {
             this.setSprinting(true);
         }
