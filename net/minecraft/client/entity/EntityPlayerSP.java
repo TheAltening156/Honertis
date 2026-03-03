@@ -302,7 +302,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
     {
     	if (getCurrentEquippedItem() != null) {
 	        C07PacketPlayerDigging.Action c07packetplayerdigging$action = dropAll ? C07PacketPlayerDigging.Action.DROP_ALL_ITEMS : C07PacketPlayerDigging.Action.DROP_ITEM;
-	        DropSwing newDrop = Honertis.INSTANCE.modulesManager.getModuleByClass(DropSwing.class);
+	        DropSwing newDrop = Honertis.INSTANCE.getModule(DropSwing.class);
 	        
 	        if (newDrop.isEnabled() && newDrop.armSwing.isEnabled()) {
 	        	swingItem();
@@ -699,14 +699,14 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void onCriticalHit(Entity entityHit)
     {
-    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.modulesManager.getModuleByClass(MoreParticles.class);
+    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.getModule(MoreParticles.class);
         for (int integer : new int[p.isEnabled() ? (int) p.particles.getDefValue() : 1])
         this.mc.effectRenderer.emitParticleAtEntity(entityHit, EnumParticleTypes.CRIT);
     }
 
     public void onEnchantmentCritical(Entity entityHit)
     {
-    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.modulesManager.getModuleByClass(MoreParticles.class);
+    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.getModule(MoreParticles.class);
         for (int integer : new int[p.isEnabled() ? (int) p.particles.getDefValue() : 1])
         this.mc.effectRenderer.emitParticleAtEntity(entityHit, EnumParticleTypes.CRIT_MAGIC);
     }
@@ -843,7 +843,7 @@ public class EntityPlayerSP extends AbstractClientPlayer
             }
         }
 
-        if (!this.isSprinting() && this.movementInput.moveForward >= f && flag3 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness) && (Honertis.INSTANCE.modulesManager.getModuleByClass(ToggleSprint.class).isEnabled() || this.mc.gameSettings.keyBindSprint.isKeyDown()))
+        if (!this.isSprinting() && this.movementInput.moveForward >= f && flag3 && !this.isUsingItem() && !this.isPotionActive(Potion.blindness) && (Honertis.INSTANCE.getModule(ToggleSprint.class).isEnabled() || this.mc.gameSettings.keyBindSprint.isKeyDown()))
         {
             this.setSprinting(true);
         }

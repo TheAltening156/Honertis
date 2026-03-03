@@ -605,7 +605,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
     private float zoomTarget = 1f;
     private float zoomValue = 0f;
-    public Zoom zoom = Honertis.INSTANCE.modulesManager.getModuleByClass(Zoom.class);
+    public Zoom zoom = Honertis.INSTANCE.getModule(Zoom.class);
 
     
     /**
@@ -939,7 +939,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         this.cloudFog = this.mc.renderGlobal.hasCloudFog(d0, d1, d2, partialTicks);
     }
 
-    public NorCamHurt camHurt = Honertis.INSTANCE.modulesManager.getModuleByClass(NorCamHurt.class);
+    public NorCamHurt camHurt = Honertis.INSTANCE.getModule(NorCamHurt.class);
     
     /**
      * sets up projection, view effects, camera position/rotation
@@ -1341,7 +1341,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
         return i > 200 ? 1.0F : 0.7F + MathHelper.sin(((float)i - partialTicks) * (float)Math.PI * 0.2F) * 0.3F;
     }
 
-	public FreeLook mod = Honertis.INSTANCE.modulesManager.getModuleByClass(FreeLook.class);
+	public FreeLook mod = Honertis.INSTANCE.getModule(FreeLook.class);
     public MusicPlayerGui musicPlayer = Honertis.INSTANCE.musicPlayer;
 
 	

@@ -94,7 +94,7 @@ public class MusicPlayerGui extends GuiScreen {
     private static final File BIN_DIR = new File("Honertis/musicPlayer/");
     private static final File songDir = new File(BIN_DIR + "/songs");
 	private static final File localSongs = new File(BIN_DIR + "/localSongs");
-	public MiniPlayer player = Honertis.INSTANCE.modulesManager.getModuleByClass(MiniPlayer.class);
+	public MiniPlayer player = Honertis.INSTANCE.getModule(MiniPlayer.class);
 	
 	public static String ytdlp = "yt-dlp" + getOs();
 	public static String ffmpeg = "ffmpeg" + getOs();

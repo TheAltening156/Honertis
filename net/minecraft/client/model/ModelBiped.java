@@ -1,6 +1,7 @@
 package net.minecraft.client.model;
 
 import fr.honertis.Honertis;
+import fr.honertis.module.modules.BlockHit;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
@@ -171,6 +172,7 @@ public class ModelBiped extends ModelBase
 
             case 3:
                 this.bipedRightArm.rotateAngleX = this.bipedRightArm.rotateAngleX * 0.5F - ((float)Math.PI / 10F) * (float)this.heldItemRight;
+                if (!Honertis.INSTANCE.getModule(BlockHit.class).oldSword.isEnabled())
                 	this.bipedRightArm.rotateAngleY = -0.5235988F;
         }
 

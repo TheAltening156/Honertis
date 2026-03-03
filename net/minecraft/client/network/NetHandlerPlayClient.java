@@ -961,7 +961,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
     {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
         this.gameController.theWorld.setTotalWorldTime(packetIn.getTotalWorldTime());
-        CustomTime ct = Honertis.INSTANCE.modulesManager.getModuleByClass(CustomTime.class);
+        CustomTime ct = Honertis.INSTANCE.getModule(CustomTime.class);
         this.gameController.theWorld.setWorldTime(ct.isEnabled() ? ct.time.getLongValue() : packetIn.getWorldTime());
     }
 

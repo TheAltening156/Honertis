@@ -417,7 +417,6 @@ public class RenderItem implements IResourceManagerReloadListener
                 GlStateManager.cullFace(1028);
             }
         }
-
         this.renderItem(stack, model);
         GlStateManager.cullFace(1029);
         GlStateManager.popMatrix();

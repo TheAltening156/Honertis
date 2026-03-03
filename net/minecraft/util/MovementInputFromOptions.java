@@ -40,7 +40,7 @@ public class MovementInputFromOptions extends MovementInput
         }
 
         this.jump = this.gameSettings.keyBindJump.isKeyDown();
-        ToggleSneak toggleSneak = Honertis.INSTANCE.modulesManager.getModuleByClass(ToggleSneak.class);
+        ToggleSneak toggleSneak = Honertis.INSTANCE.getModule(ToggleSneak.class);
         boolean hold = toggleSneak.isEnabled() ? toggleSneak.holdActive : false;
         if (hold) {
         	hold = Minecraft.getMinecraft().currentScreen != null? false : hold;

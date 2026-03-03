@@ -1,5 +1,7 @@
 package net.minecraft.client.renderer.entity.layers;
 
+import fr.honertis.Honertis;
+import fr.honertis.module.modules.BlockHit;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBiped;
@@ -62,7 +64,10 @@ public class LayerHeldItem implements LayerRenderer<EntityLivingBase>
             {
                 GlStateManager.translate(0.0F, 0.203125F, 0.0F);
             }
-
+            if (entitylivingbaseIn instanceof EntityPlayer && ((EntityPlayer) entitylivingbaseIn).isBlocking() && Honertis.INSTANCE.getModule(BlockHit.class).oldSword.isEnabled()) {
+            	GlStateManager.rotate(-90, -1, 3 , 6);
+            	GlStateManager.translate(-0.1f, -0.05f, 0.0f);
+            }
             minecraft.getItemRenderer().renderItem(entitylivingbaseIn, itemstack, ItemCameraTransforms.TransformType.THIRD_PERSON);
             GlStateManager.popMatrix();
         }

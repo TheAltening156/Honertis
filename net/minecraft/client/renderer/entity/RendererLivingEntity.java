@@ -313,7 +313,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
         return this.setBrightness(entityLivingBaseIn, partialTicks, true);
     }
 
-    public HitColor h = Honertis.INSTANCE.modulesManager.getModuleByClass(HitColor.class);
+    public HitColor h = Honertis.INSTANCE.getModule(HitColor.class);
 
     
     protected boolean setBrightness(T entitylivingbaseIn, float partialTicks, boolean combineTextures)

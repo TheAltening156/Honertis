@@ -6,6 +6,7 @@ import fr.honertis.guis.music.CurrentPlayingSong;
 import fr.honertis.guis.music.MusicPlayer;
 import fr.honertis.guis.music.MusicPlayerGui;
 import fr.honertis.manager.FileManager;
+import fr.honertis.module.ModuleBase;
 import fr.honertis.module.ModulesManager;
 import fr.honertis.utils.WebUtils;
 import net.minecraft.client.gui.GuiIngameMenu;
@@ -39,6 +40,10 @@ public class Honertis {
 		FileManager.init();
 		rpc.init();
 		yalter.mousetweaks.Main.initialize(Constants.EntryPoint.UNDEFINED);
+	}
+	
+	public <T extends ModuleBase> T getModule(Class<T> m) {
+		return modulesManager.getModuleByClass(m);
 	}
 
 }

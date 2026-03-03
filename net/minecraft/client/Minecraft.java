@@ -521,7 +521,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.setWindowIcon();
         this.setInitialDisplayMode();
         Honertis.INSTANCE.start();
-        FreeLook fr = Honertis.INSTANCE.modulesManager.getModuleByClass(FreeLook.class);
+        FreeLook fr = Honertis.INSTANCE.getModule(FreeLook.class);
         if (fr.isEnabled())
         	fr.setEnabled(false);
         this.createDisplay();
@@ -1256,7 +1256,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.mcProfiler.startSection("display_update");
         for (ModuleBase m : Honertis.INSTANCE.modulesManager.modules) {
         	m.update();
-        	FreeLook mod = Honertis.INSTANCE.modulesManager.getModuleByClass(FreeLook.class);
+        	//rightClickMouse();
+        	FreeLook mod = Honertis.INSTANCE.getModule(FreeLook.class);
             
     		if (mod.hold.isEnabled()) {
     			if (currentScreen == null) {
@@ -1280,7 +1281,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
     		}
         }
         
-        DropSwing newDrop = Honertis.INSTANCE.modulesManager.getModuleByClass(DropSwing.class);
+        DropSwing newDrop = Honertis.INSTANCE.getModule(DropSwing.class);
         
         if (currentScreen == null && (newDrop.isEnabled() && newDrop.fastDropping.isEnabled())) {
 	        if (Keyboard.getEventKey() == gameSettings.keyBindDrop.getKeyCode() && Keyboard.getEventKeyState()) {
@@ -1603,7 +1604,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 		this.effectRenderer.addBlockHitEffects(blockpos, this.objectMouseOver.sideHit);
     	                this.thePlayer.swingItem();	
                 	}
-                	if (Honertis.INSTANCE.modulesManager.getModuleByClass(BlockTap.class).isEnabled() && thePlayer.isUsingItem()) {
+                	if (Honertis.INSTANCE.getModule(BlockTap.class).isEnabled() && thePlayer.isUsingItem()) {
                 		this.effectRenderer.addBlockHitEffects(blockpos, this.objectMouseOver.sideHit);
     	                this.thePlayer.swingItem();	
                 	}
@@ -1970,7 +1971,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                         }
                         else
                         {
-                        	Zoom zoom = Honertis.INSTANCE.modulesManager.getModuleByClass(Zoom.class);
+                        	Zoom zoom = Honertis.INSTANCE.getModule(Zoom.class);
                         	if (!zoom.isZooming)
                             this.thePlayer.inventory.changeCurrentItem(j);
                         }
@@ -2040,7 +2041,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     else
                     {
                     	
-                    	FreeLook mod = Honertis.INSTANCE.modulesManager.getModuleByClass(FreeLook.class);
+                    	FreeLook mod = Honertis.INSTANCE.getModule(FreeLook.class);
                         
                 		if (!mod.hold.isEnabled()) {
                 			if (k == mod.key.getKey())
@@ -2207,7 +2208,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     this.displayGuiScreen(new GuiInventory(this.thePlayer));
                 }
             }
-            DropSwing newDrop = Honertis.INSTANCE.modulesManager.getModuleByClass(DropSwing.class);
+            DropSwing newDrop = Honertis.INSTANCE.getModule(DropSwing.class);
             
             if (!newDrop.isEnabled() || (newDrop.isEnabled() && !newDrop.fastDropping.isEnabled())) {
             	while (this.gameSettings.keyBindDrop.isPressed())
