@@ -24,5 +24,8 @@ Merci de mentionner le projet si vous l'utilisez dans vos propres créations.
 - **Discord** : `TheAltening#9143` ou `thealtening`
 - Vous pouvez aussi ouvrir une issue directement ici sur GitHub.
 
+---
+
+## ♥️ Supporter le projet
 - Vous pouvez aussi supporter le projet avec ko-fi
 - [![Supporter sur Ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/altening)
