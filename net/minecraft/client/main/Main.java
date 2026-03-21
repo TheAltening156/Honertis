@@ -15,6 +15,7 @@ import joptsimple.*;
 import net.minecraft.client.*;
 import net.minecraft.client.main.*;
 import net.minecraft.util.Session;
+import net.minecraft.util.Util.EnumOS;
 
 public class Main
 {
@@ -97,7 +98,7 @@ public class Main
         PropertyMap propertymap1 = (PropertyMap)gson.fromJson((String)optionset.valueOf(optionspec16), PropertyMap.class);
         File file1 = (File)optionset.valueOf(optionspec2);
         File file2 = optionset.has(optionspec3) ? (File)optionset.valueOf(optionspec3) : new File(file1, "assets/");
-        File file3 = optionset.has(optionspec4) ? (File)optionset.valueOf(optionspec4) : new File(file1, "resourcepacks/");
+        File file3 = optionset.has(optionspec4) ? (File)optionset.valueOf(optionspec4) : new File(new File(getAppData(), ".minecraft"), "resourcepacks/");
         String s4 = optionset.has(optionspec10) ? (String)optionspec10.value(optionset) : (String)optionspec9.value(optionset);
         String s5 = optionset.has(optionspec17) ? (String)optionspec17.value(optionset) : null;
         String s6 = (String)optionset.valueOf(optionspec);
@@ -118,6 +119,15 @@ public class Main
         Thread.currentThread().setName("Client thread");
         (new Minecraft(gameconfiguration)).run();
     }
+    
+    public static File getAppData() {
+		EnumOS os = net.minecraft.util.Util.getOSType();
+		if (os == EnumOS.WINDOWS)
+			return new File(System.getenv("APPDATA"));
+		if (os == EnumOS.OSX)
+			return new File(new File(System.getProperty("user.home"), "Library"), "Application Support");
+		return new File(System.getProperty("user.home"));
+	}
 
     private static boolean isNullOrEmpty(String str)
     {

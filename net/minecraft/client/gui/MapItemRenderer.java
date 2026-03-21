@@ -98,7 +98,7 @@ public class MapItemRenderer
                 }
                 else
                 {
-                    this.mapTextureData[i] = MapColor.mapColorArray[j / 4].func_151643_b(j & 3);
+                    this.mapTextureData[i] = MapColor.mapColorArray[j / 4].getMapColor(j & 3);
                 }
             }
 

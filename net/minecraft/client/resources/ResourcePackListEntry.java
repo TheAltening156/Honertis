@@ -2,7 +2,6 @@ package net.minecraft.client.resources;
 
 import java.util.List;
 
-import fr.honertis.guis.resourcePacks.GuiScreenPackManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiListExtended;
@@ -11,6 +10,7 @@ import net.minecraft.client.gui.GuiScreenResourcePacks;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.ResourcePackRepository.SubFolder;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
@@ -22,11 +22,11 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
     private static final IChatComponent iold = new ChatComponentTranslation("resourcePack.incompatible.old", new Object[0]);
     private static final IChatComponent inew = new ChatComponentTranslation("resourcePack.incompatible.new", new Object[0]);
     protected final Minecraft mc;
-    protected final GuiScreenPackManager resourcePacksGUI;
+    protected final GuiScreenResourcePacks resourcePacksGUI;
 
     public ResourcePackListEntry(GuiScreen resourcePacksGUIIn)
     {
-        this.resourcePacksGUI = (GuiScreenPackManager) resourcePacksGUIIn;
+        this.resourcePacksGUI = (GuiScreenResourcePacks) resourcePacksGUIIn;
         this.mc = Minecraft.getMinecraft();
     }
 
@@ -46,7 +46,7 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
         String s = this.getPackName();
         String s1 = this.getPackDescription();
 
-        if ((this.mc.gameSettings.touchscreen || isSelected) && this.func_148310_d())
+        if ((this.mc.gameSettings.touchscreen || isSelected) && this.showHoverOverlay())
         {
             this.mc.getTextureManager().bindTexture(RESOURCE_PACKS_TEXTURE);
             Gui.drawRect(x, y, x + 32, y + 32, -1601138544);
@@ -76,12 +76,12 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
                     Gui.drawModalRectWithCustomSizedTexture(x, y, 32.0F, j < 16 ? 32.0F : 0.0F, 32, 32, 256.0F, 256.0F);
                 }
 
-                if (this.getLastPack())
+                if (this.canMoveUp())
                 {
                 	Gui.drawModalRectWithCustomSizedTexture(x, y, 96.0F, j < 32 && j > 16 && k < 16 ? 32.0F : 0.0F, 32, 32, 256.0F, 256.0F);
                 }
 
-                if (this.func_148307_h())
+                if (this.canMoveDown())
                 {
                 	Gui.drawModalRectWithCustomSizedTexture(x, y, 64.0F, j < 32 && j > 16 && k > 16 ? 32.0F : 0.0F, 32, 32, 256.0F, 256.0F);   
                 }
@@ -89,14 +89,16 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
         }
 
         int width = this.mc.fontRendererObj.getStringWidth(s);
-
-        if (width > 157)
+        
+        int limit = 157;
+        
+        if (width > limit)
         {
-            s = this.mc.fontRendererObj.trimStringToWidth(s, 157 - this.mc.fontRendererObj.getStringWidth("...")) + "...";
+            s = this.mc.fontRendererObj.trimStringToWidth(s, limit - this.mc.fontRendererObj.getStringWidth("...")) + "...";
         }
 
         this.mc.fontRendererObj.drawStringWithShadow(s, (float)(x + 32 + 2), (float)(y + 1), 16777215);
-        List<String> list = this.mc.fontRendererObj.listFormattedStringToWidth(s1, 157);
+        List<String> list = this.mc.fontRendererObj.listFormattedStringToWidth(s1, limit);
 
         for (int l = 0; l < 2 && l < list.size(); ++l)
         {
@@ -112,7 +114,7 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
 
     protected abstract void bindTexture();
 
-    protected boolean func_148310_d()
+    protected boolean showHoverOverlay()
     {
         return true;
     }
@@ -127,18 +129,18 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
         return this.resourcePacksGUI.hasResourcePackEntry(this);
     }
 
-    protected boolean getLastPack()
+    protected boolean canMoveUp()
     {
         List<ResourcePackListEntry> list = this.resourcePacksGUI.getListContaining(this);
         int i = list.indexOf(this);
-        return i > 0 && ((ResourcePackListEntry)list.get(i - 1)).func_148310_d();
+        return i > 0 && ((ResourcePackListEntry)list.get(i - 1)).showHoverOverlay();
     }
 
-    protected boolean func_148307_h()
+    protected boolean canMoveDown()
     {
         List<ResourcePackListEntry> list = this.resourcePacksGUI.getListContaining(this);
         int i = list.indexOf(this);
-        return i >= 0 && i < list.size() - 1 && ((ResourcePackListEntry)list.get(i + 1)).func_148310_d();
+        return i >= 0 && i < list.size() - 1 && ((ResourcePackListEntry)list.get(i + 1)).showHoverOverlay();
     }
 
     /**
@@ -146,8 +148,9 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
      */
     public boolean mousePressed(int slotIndex, int p_148278_2_, int p_148278_3_, int p_148278_4_, int p_148278_5_, int p_148278_6_)
     {
-        if (this.func_148310_d() && p_148278_5_ <= 32)
+        if (this.showHoverOverlay() && p_148278_5_ <= 32)
         {
+        	
             if (this.dontHavePackEntry())
             {
                 this.resourcePacksGUI.markChanged();
@@ -174,10 +177,14 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
                 }
                 else
                 {
-                    this.resourcePacksGUI.getListContaining(this).remove(this);
-                    this.resourcePacksGUI.getSelectedResourcePacks().add(0, this);
+                	
+                	if (this instanceof ResourcePackListEntryFolder) {
+	        			openCloseSubFolder(((ResourcePackListEntryFolder)this).getPackEntry());	
+                	} else {
+                		this.resourcePacksGUI.getListContaining(this).remove(this);
+	        			this.resourcePacksGUI.getSelectedResourcePacks().add(0, this);
+                	}
                 }
-
                 return true;
             }
 
@@ -189,7 +196,7 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
                 return true;
             }
 
-            if (p_148278_5_ > 16 && p_148278_6_ < 16 && this.getLastPack())
+            if (p_148278_5_ > 16 && p_148278_6_ < 16 && this.canMoveUp())
             {
                 List<ResourcePackListEntry> list1 = this.resourcePacksGUI.getListContaining(this);
                 int k = list1.indexOf(this);
@@ -199,7 +206,7 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
                 return true;
             }
 
-            if (p_148278_5_ > 16 && p_148278_6_ > 16 && this.func_148307_h())
+            if (p_148278_5_ > 16 && p_148278_6_ > 16 && this.canMoveDown())
             {
                 List<ResourcePackListEntry> list = this.resourcePacksGUI.getListContaining(this);
                 int i = list.indexOf(this);
@@ -213,7 +220,13 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
         return false;
     }
 
-    public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_)
+    private void openCloseSubFolder(SubFolder packEntry) {
+		//TODO: A Faire
+    	packEntry.opened = !packEntry.opened;
+    	packEntry.bindTexturePackIcon(mc.getTextureManager());
+	}
+
+	public void setSelected(int p_178011_1_, int p_178011_2_, int p_178011_3_)
     {
     }
 

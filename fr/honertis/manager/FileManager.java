@@ -19,10 +19,10 @@ import fr.honertis.module.ModulesManager;
 import fr.honertis.settings.Settings;
 import fr.honertis.utils.YamlUtils;
 import fr.honertis.utils.YamlUtils.ConfigMod;
+import static fr.honertis.utils.Utils.*;
 
 public class FileManager {
-	public static File dir = new File("Honertis/");
-	public static File configFile = new File(dir + "/config.yml");
+	public static File configFile = new File(dir, "config.yml");
 	
 	public static void init() {
 		dir.mkdirs();

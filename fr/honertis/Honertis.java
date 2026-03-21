@@ -1,5 +1,9 @@
 package fr.honertis;
 
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
 import fr.honertis.event.Event;
 import fr.honertis.guis.GuiHonertisOptions;
 import fr.honertis.guis.music.CurrentPlayingSong;
@@ -9,8 +13,6 @@ import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.module.ModulesManager;
 import fr.honertis.utils.WebUtils;
-import net.minecraft.client.gui.GuiIngameMenu;
-import net.minecraft.client.gui.GuiScreen;
 import yalter.mousetweaks.Constants;
 
 public class Honertis {
@@ -26,6 +28,8 @@ public class Honertis {
 	public CurrentPlayingSong playingSong;
 	public boolean isLauncher;
 	public String launcherVersion;
+	public List<File> subFolders;
+	public Map<File, List<File>> subFolderPacks;
 	
 	public void start() {
 		name = "Honertis";

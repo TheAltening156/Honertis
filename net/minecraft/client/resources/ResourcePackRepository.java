@@ -8,13 +8,18 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.SettableFuture;
+
+import fr.honertis.Honertis;
+
 import java.awt.image.BufferedImage;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +37,7 @@ import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
+import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.logging.log4j.LogManager;
@@ -107,16 +113,93 @@ public class ResourcePackRepository
 
     private List<File> getResourcePackFiles()
     {
-        return this.dirResourcepacks.isDirectory() ? Arrays.asList(this.dirResourcepacks.listFiles(resourcePackFilter)) : Collections.<File>emptyList();
+        return this.dirResourcepacks.isDirectory() ? getAllPacks(dirResourcepacks, true) /*Arrays.asList(this.dirResourcepacks.listFiles(resourcePackFilter))*/ : Collections.<File>emptyList();
     }
 
+    //public File subFolder = new File("Folder");
+    
+    public List<File> getAllPacks(File dir, boolean isRoot) {
+    	if (isRoot)
+    		Honertis.INSTANCE.subFolderPacks = new HashMap<>();
+        List<File> packs = new ArrayList<File>();
+
+        File[] files = dir.listFiles();
+        if (files == null) return packs;
+
+        List<File> subDirs = new ArrayList<File>();
+        List<File> zips = new ArrayList<File>();
+        List<File> packInDir = new ArrayList<File>();
+        
+        for (File file : files) {
+            if (file.isDirectory()) {
+                File mcmeta = new File(file, "pack.mcmeta");
+                if (mcmeta.exists()) {
+                	packInDir.add(file);
+                } else {
+                    subDirs.add(file);
+                }
+            } else if (file.getName().endsWith(".zip")) {
+                zips.add(file);
+            }
+        }
+        
+        for (File dirFile : subDirs) {
+        	packs.addAll(getAllPacks(dirFile, false));
+        }
+        if (!zips.isEmpty() && !isRoot) { 
+        	Honertis.INSTANCE.subFolderPacks.put(dir, zips);
+        	packs.add(dir);
+        }
+        
+        packs.addAll(packInDir);
+        packs.addAll(zips);
+        return packs;
+    }
+    
+    public class SubFolder extends ResourcePackRepository.Entry{
+    	public String name;
+    	public boolean opened;
+    	
+    	public SubFolder(String name) {
+    		super(new File(this.name = name));
+    	}
+    	@Override
+    	public void bindTexturePackIcon(TextureManager textureManagerIn) {
+    		textureManagerIn.bindTexture(new ResourceLocation("honertis/packs/" + (opened ? "open" : "close") + ".png"));
+    	}
+    	
+    	@Override
+    	public String getResourcePackName() {
+    		return name;
+    	}
+    	
+    	@Override
+    	public String getTexturePackDescription() {
+    		return " ";
+    	}	
+    	@Override
+    	public int getPackFormat() {
+    		return 1;
+    	}
+    	@Override
+    	public void updateResourcePack() throws IOException {
+    		
+    	}
+    }
+    
     public void updateRepositoryEntriesAll()
     {
         List<ResourcePackRepository.Entry> list = Lists.<ResourcePackRepository.Entry>newArrayList();
-
+        
         for (File file1 : this.getResourcePackFiles())
         {
             ResourcePackRepository.Entry resourcepackrepository$entry = new ResourcePackRepository.Entry(file1);
+            for (File entry : Honertis.INSTANCE.subFolderPacks.keySet()) {
+            	if (file1.getName().equals(entry.getName())) {
+            		resourcepackrepository$entry = new SubFolder(entry.getName());
+            		System.out.println("File : " + file1.getName() + " is " + entry.getName());
+            	}
+            }
 
             if (!this.repositoryEntriesAll.contains(resourcepackrepository$entry))
             {
@@ -319,6 +402,7 @@ public class ResourcePackRepository
         public void updateResourcePack() throws IOException
         {
             this.reResourcePack = (IResourcePack)(this.resourcePackFile.isDirectory() ? new FolderResourcePack(this.resourcePackFile) : new FileResourcePack(this.resourcePackFile));
+            
             this.rePackMetadataSection = (PackMetadataSection)this.reResourcePack.getPackMetadata(ResourcePackRepository.this.rprMetadataSerializer, "pack");
 
             try
@@ -337,14 +421,13 @@ public class ResourcePackRepository
 
             this.closeResourcePack();
         }
-
+        
         public void bindTexturePackIcon(TextureManager textureManagerIn)
         {
             if (this.locationTexturePackIcon == null)
             {
                 this.locationTexturePackIcon = textureManagerIn.getDynamicTextureLocation("texturepackicon", new DynamicTexture(this.texturePackIcon));
             }
-
             textureManagerIn.bindTexture(this.locationTexturePackIcon);
         }
 

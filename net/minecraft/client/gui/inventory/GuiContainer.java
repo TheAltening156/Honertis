@@ -2,8 +2,6 @@ package net.minecraft.client.gui.inventory;
 
 import com.google.common.collect.Sets;
 
-import fr.honertis.Honertis;
-
 import java.io.IOException;
 import java.util.Set;
 import net.minecraft.client.Minecraft;

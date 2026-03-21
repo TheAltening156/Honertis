@@ -4,7 +4,6 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
 
-import fr.honertis.Honertis;
 import fr.honertis.module.modules.MoreParticles;
 
 import java.util.Collection;

@@ -59,22 +59,22 @@ public class ResourcePackListEntryDefault extends ResourcePackListEntry
         return EnumChatFormatting.RED + "Missing " + "pack.mcmeta" + " :(";
     }
 
-    protected boolean func_148309_e()
+    protected boolean canMoveRight()
     {
         return false;
     }
 
-    protected boolean func_148308_f()
+    protected boolean canMoveLeft()
     {
         return false;
     }
 
-    protected boolean func_148314_g()
+    protected boolean canMoveUp()
     {
         return false;
     }
 
-    protected boolean func_148307_h()
+    protected boolean canMoveDown()
     {
         return false;
     }
@@ -89,7 +89,7 @@ public class ResourcePackListEntryDefault extends ResourcePackListEntry
         this.mc.getTextureManager().bindTexture(this.resourcePackIcon);
     }
 
-    protected boolean func_148310_d()
+    protected boolean showHoverOverlay()
     {
         return false;
     }

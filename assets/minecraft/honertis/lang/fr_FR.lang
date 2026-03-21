@@ -23,6 +23,7 @@ color.alpha=Alpha
 module.gg=Dis GG ou GL à chaque debut de game commençant, perdue ou gagnée
 
 module.blockhit=Remet l'animation du blockhit d'avant la 1.8
+module.blockhit.sword=Ancienne position de l'épée
 
 module.blocktap=Remet la possibilité de tapper des blocs pendans le blockHit
 

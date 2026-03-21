@@ -56,7 +56,7 @@ public class BlockPlanks extends Block
      */
     public MapColor getMapColor(IBlockState state)
     {
-        return ((BlockPlanks.EnumType)state.getValue(VARIANT)).func_181070_c();
+        return ((BlockPlanks.EnumType)state.getValue(VARIANT)).getMapColor();
     }
 
     /**
@@ -105,7 +105,7 @@ public class BlockPlanks extends Block
             return this.meta;
         }
 
-        public MapColor func_181070_c()
+        public MapColor getMapColor()
         {
             return this.field_181071_k;
         }

@@ -5,24 +5,20 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.text.Normalizer;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.lwjgl.Sys;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import fr.honertis.Honertis;
-import fr.honertis.guis.resourcePacks.GuiScreenPackManager;
-import fr.honertis.module.ModuleBase;
 import fr.honertis.settings.NumberSettings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.Util;
 
 public class Utils {
+	public static File dir = new File(new File(net.minecraft.client.main.Main.getAppData(), ".minecraft"), "Honertis");
+
 	public static double textScroll(double textWidth, double maxTextWidth, long time, double speed) {
         double offset = 0;
 		if (textWidth > maxTextWidth) {

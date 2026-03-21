@@ -91,9 +91,9 @@ public class MusicPlayerGui extends GuiScreen {
     public boolean isYoutube = true;
     public boolean repeat = false;
         
-    private static final File BIN_DIR = new File("Honertis/musicPlayer/");
-    private static final File songDir = new File(BIN_DIR + "/songs");
-	private static final File localSongs = new File(BIN_DIR + "/localSongs");
+    private static final File BIN_DIR = new File(Utils.dir, "musicPlayer");
+    private static final File songDir = new File(BIN_DIR, "songs");
+	private static final File localSongs = new File(BIN_DIR, "localSongs");
 	public MiniPlayer player = Honertis.INSTANCE.getModule(MiniPlayer.class);
 	
 	public static String ytdlp = "yt-dlp" + getOs();
@@ -539,13 +539,13 @@ public class MusicPlayerGui extends GuiScreen {
 		        	e.printStackTrace();
 		        }
 		        try {
-					musicPlayer.play(new File(songDir + "/" + outputName), true);
+					musicPlayer.play(new File(songDir, outputName), true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 	        } else {
 	        	try {
-					musicPlayer.play(new File(BIN_DIR + "/localSongs/" + song.getTitle()), false);
+					musicPlayer.play(new File(new File(BIN_DIR, "localSongs"), song.getTitle()), false);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
