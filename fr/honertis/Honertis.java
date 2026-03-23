@@ -10,6 +10,7 @@ import fr.honertis.guis.music.MusicPlayerGui;
 import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.module.ModulesManager;
+import net.minecraft.client.gui.GuiScreenResourcePacks;
 import yalter.mousetweaks.Constants;
 
 public class Honertis {
@@ -25,8 +26,9 @@ public class Honertis {
 	public CurrentPlayingSong playingSong;
 	public boolean isLauncher;
 	public String launcherVersion;
-	public List<File> subFolders;
 	public Map<File, List<File>> subFolderPacks;
+	public Thread packsThread = null;
+	public GuiScreenResourcePacks guiScreenResourcePacks;
 	
 	public void start() {
 		name = "Honertis";

@@ -2,8 +2,10 @@ package net.minecraft.client.gui;
 
 import com.google.common.collect.Lists;
 
+import fr.honertis.Honertis;
 import fr.honertis.utils.LangManager;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -56,24 +58,31 @@ public class GuiScreenResourcePacks extends GuiScreen
 			this.availableResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
 			this.selectedResourcePacks = Lists.<ResourcePackListEntry>newArrayList();
 			ResourcePackRepository resourcepackrepository = this.mc.getResourcePackRepository();
-			if (cachedPackList == null) {
-			    this.mc.getResourcePackRepository().updateRepositoryEntriesAll();
-			    cachedPackList = new ArrayList<>(this.mc.getResourcePackRepository().getRepositoryEntriesAll());
+			if (Honertis.INSTANCE.packsThread == null) {
+				(Honertis.INSTANCE.packsThread = 
+				new Thread(() -> {
+					if (cachedPackList == null) {
+						resourcepackrepository.updateRepositoryEntriesAll();
+				    	cachedPackList = new ArrayList<>(resourcepackrepository.getRepositoryEntriesAll());
+					}
+					List<ResourcePackRepository.Entry> list = cachedPackList;
+					list.removeAll(resourcepackrepository.getRepositoryEntries());
+	
+					for (ResourcePackRepository.Entry resourcepackrepository$entry : list) {
+						if (resourcepackrepository$entry instanceof SubFolder) {
+							this.availableResourcePacks.add(new ResourcePackListEntryFolder(this, (SubFolder) resourcepackrepository$entry));
+						} else
+						if (resourcepackrepository$entry instanceof SubFolderPack) {
+							this.availableResourcePacks.add(new ResourcePackListEntryFoundSubFolder(this, (SubFolderPack)resourcepackrepository$entry));
+						} else {
+							this.availableResourcePacks.add(new ResourcePackListEntryFound(this, resourcepackrepository$entry));
+						}
+					}
+					Honertis.INSTANCE.packsThread = null;
+				}, "Resource Packs Thread")).start();
+			} else {
+				
 			}
-			List<ResourcePackRepository.Entry> list = cachedPackList;
-			list.removeAll(resourcepackrepository.getRepositoryEntries());
-
-			for (ResourcePackRepository.Entry resourcepackrepository$entry : list) {
-				if (resourcepackrepository$entry instanceof SubFolder) {
-					this.availableResourcePacks.add(new ResourcePackListEntryFolder(this, (SubFolder) resourcepackrepository$entry));
-				} else
-				if (resourcepackrepository$entry instanceof SubFolderPack) {
-					this.availableResourcePacks.add(new ResourcePackListEntryFoundSubFolder(this, (SubFolderPack)resourcepackrepository$entry));
-				} else {
-					this.availableResourcePacks.add(new ResourcePackListEntryFound(this, resourcepackrepository$entry));
-				}
-			}
-
 			for (ResourcePackRepository.Entry resourcepackrepository$entry1 : Lists
 					.reverse(resourcepackrepository.getRepositoryEntries())) {
 				if (resourcepackrepository$entry1 instanceof SubFolderPack) {
@@ -208,6 +217,8 @@ public class GuiScreenResourcePacks extends GuiScreen
         this.selectedResourcePacksList.drawScreen(mouseX, mouseY, partialTicks);
         this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.title", new Object[0]), this.width / 2, 16, 16777215);
         this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.folderInfo", new Object[0]), this.width / 2 - 77, this.height - 26, 8421504);
+        if (Honertis.INSTANCE.packsThread != null)
+        	mc.fontRendererObj.drawCenteredStringWithShadow("Loading...", width /2 - 77 - mc.fontRendererObj.getStringWidth("Loading...")/2, height/2 - mc.fontRendererObj.FONT_HEIGHT, Color.LIGHT_GRAY.getRGB());
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
