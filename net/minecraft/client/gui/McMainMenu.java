@@ -3,6 +3,7 @@ package net.minecraft.client.gui;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
+import fr.honertis.Honertis;
 import fr.honertis.guis.GuiHonertisCredits;
 import fr.honertis.guis.GuiHonertisOptions;
 
@@ -605,7 +606,7 @@ public class McMainMenu extends GuiScreen implements GuiYesNoCallback
         GlStateManager.scale(f, f, f);
         this.drawCenteredString(this.fontRendererObj, this.splashText, 0, -8, -256);
         GlStateManager.popMatrix();
-        String s = "Minecraft 1.8.9";
+        String s = Honertis.INSTANCE.title;
 
         if (this.mc.isDemo())
         {

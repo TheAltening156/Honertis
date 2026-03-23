@@ -31,10 +31,10 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
 
     public void drawEntry(int slotIndex, int x, int y, int listWidth, int slotHeight, int mouseX, int mouseY, boolean isSelected)
     {
-    	if (this instanceof ResourcePackListEntryFoundSubFolder) {
+    	/*if (this instanceof ResourcePackListEntryFoundSubFolder) {
     		x += 15;
     		listWidth -= 15;
-    	}
+    	}*/
         int i = this.getPackFormat();
 
         if (i != 1)
@@ -49,7 +49,7 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
         String s = this.getPackName();
         String s1 = this.getPackDescription();
 
-        if ((this.mc.gameSettings.touchscreen || isSelected) && this.showHoverOverlay() && (this instanceof ResourcePackListEntryFolder && ((ResourcePackListEntryFolder)this).packEntry.opened))
+        if ((this.mc.gameSettings.touchscreen || isSelected) && this.showHoverOverlay() /*&& (this instanceof ResourcePackListEntryFolder && ((ResourcePackListEntryFolder)this).packEntry.opened)*/)
         {
             this.mc.getTextureManager().bindTexture(RESOURCE_PACKS_TEXTURE);
             Gui.drawRect(x, y, x + 32, y + 32, -1601138544);
@@ -122,9 +122,9 @@ public abstract class ResourcePackListEntry implements GuiListExtended.IGuiListE
         int width = this.mc.fontRendererObj.getStringWidth(s);
 
         int limit = 157;
-        if (this instanceof ResourcePackListEntryFoundSubFolder) {
+        /*if (this instanceof ResourcePackListEntryFoundSubFolder) {
         	limit -= 15;
-        }
+        }*/
         
         if (width > limit)
         {
