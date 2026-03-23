@@ -12,6 +12,7 @@ gui.current=la version actuelle est la
 gui.open=Ouvrir le dossier de sons
 gui.error=Erreur
 gui.ffmpegNotFound=ffmpeg introuvable, installez le manuellement.
+gui.loading=Chargement...
 
 # Other
 color.red=Rouge

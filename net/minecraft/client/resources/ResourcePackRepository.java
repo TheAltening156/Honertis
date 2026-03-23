@@ -202,7 +202,7 @@ public class ResourcePackRepository
             for (File entry : Honertis.INSTANCE.subFolderPacks.keySet()) {
             	if (entry.isDirectory() && entry.listFiles() != null) {
 	            	if (file1.getName().equals(entry.getName())) {
-	            		System.out.println("pack " + entry.getName() + " is a subfolder");
+	            		//System.out.println("pack " + entry.getName() + " is a subfolder");
 	            		resourcepackrepository$entry = new SubFolder(entry.getName());
 	            		break outer;
 	            	}
@@ -211,7 +211,7 @@ public class ResourcePackRepository
 
                         for (File subFile : Honertis.INSTANCE.subFolderPacks.get(entry)) {
                             if (subFile.equals(file1)) {
-                                System.out.println("pack " + subFile.getName() + " is a subfolder pack");
+                                //System.out.println("pack " + subFile.getName() + " is a subfolder pack");
                                 resourcepackrepository$entry = new SubFolderPack(subFile);
                                 break outer;
                             }

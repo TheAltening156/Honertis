@@ -218,7 +218,7 @@ public class GuiScreenResourcePacks extends GuiScreen
         this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.title", new Object[0]), this.width / 2, 16, 16777215);
         this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.folderInfo", new Object[0]), this.width / 2 - 77, this.height - 26, 8421504);
         if (Honertis.INSTANCE.packsThread != null)
-        	mc.fontRendererObj.drawCenteredStringWithShadow("Loading...", width /2 - 77 - mc.fontRendererObj.getStringWidth("Loading...")/2, height/2 - mc.fontRendererObj.FONT_HEIGHT, Color.LIGHT_GRAY.getRGB());
+        	mc.fontRendererObj.drawCenteredStringWithShadow(LangManager.format("gui.loading"), width /2 - 77 - mc.fontRendererObj.getStringWidth(LangManager.format("gui.loading"))/2, height/2 - mc.fontRendererObj.FONT_HEIGHT, Color.LIGHT_GRAY.getRGB());
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
