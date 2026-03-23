@@ -141,8 +141,8 @@ public class EntityFishHook extends Entity
         this.motionY = p_146035_3_;
         this.motionZ = p_146035_5_;
         float f1 = MathHelper.sqrt_double(p_146035_1_ * p_146035_1_ + p_146035_5_ * p_146035_5_);
-        this.prevRotationYaw = this.rotationYaw = (float)(MathHelper.func_181159_b(p_146035_1_, p_146035_5_) * 180.0D / Math.PI);
-        this.prevRotationPitch = this.rotationPitch = (float)(MathHelper.func_181159_b(p_146035_3_, (double)f1) * 180.0D / Math.PI);
+        this.prevRotationYaw = this.rotationYaw = (float)(MathHelper.atan2(p_146035_1_, p_146035_5_) * 180.0D / Math.PI);
+        this.prevRotationPitch = this.rotationPitch = (float)(MathHelper.atan2(p_146035_3_, (double)f1) * 180.0D / Math.PI);
         this.ticksInGround = 0;
     }
 
@@ -309,9 +309,9 @@ public class EntityFishHook extends Entity
             {
                 this.moveEntity(this.motionX, this.motionY, this.motionZ);
                 float f5 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
-                this.rotationYaw = (float)(MathHelper.func_181159_b(this.motionX, this.motionZ) * 180.0D / Math.PI);
+                this.rotationYaw = (float)(MathHelper.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
 
-                for (this.rotationPitch = (float)(MathHelper.func_181159_b(this.motionY, (double)f5) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
+                for (this.rotationPitch = (float)(MathHelper.atan2(this.motionY, (double)f5) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F)
                 {
                     ;
                 }
@@ -363,7 +363,7 @@ public class EntityFishHook extends Entity
                     int l = 1;
                     BlockPos blockpos = (new BlockPos(this)).up();
 
-                    if (this.rand.nextFloat() < 0.25F && this.worldObj.canLightningStrike(blockpos))
+                    if (this.rand.nextFloat() < 0.25F && this.worldObj.isRainingAt(blockpos))
                     {
                         l = 2;
                     }

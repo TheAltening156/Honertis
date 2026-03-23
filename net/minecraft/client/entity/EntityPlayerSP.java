@@ -1,19 +1,11 @@
 package net.minecraft.client.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.lwjgl.input.Keyboard;
-
 import fr.honertis.Honertis;
 import fr.honertis.event.EventType;
 import fr.honertis.event.EventUpdate;
-import fr.honertis.module.ModuleBase;
 import fr.honertis.module.modules.DropSwing;
 import fr.honertis.module.modules.MoreParticles;
 import fr.honertis.module.modules.ToggleSprint;
-import fr.honertis.utils.TimeUtils;
-import fr.honertis.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -57,7 +49,6 @@ import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatFileWriter;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
@@ -202,7 +193,6 @@ public class EntityPlayerSP extends AbstractClientPlayer
         EventUpdate e = new EventUpdate();
         e.setType(EventType.POST);
         Honertis.INSTANCE.event.onEvent(e);
-        
     }
 
     /**
@@ -699,14 +689,14 @@ public class EntityPlayerSP extends AbstractClientPlayer
      */
     public void onCriticalHit(Entity entityHit)
     {
-    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.getModule(MoreParticles.class);
+    	MoreParticles p = Honertis.INSTANCE.getModule(MoreParticles.class);
         for (int integer : new int[p.isEnabled() ? (int) p.particles.getDefValue() : 1])
         this.mc.effectRenderer.emitParticleAtEntity(entityHit, EnumParticleTypes.CRIT);
     }
 
     public void onEnchantmentCritical(Entity entityHit)
     {
-    	MoreParticles p = (MoreParticles)Honertis.INSTANCE.getModule(MoreParticles.class);
+    	MoreParticles p = Honertis.INSTANCE.getModule(MoreParticles.class);
         for (int integer : new int[p.isEnabled() ? (int) p.particles.getDefValue() : 1])
         this.mc.effectRenderer.emitParticleAtEntity(entityHit, EnumParticleTypes.CRIT_MAGIC);
     }

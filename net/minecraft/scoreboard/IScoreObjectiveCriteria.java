@@ -20,7 +20,7 @@ public interface IScoreObjectiveCriteria
 
     String getName();
 
-    int func_96635_a(List<EntityPlayer> p_96635_1_);
+    int setScore(List<EntityPlayer> p_96635_1_);
 
     boolean isReadOnly();
 

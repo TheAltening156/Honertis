@@ -43,16 +43,18 @@ public class Timer
      * The time reported by the high-resolution clock at the last sync, in milliseconds
      */
     private long lastSyncHRClock;
-    private long field_74285_i;
+
+    /** Increase per 1 every tick, reset when reach 1000 */
+    private long counter;
 
     /**
      * A ratio used to sync the high-resolution clock to the system clock, updated once per second
      */
     private double timeSyncAdjustment = 1.0D;
 
-    public Timer(float p_i1018_1_)
+    public Timer(float tps)
     {
-        this.ticksPerSecond = p_i1018_1_;
+        this.ticksPerSecond = tps;
         this.lastSyncSysClock = Minecraft.getSystemTime();
         this.lastSyncHRClock = System.nanoTime() / 1000000L;
     }
@@ -69,18 +71,18 @@ public class Timer
 
         if (j <= 1000L && j >= 0L)
         {
-            this.field_74285_i += j;
+            this.counter += j;
 
-            if (this.field_74285_i > 1000L)
+            if (this.counter > 1000L)
             {
                 long l = k - this.lastSyncHRClock;
-                double d1 = (double)this.field_74285_i / (double)l;
+                double d1 = (double)this.counter / (double)l;
                 this.timeSyncAdjustment += (d1 - this.timeSyncAdjustment) * 0.20000000298023224D;
                 this.lastSyncHRClock = k;
-                this.field_74285_i = 0L;
+                this.counter = 0L;
             }
 
-            if (this.field_74285_i < 0L)
+            if (this.counter < 0L)
             {
                 this.lastSyncHRClock = k;
             }

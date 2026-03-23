@@ -99,7 +99,7 @@ public class StructureOceanMonument extends MapGenStructure
         return new StructureOceanMonument.StartMonument(this.worldObj, this.rand, chunkX, chunkZ);
     }
 
-    public List<BiomeGenBase.SpawnListEntry> func_175799_b()
+    public List<BiomeGenBase.SpawnListEntry> getScatteredFeatureSpawnList()
     {
         return field_175803_h;
     }

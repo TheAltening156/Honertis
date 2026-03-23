@@ -5,6 +5,8 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.util.UUIDTypeAdapter;
 import java.net.Proxy;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.Session;
 import net.minecraft.world.WorldSettings;
 
@@ -89,7 +91,7 @@ public class Realms
 
     public static void setConnectedToRealms(boolean p_setConnectedToRealms_0_)
     {
-        Minecraft.getMinecraft().func_181537_a(p_setConnectedToRealms_0_);
+        Minecraft.getMinecraft().setConnectedToRealms(p_setConnectedToRealms_0_);
     }
 
     public static ListenableFuture<Object> downloadResourcePack(String p_downloadResourcePack_0_, String p_downloadResourcePack_1_)
@@ -100,6 +102,16 @@ public class Realms
 
     public static void clearResourcePack()
     {
-        Minecraft.getMinecraft().getResourcePackRepository().func_148529_f();
+        Minecraft.getMinecraft().getResourcePackRepository().clearResourcePack();
+    }
+
+    public static boolean getRealmsNotificationsEnabled()
+    {
+        return Minecraft.getMinecraft().gameSettings.getOptionOrdinalValue(GameSettings.Options.enumFloat);
+    }
+
+    public static boolean inTitleScreen()
+    {
+        return Minecraft.getMinecraft().currentScreen != null && Minecraft.getMinecraft().currentScreen instanceof GuiMainMenu;
     }
 }

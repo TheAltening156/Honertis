@@ -6,15 +6,10 @@ import com.google.common.util.concurrent.Futures;
 import com.mojang.authlib.GameProfile;
 
 import fr.honertis.Honertis;
-import fr.honertis.module.ModulesManager;
 import fr.honertis.module.modules.CustomTime;
 import io.netty.buffer.Unpooled;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -312,7 +307,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
 
         if (packetIn.getType() == 10)
         {
-            entity = EntityMinecart.func_180458_a(this.clientWorldController, d0, d1, d2, EntityMinecart.EnumMinecartType.byNetworkID(packetIn.func_149009_m()));
+            entity = EntityMinecart.getMinecart(this.clientWorldController, d0, d1, d2, EntityMinecart.EnumMinecartType.byNetworkID(packetIn.func_149009_m()));
         }
         else if (packetIn.getType() == 90)
         {
@@ -543,7 +538,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         double d2 = (double)packetIn.getZ() / 32.0D;
         float f = (float)(packetIn.getYaw() * 360) / 256.0F;
         float f1 = (float)(packetIn.getPitch() * 360) / 256.0F;
-        EntityOtherPlayerMP entityotherplayermp = new EntityOtherPlayerMP(this.gameController.theWorld, getPlayerInfo(packetIn.getPlayer()).getGameProfile());
+        EntityOtherPlayerMP entityotherplayermp = new EntityOtherPlayerMP(this.gameController.theWorld, this.getPlayerInfo(packetIn.getPlayer()).getGameProfile());
         entityotherplayermp.prevPosX = entityotherplayermp.lastTickPosX = (double)(entityotherplayermp.serverPosX = packetIn.getX());
         entityotherplayermp.prevPosY = entityotherplayermp.lastTickPosY = (double)(entityotherplayermp.serverPosY = packetIn.getY());
         entityotherplayermp.prevPosZ = entityotherplayermp.lastTickPosZ = (double)(entityotherplayermp.serverPosZ = packetIn.getZ());
@@ -769,7 +764,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
 
         this.clientWorldController.invalidateBlockReceiveRegion(packetIn.getChunkX() << 4, 0, packetIn.getChunkZ() << 4, (packetIn.getChunkX() << 4) + 15, 256, (packetIn.getChunkZ() << 4) + 15);
         Chunk chunk = this.clientWorldController.getChunkFromChunkCoords(packetIn.getChunkX(), packetIn.getChunkZ());
-        chunk.fillChunk(packetIn.func_149272_d(), packetIn.getExtractedSize(), packetIn.func_149274_i());
+        chunk.fillChunk(packetIn.getExtractedDataBytes(), packetIn.getExtractedSize(), packetIn.func_149274_i());
         this.clientWorldController.markBlockRangeForRenderUpdate(packetIn.getChunkX() << 4, 0, packetIn.getChunkZ() << 4, (packetIn.getChunkX() << 4) + 15, 256, (packetIn.getChunkZ() << 4) + 15);
 
         if (!packetIn.func_149274_i() || !(this.clientWorldController.provider instanceof WorldProviderSurface))
@@ -959,7 +954,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
 
     public void handleTimeUpdate(S03PacketTimeUpdate packetIn)
     {
-        PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
+    	PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
         this.gameController.theWorld.setTotalWorldTime(packetIn.getTotalWorldTime());
         CustomTime ct = Honertis.INSTANCE.getModule(CustomTime.class);
         this.gameController.theWorld.setWorldTime(ct.isEnabled() ? ct.time.getLongValue() : packetIn.getWorldTime());
@@ -1591,7 +1586,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
 
             case RESET:
                 this.gameController.ingameGUI.displayTitle("", "", -1, -1, -1);
-                this.gameController.ingameGUI.func_175177_a();
+                this.gameController.ingameGUI.setDefaultTitlesTimes();
                 return;
         }
 
@@ -1602,7 +1597,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
     {
         if (!this.netManager.isLocalChannel())
         {
-            this.netManager.setCompressionTreshold(packetIn.func_179760_a());
+            this.netManager.setCompressionTreshold(packetIn.getThreshold());
         }
     }
 
@@ -1628,9 +1623,9 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
     {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
 
-        for (S38PacketPlayerListItem.AddPlayerData s38packetplayerlistitem$addplayerdata : packetIn.func_179767_a())
+        for (S38PacketPlayerListItem.AddPlayerData s38packetplayerlistitem$addplayerdata : packetIn.getEntries())
         {
-            if (packetIn.func_179768_b() == S38PacketPlayerListItem.Action.REMOVE_PLAYER)
+            if (packetIn.getAction() == S38PacketPlayerListItem.Action.REMOVE_PLAYER)
             {
                 this.playerInfoMap.remove(s38packetplayerlistitem$addplayerdata.getProfile().getId());
             }
@@ -1638,7 +1633,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
             {
                 NetworkPlayerInfo networkplayerinfo = (NetworkPlayerInfo)this.playerInfoMap.get(s38packetplayerlistitem$addplayerdata.getProfile().getId());
 
-                if (packetIn.func_179768_b() == S38PacketPlayerListItem.Action.ADD_PLAYER)
+                if (packetIn.getAction() == S38PacketPlayerListItem.Action.ADD_PLAYER)
                 {
                     networkplayerinfo = new NetworkPlayerInfo(s38packetplayerlistitem$addplayerdata);
                     this.playerInfoMap.put(networkplayerinfo.getGameProfile().getId(), networkplayerinfo);
@@ -1646,7 +1641,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
 
                 if (networkplayerinfo != null)
                 {
-                    switch (packetIn.func_179768_b())
+                    switch (packetIn.getAction())
                     {
                         case ADD_PLAYER:
                             networkplayerinfo.setGameType(s38packetplayerlistitem$addplayerdata.getGameMode());
@@ -1714,9 +1709,6 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
 
         if (s.startsWith("level://"))
         {
-        	if (!this.validateResourcePackUrl(s, s1)) {
-                return;
-            }
             String s2 = s.substring("level://".length());
             File file1 = new File(this.gameController.mcDataDir, "saves");
             File file2 = new File(file1, s2);
@@ -1814,33 +1806,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         }
     }
 
-    public boolean validateResourcePackUrl(String url, String hash) {
-        try {
-            URI uri = new URI(url);
-            String scheme = uri.getScheme();
-            boolean isLevelProtocol = "level".equals(scheme);
-            if (!("http".equals(scheme) || "https".equals(scheme) || isLevelProtocol)) {
-                this.getNetworkManager().sendPacket(new C19PacketResourcePackStatus(hash, C19PacketResourcePackStatus.Action.FAILED_DOWNLOAD));
-                throw new URISyntaxException(url, "Wrong protocol");
-            }
-            url = URLDecoder.decode(url.substring("level://".length()), StandardCharsets.UTF_8.toString());
-            if (isLevelProtocol && (url.contains("..") || !url.endsWith("/resources.zip"))) {
-                System.out.println("Malicious server tried to access " + url);
-                /*EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
-                if (player != null) {
-                    Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessage(new ChatComponentText("Malicious server tried to access " + url));
-                }*/
-                throw new URISyntaxException(url, "Invalid levelstorage resourcepack path");
-            }
-            return true;
-        }
-        catch (Exception e) {
-            this.getNetworkManager().sendPacket(new C19PacketResourcePackStatus(hash, C19PacketResourcePackStatus.Action.FAILED_DOWNLOAD));
-            return false;
-        }
-    }
-
-	public void handleEntityNBT(S49PacketUpdateEntityNBT packetIn)
+    public void handleEntityNBT(S49PacketUpdateEntityNBT packetIn)
     {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
         Entity entity = packetIn.getEntity(this.clientWorldController);
@@ -1988,23 +1954,23 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
         Scoreboard scoreboard = this.clientWorldController.getScoreboard();
         ScorePlayerTeam scoreplayerteam;
 
-        if (packetIn.func_149307_h() == 0)
+        if (packetIn.getAction() == 0)
         {
-            scoreplayerteam = scoreboard.createTeam(packetIn.func_149312_c());
+            scoreplayerteam = scoreboard.createTeam(packetIn.getName());
         }
         else
         {
-            scoreplayerteam = scoreboard.getTeam(packetIn.func_149312_c());
+            scoreplayerteam = scoreboard.getTeam(packetIn.getName());
         }
 
-        if (packetIn.func_149307_h() == 0 || packetIn.func_149307_h() == 2)
+        if (packetIn.getAction() == 0 || packetIn.getAction() == 2)
         {
-            scoreplayerteam.setTeamName(packetIn.func_149306_d());
-            scoreplayerteam.setNamePrefix(packetIn.func_149311_e());
-            scoreplayerteam.setNameSuffix(packetIn.func_149309_f());
-            scoreplayerteam.setChatFormat(EnumChatFormatting.func_175744_a(packetIn.func_179813_h()));
-            scoreplayerteam.func_98298_a(packetIn.func_149308_i());
-            Team.EnumVisible team$enumvisible = Team.EnumVisible.func_178824_a(packetIn.func_179814_i());
+            scoreplayerteam.setTeamName(packetIn.getDisplayName());
+            scoreplayerteam.setNamePrefix(packetIn.getPrefix());
+            scoreplayerteam.setNameSuffix(packetIn.getSuffix());
+            scoreplayerteam.setChatFormat(EnumChatFormatting.func_175744_a(packetIn.getColor()));
+            scoreplayerteam.func_98298_a(packetIn.getFriendlyFlags());
+            Team.EnumVisible team$enumvisible = Team.EnumVisible.func_178824_a(packetIn.getNameTagVisibility());
 
             if (team$enumvisible != null)
             {
@@ -2012,23 +1978,23 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
             }
         }
 
-        if (packetIn.func_149307_h() == 0 || packetIn.func_149307_h() == 3)
+        if (packetIn.getAction() == 0 || packetIn.getAction() == 3)
         {
-            for (String s : packetIn.func_149310_g())
+            for (String s : packetIn.getPlayers())
             {
-                scoreboard.addPlayerToTeam(s, packetIn.func_149312_c());
+                scoreboard.addPlayerToTeam(s, packetIn.getName());
             }
         }
 
-        if (packetIn.func_149307_h() == 4)
+        if (packetIn.getAction() == 4)
         {
-            for (String s1 : packetIn.func_149310_g())
+            for (String s1 : packetIn.getPlayers())
             {
                 scoreboard.removePlayerFromTeam(s1, scoreplayerteam);
             }
         }
 
-        if (packetIn.func_149307_h() == 1)
+        if (packetIn.getAction() == 1)
         {
             scoreboard.removeTeam(scoreplayerteam);
         }

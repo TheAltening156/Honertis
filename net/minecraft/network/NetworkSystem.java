@@ -55,7 +55,7 @@ public class NetworkSystem
             return new NioEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Server IO #%d").setDaemon(true).build());
         }
     };
-    public static final LazyLoadBase<EpollEventLoopGroup> field_181141_b = new LazyLoadBase<EpollEventLoopGroup>()
+    public static final LazyLoadBase<EpollEventLoopGroup> SERVER_EPOLL_EVENTLOOP = new LazyLoadBase<EpollEventLoopGroup>()
     {
         protected EpollEventLoopGroup load()
         {
@@ -94,10 +94,10 @@ public class NetworkSystem
             Class <? extends ServerSocketChannel > oclass;
             LazyLoadBase <? extends EventLoopGroup > lazyloadbase;
 
-            if (Epoll.isAvailable() && this.mcServer.func_181035_ah())
+            if (Epoll.isAvailable() && this.mcServer.shouldUseNativeTransport())
             {
                 oclass = EpollServerSocketChannel.class;
-                lazyloadbase = field_181141_b;
+                lazyloadbase = SERVER_EPOLL_EVENTLOOP;
                 logger.info("Using epoll channel type");
             }
             else

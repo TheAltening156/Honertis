@@ -5,7 +5,7 @@ import net.minecraft.client.resources.ResourcePackRepository.SubFolder;
 
 public class ResourcePackListEntryFolder extends ResourcePackListEntry
 {
-    private final SubFolder packEntry;
+    final SubFolder packEntry;
 
     public ResourcePackListEntryFolder(GuiScreen resourcePacksGUIIn, SubFolder packEntry)
     {

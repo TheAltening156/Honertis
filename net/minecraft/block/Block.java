@@ -38,7 +38,7 @@ public class Block
     /** ResourceLocation for the Air block */
     private static final ResourceLocation AIR_ID = new ResourceLocation("air");
     public static final RegistryNamespacedDefaultedByKey<ResourceLocation, Block> blockRegistry = new RegistryNamespacedDefaultedByKey(AIR_ID);
-    public static final ObjectIntIdentityMap BLOCK_STATE_IDS = new ObjectIntIdentityMap();
+    public static final ObjectIntIdentityMap<IBlockState> BLOCK_STATE_IDS = new ObjectIntIdentityMap();
     private CreativeTabs displayOnCreativeTab;
     public static final Block.SoundType soundTypeStone = new Block.SoundType("stone", 1.0F, 1.0F);
 
@@ -137,7 +137,9 @@ public class Block
     public Block.SoundType stepSound;
     public float blockParticleGravity;
     protected final Material blockMaterial;
-    protected final MapColor field_181083_K;
+
+    /** The Block's MapColor */
+    protected final MapColor blockMapColor;
 
     /**
      * Determines how much velocity is maintained while moving on top of this block
@@ -246,7 +248,7 @@ public class Block
      */
     public MapColor getMapColor(IBlockState state)
     {
-        return this.field_181083_K;
+        return this.blockMapColor;
     }
 
     /**
@@ -281,18 +283,18 @@ public class Block
         return state;
     }
 
-    public Block(Material p_i46399_1_, MapColor p_i46399_2_)
+    public Block(Material blockMaterialIn, MapColor blockMapColorIn)
     {
         this.enableStats = true;
         this.stepSound = soundTypeStone;
         this.blockParticleGravity = 1.0F;
         this.slipperiness = 0.6F;
-        this.blockMaterial = p_i46399_1_;
-        this.field_181083_K = p_i46399_2_;
+        this.blockMaterial = blockMaterialIn;
+        this.blockMapColor = blockMapColorIn;
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         this.fullBlock = this.isOpaqueCube();
         this.lightOpacity = this.isOpaqueCube() ? 255 : 0;
-        this.translucent = !p_i46399_1_.blocksLight();
+        this.translucent = !blockMaterialIn.blocksLight();
         this.blockState = this.createBlockState();
         this.setDefaultState(this.blockState.getBaseState());
     }
@@ -1034,7 +1036,10 @@ public class Block
     {
     }
 
-    public boolean func_181623_g()
+    /**
+     * Return true if an entity can be spawned inside the block (used to get the player's bed spawn location)
+     */
+    public boolean canSpawnInBlock()
     {
         return !this.blockMaterial.isSolid() && !this.blockMaterial.isLiquid();
     }
@@ -1118,6 +1123,9 @@ public class Block
         return Item.getItemFromBlock(this);
     }
 
+    /**
+     * Gets the meta to use for the Pick Block ItemStack result
+     */
     public int getDamageValue(World worldIn, BlockPos pos)
     {
         return this.damageDropped(worldIn.getBlockState(pos));

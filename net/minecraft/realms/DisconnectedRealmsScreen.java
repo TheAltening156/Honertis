@@ -11,11 +11,11 @@ public class DisconnectedRealmsScreen extends RealmsScreen
     private final RealmsScreen parent;
     private int textHeight;
 
-    public DisconnectedRealmsScreen(RealmsScreen p_i45742_1_, String p_i45742_2_, IChatComponent p_i45742_3_)
+    public DisconnectedRealmsScreen(RealmsScreen parentIn, String unlocalizedTitle, IChatComponent reasonIn)
     {
-        this.parent = p_i45742_1_;
-        this.title = getLocalizedString(p_i45742_2_);
-        this.reason = p_i45742_3_;
+        this.parent = parentIn;
+        this.title = getLocalizedString(unlocalizedTitle);
+        this.reason = reasonIn;
     }
 
     public void init()

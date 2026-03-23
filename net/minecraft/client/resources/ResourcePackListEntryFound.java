@@ -1,39 +1,39 @@
 package net.minecraft.client.resources;
 
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiScreenResourcePacks;
 
 public class ResourcePackListEntryFound extends ResourcePackListEntry
 {
-    private final ResourcePackRepository.Entry packEntry;
+    private final ResourcePackRepository.Entry field_148319_c;
 
-    public ResourcePackListEntryFound(GuiScreen resourcePacksGUIIn, ResourcePackRepository.Entry packEntry)
+    public ResourcePackListEntryFound(GuiScreenResourcePacks resourcePacksGUIIn, ResourcePackRepository.Entry p_i45053_2_)
     {
         super(resourcePacksGUIIn);
-        this.packEntry = packEntry;
+        this.field_148319_c = p_i45053_2_;
     }
 
     protected void bindTexture()
     {
-        this.packEntry.bindTexturePackIcon(this.mc.getTextureManager());
+        this.field_148319_c.bindTexturePackIcon(this.mc.getTextureManager());
     }
 
     protected int getPackFormat()
     {
-        return this.packEntry.getPackFormat();
+        return this.field_148319_c.getPackFormat();
     }
 
     protected String getPackDescription()
     {
-        return this.packEntry.getTexturePackDescription();
+        return this.field_148319_c.getTexturePackDescription();
     }
 
     protected String getPackName()
     {
-        return this.packEntry.getResourcePackName();
+        return this.field_148319_c.getResourcePackName();
     }
 
-    public ResourcePackRepository.Entry getPackEntry()
+    public ResourcePackRepository.Entry func_148318_i()
     {
-        return this.packEntry;
+        return this.field_148319_c;
     }
 }

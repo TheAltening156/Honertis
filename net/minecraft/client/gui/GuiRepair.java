@@ -220,7 +220,7 @@ public class GuiRepair extends GuiContainer implements ICrafting
     {
     }
 
-    public void func_175173_a(Container p_175173_1_, IInventory p_175173_2_)
+    public void sendAllWindowProperties(Container p_175173_1_, IInventory p_175173_2_)
     {
     }
 }

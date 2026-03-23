@@ -80,12 +80,12 @@ public class ModelIronGolem extends ModelBase
      * and legs, where par1 represents the time(so that arms and legs swing back and forth) and par2 represents how
      * "far" arms and legs can swing at most.
      */
-    public void setRotationAngles(float p_78087_1_, float p_78087_2_, float p_78087_3_, float p_78087_4_, float p_78087_5_, float p_78087_6_, Entity entityIn)
+    public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)
     {
-        this.ironGolemHead.rotateAngleY = p_78087_4_ / (180F / (float)Math.PI);
-        this.ironGolemHead.rotateAngleX = p_78087_5_ / (180F / (float)Math.PI);
-        this.ironGolemLeftLeg.rotateAngleX = -1.5F * this.func_78172_a(p_78087_1_, 13.0F) * p_78087_2_;
-        this.ironGolemRightLeg.rotateAngleX = 1.5F * this.func_78172_a(p_78087_1_, 13.0F) * p_78087_2_;
+        this.ironGolemHead.rotateAngleY = netHeadYaw / (180F / (float)Math.PI);
+        this.ironGolemHead.rotateAngleX = headPitch / (180F / (float)Math.PI);
+        this.ironGolemLeftLeg.rotateAngleX = -1.5F * this.func_78172_a(limbSwing, 13.0F) * limbSwingAmount;
+        this.ironGolemRightLeg.rotateAngleX = 1.5F * this.func_78172_a(limbSwing, 13.0F) * limbSwingAmount;
         this.ironGolemLeftLeg.rotateAngleY = 0.0F;
         this.ironGolemRightLeg.rotateAngleY = 0.0F;
     }

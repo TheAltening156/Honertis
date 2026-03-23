@@ -11,9 +11,9 @@ import net.minecraft.world.storage.WorldInfo;
 
 public class AnvilSaveHandler extends SaveHandler
 {
-    public AnvilSaveHandler(File savesDirectory, String p_i2142_2_, boolean storePlayerdata)
+    public AnvilSaveHandler(File savesDirectory, String directoryName, boolean storePlayerdata)
     {
-        super(savesDirectory, p_i2142_2_, storePlayerdata);
+        super(savesDirectory, directoryName, storePlayerdata);
     }
 
     /**

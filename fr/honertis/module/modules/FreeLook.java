@@ -1,18 +1,12 @@
 package fr.honertis.module.modules;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 
 import fr.honertis.event.EventRender2D;
-import fr.honertis.event.EventUpdate;
 import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.settings.BooleanSettings;
 import fr.honertis.settings.KeyBindSettings;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.play.server.S08PacketPlayerPosLook;
-import net.minecraft.util.MathHelper;
 
 public class FreeLook extends ModuleBase {
 	public KeyBindSettings key = new KeyBindSettings("module.freelook.key", 0);
@@ -53,6 +47,30 @@ public class FreeLook extends ModuleBase {
 	public void onRender2D(EventRender2D e) {
 		if (enabled) {
 		    mc.gameSettings.thirdPersonView = 1;
+		}
+	}
+	
+	@Override
+	public void update() {
+		if (hold.isEnabled()) {
+			if (mc.currentScreen == null) {
+    			if (Keyboard.getEventKey() == key.getKey()) {
+    				if (Keyboard.getEventKeyState()) {
+    					if (!isEnabled())
+    						toggle();
+    				} else {
+    					if (isEnabled()) {
+   							toggle();
+    					}
+    				}
+    			}
+
+    		} else {
+    			if (isEnabled()) {
+    				setEnabled(false);
+    				onDisable();
+    			}
+    		}
 		}
 	}
 

@@ -44,7 +44,7 @@ public class GuiModuleOptions extends GuiScreen {
 	
 	@Override
 	public boolean doesGuiPauseGame() {
-		return false;
+		return true;
 	}
 	
 	@Override
@@ -273,10 +273,10 @@ public class GuiModuleOptions extends GuiScreen {
 								}
 								if (s instanceof KeyBindSettings) {
 									KeyBindSettings ss = (KeyBindSettings) s;
-									String sn = ss.getName() + "  :  " + Keyboard.getKeyName(ss.getKey());
+									String keyName = ss.getName() + "  :  " + Keyboard.getKeyName(ss.getKey());
 									int sx = settsX + 36;
 									int sy = settsY;
-									if (isHovered(sx - 31, sy, sx + mc.fontRendererObj.getStringWidth(ss.getName() + "  :  " + Keyboard.getKeyName(ss.getKey())) - 26, sy + 10, mouseX, mouseY)) {
+									if (isHovered(sx - 31, sy, sx + mc.fontRendererObj.getStringWidth(keyName) - 26, sy + 10, mouseX, mouseY)) {
 										ss.change();
 									}
 								}

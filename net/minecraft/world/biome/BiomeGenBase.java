@@ -306,17 +306,17 @@ public abstract class BiomeGenBase
         return this;
     }
 
-    protected BiomeGenBase func_150557_a(int p_150557_1_, boolean p_150557_2_)
+    protected BiomeGenBase func_150557_a(int colorIn, boolean p_150557_2_)
     {
-        this.color = p_150557_1_;
+        this.color = colorIn;
 
         if (p_150557_2_)
         {
-            this.field_150609_ah = (p_150557_1_ & 16711422) >> 1;
+            this.field_150609_ah = (colorIn & 16711422) >> 1;
         }
         else
         {
-            this.field_150609_ah = p_150557_1_;
+            this.field_150609_ah = colorIn;
         }
 
         return this;
@@ -329,7 +329,7 @@ public abstract class BiomeGenBase
     {
         p_76731_1_ = p_76731_1_ / 3.0F;
         p_76731_1_ = MathHelper.clamp_float(p_76731_1_, -1.0F, 1.0F);
-        return MathHelper.func_181758_c(0.62222224F - p_76731_1_ * 0.05F, 0.5F + p_76731_1_ * 0.1F, 1.0F);
+        return MathHelper.hsvToRGB(0.62222224F - p_76731_1_ * 0.05F, 0.5F + p_76731_1_ * 0.1F, 1.0F);
     }
 
     public List<BiomeGenBase.SpawnListEntry> getSpawnableList(EnumCreatureType creatureType)
@@ -362,9 +362,9 @@ public abstract class BiomeGenBase
     }
 
     /**
-     * Return true if the biome supports lightning bolt spawn, either by have the bolts enabled and have rain enabled.
+     * Check if rain can occur in biome
      */
-    public boolean canSpawnLightningBolt()
+    public boolean canRain()
     {
         return this.isSnowyBiome() ? false : this.enableRain;
     }
@@ -441,20 +441,30 @@ public abstract class BiomeGenBase
         return this.enableSnow;
     }
 
-    public void genTerrainBlocks(World worldIn, Random rand, ChunkPrimer chunkPrimerIn, int p_180622_4_, int p_180622_5_, double p_180622_6_)
+    public void genTerrainBlocks(World worldIn, Random rand, ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal)
     {
-        this.generateBiomeTerrain(worldIn, rand, chunkPrimerIn, p_180622_4_, p_180622_5_, p_180622_6_);
+        this.generateBiomeTerrain(worldIn, rand, chunkPrimerIn, x, z, noiseVal);
     }
 
-    public final void generateBiomeTerrain(World worldIn, Random rand, ChunkPrimer chunkPrimerIn, int p_180628_4_, int p_180628_5_, double p_180628_6_)
+    /**
+     * Given x, z coordinates, we count down all the y positions starting at 255 and working our way down. When we hit a
+     * non-air block, we replace it with this.topBlock (default grass, descendants may set otherwise), and then a
+     * relatively shallow layer of blocks of type this.fillerBlock (default dirt). A random set of blocks below y == 5
+     * (but always including y == 0) is replaced with bedrock.
+     *  
+     * If we don't hit non-air until somewhat below sea level, we top with gravel and fill down with stone.
+     *  
+     * If this.fillerBlock is red sand, we replace some of that with red sandstone.
+     */
+    public final void generateBiomeTerrain(World worldIn, Random rand, ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal)
     {
-        int i = worldIn.func_181545_F();
+        int i = worldIn.getSeaLevel();
         IBlockState iblockstate = this.topBlock;
         IBlockState iblockstate1 = this.fillerBlock;
         int j = -1;
-        int k = (int)(p_180628_6_ / 3.0D + 3.0D + rand.nextDouble() * 0.25D);
-        int l = p_180628_4_ & 15;
-        int i1 = p_180628_5_ & 15;
+        int k = (int)(noiseVal / 3.0D + 3.0D + rand.nextDouble() * 0.25D);
+        int l = x & 15;
+        int i1 = z & 15;
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
         for (int j1 = 255; j1 >= 0; --j1)
@@ -488,7 +498,7 @@ public abstract class BiomeGenBase
 
                         if (j1 < i && (iblockstate == null || iblockstate.getBlock().getMaterial() == Material.air))
                         {
-                            if (this.getFloatTemperature(blockpos$mutableblockpos.func_181079_c(p_180628_4_, j1, p_180628_5_)) < 0.15F)
+                            if (this.getFloatTemperature(blockpos$mutableblockpos.set(x, j1, z)) < 0.15F)
                             {
                                 iblockstate = Blocks.ice.getDefaultState();
                             }

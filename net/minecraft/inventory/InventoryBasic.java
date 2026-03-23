@@ -13,7 +13,7 @@ public class InventoryBasic implements IInventory
     private String inventoryTitle;
     private int slotsCount;
     private ItemStack[] inventoryContents;
-    private List<IInvBasic> field_70480_d;
+    private List<IInvBasic> changeListeners;
     private boolean hasCustomName;
 
     public InventoryBasic(String title, boolean customName, int slotCount)
@@ -29,19 +29,29 @@ public class InventoryBasic implements IInventory
         this(title.getUnformattedText(), true, slotCount);
     }
 
-    public void func_110134_a(IInvBasic p_110134_1_)
+    /**
+     * Add a listener that will be notified when any item in this inventory is modified.
+     *  
+     * @param listener the listener to add
+     */
+    public void addInventoryChangeListener(IInvBasic listener)
     {
-        if (this.field_70480_d == null)
+        if (this.changeListeners == null)
         {
-            this.field_70480_d = Lists.<IInvBasic>newArrayList();
+            this.changeListeners = Lists.<IInvBasic>newArrayList();
         }
 
-        this.field_70480_d.add(p_110134_1_);
+        this.changeListeners.add(listener);
     }
 
-    public void func_110132_b(IInvBasic p_110132_1_)
+    /**
+     * removes the specified IInvBasic from receiving further change notices
+     *  
+     * @param listener the listener to remove
+     */
+    public void removeInventoryChangeListener(IInvBasic listener)
     {
-        this.field_70480_d.remove(p_110132_1_);
+        this.changeListeners.remove(listener);
     }
 
     /**
@@ -168,7 +178,7 @@ public class InventoryBasic implements IInventory
     }
 
     /**
-     * Gets the name of this command sender (usually username, but possibly "Rcon")
+     * Get the name of this object. For players this returns their username
      */
     public String getName()
     {
@@ -214,11 +224,11 @@ public class InventoryBasic implements IInventory
      */
     public void markDirty()
     {
-        if (this.field_70480_d != null)
+        if (this.changeListeners != null)
         {
-            for (int i = 0; i < this.field_70480_d.size(); ++i)
+            for (int i = 0; i < this.changeListeners.size(); ++i)
             {
-                ((IInvBasic)this.field_70480_d.get(i)).onInventoryChanged(this);
+                ((IInvBasic)this.changeListeners.get(i)).onInventoryChanged(this);
             }
         }
     }

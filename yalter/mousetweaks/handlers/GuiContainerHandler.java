@@ -1,20 +1,3 @@
-/*
- * Decompiled with CFR 0.150.
- * 
- * Could not load the following classes:
- *  net.minecraft.client.Minecraft
- *  net.minecraft.client.gui.ScaledResolution
- *  net.minecraft.client.gui.inventory.GuiContainer
- *  net.minecraft.crash.CrashReport
- *  net.minecraft.entity.player.EntityPlayer
- *  net.minecraft.inventory.ContainerRepair
- *  net.minecraft.inventory.Slot
- *  net.minecraft.inventory.SlotCrafting
- *  net.minecraft.inventory.SlotFurnaceOutput
- *  net.minecraft.inventory.SlotMerchantResult
- *  net.minecraft.util.ReportedException
- *  org.lwjgl.input.Mouse
- */
 package yalter.mousetweaks.handlers;
 
 import java.lang.reflect.InvocationTargetException;
@@ -23,7 +6,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.crash.CrashReport;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerRepair;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotCrafting;
@@ -82,19 +64,19 @@ implements IGuiScreenHandler {
     @Override
     public Slot getSlotUnderMouse() {
         try {
-            return (Slot)Reflection.guiContainerClass.invokeMethod((Object)this.guiContainer, Constants.GETSLOTATPOSITION_NAME.forgeName, this.getRequiredMouseX(), this.getRequiredMouseY());
+            return (Slot)Reflection.guiContainerClass.invokeMethod(this.guiContainer, Constants.GETSLOTATPOSITION_NAME.forgeName, this.getRequiredMouseX(), this.getRequiredMouseY());
         }
         catch (InvocationTargetException e) {
-            CrashReport crashreport = CrashReport.makeCrashReport((Throwable)e, (String)"GuiContainer.getSlotAtPosition() threw an exception when called from MouseTweaks");
+            CrashReport crashreport = CrashReport.makeCrashReport(e, "GuiContainer.getSlotAtPosition() threw an exception when called from MouseTweaks");
             throw new ReportedException(crashreport);
         }
     }
 
     @Override
     public boolean disableRMBDraggingFunctionality() {
-        Reflection.guiContainerClass.setFieldValue((Object)this.guiContainer, Constants.IGNOREMOUSEUP_NAME.forgeName, true);
-        if (((Boolean)Reflection.guiContainerClass.getFieldValue((Object)this.guiContainer, Constants.DRAGSPLITTING_NAME.forgeName)).booleanValue() && (Integer)Reflection.guiContainerClass.getFieldValue((Object)this.guiContainer, Constants.DRAGSPLITTINGBUTTON_NAME.forgeName) == 1) {
-            Reflection.guiContainerClass.setFieldValue((Object)this.guiContainer, Constants.DRAGSPLITTING_NAME.forgeName, false);
+        Reflection.guiContainerClass.setFieldValue(this.guiContainer, Constants.IGNOREMOUSEUP_NAME.forgeName, true);
+        if (((Boolean)Reflection.guiContainerClass.getFieldValue(this.guiContainer, Constants.DRAGSPLITTING_NAME.forgeName)).booleanValue() && (Integer)Reflection.guiContainerClass.getFieldValue(this.guiContainer, Constants.DRAGSPLITTINGBUTTON_NAME.forgeName) == 1) {
+            Reflection.guiContainerClass.setFieldValue(this.guiContainer, Constants.DRAGSPLITTING_NAME.forgeName, false);
             return true;
         }
         return false;
@@ -102,7 +84,7 @@ implements IGuiScreenHandler {
 
     @Override
     public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-        this.mc.playerController.windowClick(this.guiContainer.inventorySlots.windowId, slot.slotNumber, mouseButton.getValue(), shiftPressed ? 1 : 0, (EntityPlayer)this.mc.thePlayer);
+        this.mc.playerController.windowClick(this.guiContainer.inventorySlots.windowId, slot.slotNumber, mouseButton.getValue(), shiftPressed ? 1 : 0, this.mc.thePlayer);
     }
 
     @Override

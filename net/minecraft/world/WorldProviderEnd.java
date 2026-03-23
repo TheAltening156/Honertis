@@ -31,7 +31,7 @@ public class WorldProviderEnd extends WorldProvider
     /**
      * Calculates the angle of sun and moon in the sky relative to a specified time (usually worldTime)
      */
-    public float calculateCelestialAngle(long p_76563_1_, float p_76563_3_)
+    public float calculateCelestialAngle(long worldTime, float partialTicks)
     {
         return 0.0F;
     }

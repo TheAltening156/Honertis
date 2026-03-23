@@ -401,7 +401,7 @@ public abstract class ServerConfigurationManager
         }
         else
         {
-            return this.playerEntityList.size() >= this.maxPlayers && !this.func_183023_f(profile) ? "The server is full!" : null;
+            return this.playerEntityList.size() >= this.maxPlayers && !this.bypassesPlayerLimit(profile) ? "The server is full!" : null;
         }
     }
 
@@ -477,7 +477,7 @@ public abstract class ServerConfigurationManager
         entityplayermp.playerNetServerHandler = playerIn.playerNetServerHandler;
         entityplayermp.clonePlayer(playerIn, conqueredEnd);
         entityplayermp.setEntityId(playerIn.getEntityId());
-        entityplayermp.func_174817_o(playerIn);
+        entityplayermp.setCommandStats(playerIn);
         WorldServer worldserver = this.mcServer.worldServerForDimension(playerIn.dimension);
         this.setPlayerGameTypeBasedOnOther(entityplayermp, playerIn, worldserver);
 
@@ -545,35 +545,38 @@ public abstract class ServerConfigurationManager
 
     /**
      * Transfers an entity from a world to another world.
+     *  
+     * @param oldWorldIn The world transfering from
+     * @param toWorldIn The world transfering the entity to
      */
-    public void transferEntityToWorld(Entity entityIn, int p_82448_2_, WorldServer p_82448_3_, WorldServer p_82448_4_)
+    public void transferEntityToWorld(Entity entityIn, int p_82448_2_, WorldServer oldWorldIn, WorldServer toWorldIn)
     {
         double d0 = entityIn.posX;
         double d1 = entityIn.posZ;
         double d2 = 8.0D;
         float f = entityIn.rotationYaw;
-        p_82448_3_.theProfiler.startSection("moving");
+        oldWorldIn.theProfiler.startSection("moving");
 
         if (entityIn.dimension == -1)
         {
-            d0 = MathHelper.clamp_double(d0 / d2, p_82448_4_.getWorldBorder().minX() + 16.0D, p_82448_4_.getWorldBorder().maxX() - 16.0D);
-            d1 = MathHelper.clamp_double(d1 / d2, p_82448_4_.getWorldBorder().minZ() + 16.0D, p_82448_4_.getWorldBorder().maxZ() - 16.0D);
+            d0 = MathHelper.clamp_double(d0 / d2, toWorldIn.getWorldBorder().minX() + 16.0D, toWorldIn.getWorldBorder().maxX() - 16.0D);
+            d1 = MathHelper.clamp_double(d1 / d2, toWorldIn.getWorldBorder().minZ() + 16.0D, toWorldIn.getWorldBorder().maxZ() - 16.0D);
             entityIn.setLocationAndAngles(d0, entityIn.posY, d1, entityIn.rotationYaw, entityIn.rotationPitch);
 
             if (entityIn.isEntityAlive())
             {
-                p_82448_3_.updateEntityWithOptionalForce(entityIn, false);
+                oldWorldIn.updateEntityWithOptionalForce(entityIn, false);
             }
         }
         else if (entityIn.dimension == 0)
         {
-            d0 = MathHelper.clamp_double(d0 * d2, p_82448_4_.getWorldBorder().minX() + 16.0D, p_82448_4_.getWorldBorder().maxX() - 16.0D);
-            d1 = MathHelper.clamp_double(d1 * d2, p_82448_4_.getWorldBorder().minZ() + 16.0D, p_82448_4_.getWorldBorder().maxZ() - 16.0D);
+            d0 = MathHelper.clamp_double(d0 * d2, toWorldIn.getWorldBorder().minX() + 16.0D, toWorldIn.getWorldBorder().maxX() - 16.0D);
+            d1 = MathHelper.clamp_double(d1 * d2, toWorldIn.getWorldBorder().minZ() + 16.0D, toWorldIn.getWorldBorder().maxZ() - 16.0D);
             entityIn.setLocationAndAngles(d0, entityIn.posY, d1, entityIn.rotationYaw, entityIn.rotationPitch);
 
             if (entityIn.isEntityAlive())
             {
-                p_82448_3_.updateEntityWithOptionalForce(entityIn, false);
+                oldWorldIn.updateEntityWithOptionalForce(entityIn, false);
             }
         }
         else
@@ -582,11 +585,11 @@ public abstract class ServerConfigurationManager
 
             if (p_82448_2_ == 1)
             {
-                blockpos = p_82448_4_.getSpawnPoint();
+                blockpos = toWorldIn.getSpawnPoint();
             }
             else
             {
-                blockpos = p_82448_4_.getSpawnCoordinate();
+                blockpos = toWorldIn.getSpawnCoordinate();
             }
 
             d0 = (double)blockpos.getX();
@@ -596,30 +599,30 @@ public abstract class ServerConfigurationManager
 
             if (entityIn.isEntityAlive())
             {
-                p_82448_3_.updateEntityWithOptionalForce(entityIn, false);
+                oldWorldIn.updateEntityWithOptionalForce(entityIn, false);
             }
         }
 
-        p_82448_3_.theProfiler.endSection();
+        oldWorldIn.theProfiler.endSection();
 
         if (p_82448_2_ != 1)
         {
-            p_82448_3_.theProfiler.startSection("placing");
+            oldWorldIn.theProfiler.startSection("placing");
             d0 = (double)MathHelper.clamp_int((int)d0, -29999872, 29999872);
             d1 = (double)MathHelper.clamp_int((int)d1, -29999872, 29999872);
 
             if (entityIn.isEntityAlive())
             {
                 entityIn.setLocationAndAngles(d0, entityIn.posY, d1, entityIn.rotationYaw, entityIn.rotationPitch);
-                p_82448_4_.getDefaultTeleporter().placeInPortal(entityIn, f);
-                p_82448_4_.spawnEntityInWorld(entityIn);
-                p_82448_4_.updateEntityWithOptionalForce(entityIn, false);
+                toWorldIn.getDefaultTeleporter().placeInPortal(entityIn, f);
+                toWorldIn.spawnEntityInWorld(entityIn);
+                toWorldIn.updateEntityWithOptionalForce(entityIn, false);
             }
 
-            p_82448_3_.theProfiler.endSection();
+            oldWorldIn.theProfiler.endSection();
         }
 
-        entityIn.setWorld(p_82448_4_);
+        entityIn.setWorld(toWorldIn);
     }
 
     /**
@@ -757,7 +760,7 @@ public abstract class ServerConfigurationManager
 
     public void addOp(GameProfile profile)
     {
-        this.ops.addEntry(new UserListOpsEntry(profile, this.mcServer.getOpPermissionLevel(), this.ops.func_183026_b(profile)));
+        this.ops.addEntry(new UserListOpsEntry(profile, this.mcServer.getOpPermissionLevel(), this.ops.bypassesPlayerLimit(profile)));
     }
 
     public void removeOp(GameProfile profile)
@@ -1057,7 +1060,7 @@ public abstract class ServerConfigurationManager
         }
     }
 
-    public List<EntityPlayerMP> func_181057_v()
+    public List<EntityPlayerMP> getPlayerList()
     {
         return this.playerEntityList;
     }
@@ -1070,7 +1073,7 @@ public abstract class ServerConfigurationManager
         return (EntityPlayerMP)this.uuidToPlayerMap.get(playerUUID);
     }
 
-    public boolean func_183023_f(GameProfile p_183023_1_)
+    public boolean bypassesPlayerLimit(GameProfile p_183023_1_)
     {
         return false;
     }

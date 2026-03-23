@@ -55,7 +55,7 @@ public class GuiTextField extends Gui
     /** True if this textbox is visible */
     private boolean visible = true;
     private GuiPageButtonList.GuiResponder field_175210_x;
-    private Predicate<String> field_175209_y = Predicates.<String>alwaysTrue();
+    private Predicate<String> validator = Predicates.<String>alwaysTrue();
 
     public GuiTextField(int componentId, FontRenderer fontrendererObj, int x, int y, int par5Width, int par6Height)
     {
@@ -85,7 +85,7 @@ public class GuiTextField extends Gui
      */
     public void setText(String p_146180_1_)
     {
-        if (this.field_175209_y.apply(p_146180_1_))
+        if (this.validator.apply(p_146180_1_))
         {
             if (p_146180_1_.length() > this.maxStringLength)
             {
@@ -118,9 +118,9 @@ public class GuiTextField extends Gui
         return this.text.substring(i, j);
     }
 
-    public void func_175205_a(Predicate<String> p_175205_1_)
+    public void setValidator(Predicate<String> theValidator)
     {
-        this.field_175209_y = p_175205_1_;
+        this.validator = theValidator;
     }
 
     /**
@@ -156,7 +156,7 @@ public class GuiTextField extends Gui
             s = s + this.text.substring(j);
         }
 
-        if (this.field_175209_y.apply(s))
+        if (this.validator.apply(s))
         {
             this.text = s;
             this.moveCursorBy(i - this.selectionEnd + l);
@@ -215,7 +215,7 @@ public class GuiTextField extends Gui
                     s = s + this.text.substring(j);
                 }
 
-                if (this.field_175209_y.apply(s))
+                if (this.validator.apply(s))
                 {
                     this.text = s;
 

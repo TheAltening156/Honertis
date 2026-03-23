@@ -78,7 +78,7 @@ public class GuiScreenAddServer extends GuiScreen
         this.serverIPField = new GuiTextField(1, this.fontRendererObj, this.width / 2 - 100, 106, 200, 20);
         this.serverIPField.setMaxStringLength(128);
         this.serverIPField.setText(this.serverData.serverIP);
-        this.serverIPField.func_175205_a(this.field_181032_r);
+        this.serverIPField.setValidator(this.field_181032_r);
         ((GuiButton)this.buttonList.get(0)).enabled = this.serverIPField.getText().length() > 0 && this.serverIPField.getText().split(":").length > 0 && this.serverNameField.getText().length() > 0;
     }
 

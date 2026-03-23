@@ -25,9 +25,9 @@ public class BiomeGenMesa extends BiomeGenBase
     private boolean field_150626_aH;
     private boolean field_150620_aI;
 
-    public BiomeGenMesa(int p_i45380_1_, boolean p_i45380_2_, boolean p_i45380_3_)
+    public BiomeGenMesa(int id, boolean p_i45380_2_, boolean p_i45380_3_)
     {
-        super(p_i45380_1_);
+        super(id);
         this.field_150626_aH = p_i45380_2_;
         this.field_150620_aI = p_i45380_3_;
         this.setDisableRain();
@@ -68,7 +68,7 @@ public class BiomeGenMesa extends BiomeGenBase
         super.decorate(worldIn, rand, pos);
     }
 
-    public void genTerrainBlocks(World worldIn, Random rand, ChunkPrimer chunkPrimerIn, int p_180622_4_, int p_180622_5_, double p_180622_6_)
+    public void genTerrainBlocks(World worldIn, Random rand, ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal)
     {
         if (this.field_150621_aC == null || this.field_150622_aD != worldIn.getSeed())
         {
@@ -87,9 +87,9 @@ public class BiomeGenMesa extends BiomeGenBase
 
         if (this.field_150626_aH)
         {
-            int i = (p_180622_4_ & -16) + (p_180622_5_ & 15);
-            int j = (p_180622_5_ & -16) + (p_180622_4_ & 15);
-            double d0 = Math.min(Math.abs(p_180622_6_), this.field_150623_aE.func_151601_a((double)i * 0.25D, (double)j * 0.25D));
+            int i = (x & -16) + (z & 15);
+            int j = (z & -16) + (x & 15);
+            double d0 = Math.min(Math.abs(noiseVal), this.field_150623_aE.func_151601_a((double)i * 0.25D, (double)j * 0.25D));
 
             if (d0 > 0.0D)
             {
@@ -107,13 +107,13 @@ public class BiomeGenMesa extends BiomeGenBase
             }
         }
 
-        int j1 = p_180622_4_ & 15;
-        int k1 = p_180622_5_ & 15;
-        int l1 = worldIn.func_181545_F();
+        int j1 = x & 15;
+        int k1 = z & 15;
+        int l1 = worldIn.getSeaLevel();
         IBlockState iblockstate = Blocks.stained_hardened_clay.getDefaultState();
         IBlockState iblockstate3 = this.fillerBlock;
-        int k = (int)(p_180622_6_ / 3.0D + 3.0D + rand.nextDouble() * 0.25D);
-        boolean flag = Math.cos(p_180622_6_ / 3.0D * Math.PI) > 0.0D;
+        int k = (int)(noiseVal / 3.0D + 3.0D + rand.nextDouble() * 0.25D);
+        boolean flag = Math.cos(noiseVal / 3.0D * Math.PI) > 0.0D;
         int l = -1;
         boolean flag1 = false;
 
@@ -197,7 +197,7 @@ public class BiomeGenMesa extends BiomeGenBase
                                 }
                                 else
                                 {
-                                    iblockstate4 = this.func_180629_a(p_180622_4_, i1, p_180622_5_);
+                                    iblockstate4 = this.func_180629_a(x, i1, z);
                                 }
                             }
                             else
@@ -218,7 +218,7 @@ public class BiomeGenMesa extends BiomeGenBase
                         }
                         else
                         {
-                            IBlockState iblockstate2 = this.func_180629_a(p_180622_4_, i1, p_180622_5_);
+                            IBlockState iblockstate2 = this.func_180629_a(x, i1, z);
                             chunkPrimerIn.setBlockState(k1, i1, j1, iblockstate2);
                         }
                     }

@@ -1,70 +1,39 @@
 package fr.honertis.guis.music;
 
-import static net.minecraft.client.renderer.GlStateManager.*;
-
 import static fr.honertis.utils.Utils.*;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
-import javax.imageio.ImageIO;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import fr.honertis.Honertis;
-import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.module.addons.MiniPlayer;
-import fr.honertis.settings.NumberSettings;
-import fr.honertis.utils.DrawUtils;
+import fr.honertis.utils.ChatUtils;
 import fr.honertis.utils.LangManager;
 import fr.honertis.utils.Utils;
 import fr.honertis.utils.WebUtils;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.Util.EnumOS;
 
@@ -126,9 +95,7 @@ public class MusicPlayerGui extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		if (isYoutube && Util.getOSType() == EnumOS.OSX && !Utils.isMacOSAtLeast(10,15)) {
-			SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null,
-					LangManager.format("gui.musicPlayer.macTooOld1") + getVersionFromInt(0) + "." + Utils.getVersionFromInt(1) + LangManager.format("gui.musicPlayer.macTooOld2"),
-					LangManager.format("gui.error"), JOptionPane.ERROR_MESSAGE));
+			ChatUtils.printChat(LangManager.format("gui.error") + " " + LangManager.format("gui.musicPlayer.macTooOld1") + getVersionFromInt(0) + "." + Utils.getVersionFromInt(1) + LangManager.format("gui.musicPlayer.macTooOld2"));
 			isYoutube = false;
 			refreshSongList();
 		}
@@ -194,8 +161,8 @@ public class MusicPlayerGui extends GuiScreen {
 
         int scissorX = (int) ((posX + 8) * scaleFactor);
         int scissorY = (int) ((sr.getScaledHeight() - posY - 208) * scaleFactor);
-        int scissorWidth = (int) ((275-6) * scaleFactor);
-        int scissorHeight = (int) (180 * scaleFactor);
+        int scissorWidth = (int) ((contentWidth-6) * scaleFactor);
+        int scissorHeight = 180 * scaleFactor;
 
         GlStateManager.pushMatrix();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -205,7 +172,7 @@ public class MusicPlayerGui extends GuiScreen {
         double songPosY = contentY + 5 - scrollOffset;
         int count = 0;
         for (SongItem song : songs) {
-            song.drawImageAndText(songPosX, songPosY, imageWidth, imageHeight, lineSpacing, posX, posY, mouseX, mouseY);
+            song.drawImageAndText(songPosX, songPosY, imageWidth, imageHeight, posX, posY, mouseX, mouseY);
 
             count++;
             if (count % imagesPerRow == 0) {
@@ -342,8 +309,8 @@ public class MusicPlayerGui extends GuiScreen {
 
         int scissorX = (int) (posX * scaleFactor);
         int scissorY = (int) ((sr.getScaledHeight() - posY - 208) * scaleFactor);
-        int scissorWidth = (int) (275 * scaleFactor);
-        int scissorHeight = (int) (180 * scaleFactor);
+        int scissorWidth = (int) (contentWidth * scaleFactor);
+        int scissorHeight = 180 * scaleFactor;
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor(scissorX, scissorY, scissorWidth, scissorHeight);
         
@@ -352,13 +319,9 @@ public class MusicPlayerGui extends GuiScreen {
         int count = 0;
         if (isHovered(posX + 5, posY + 28, posX + 280, posY + 207, mouseX, mouseY)) {
             for (SongItem song : songs) {
-            	song.mouseClicked(songPosX, songPosY, imageWidth, imageHeight, lineSpacing, mouseX, mouseY);
+            	song.mouseClicked(songPosX, songPosY, imageWidth, imageHeight, mouseX, mouseY);
             	if (song.hover && mouseButton == 0 && !song.getTitle().equals("Error while getting videos")) {
-            		try {
-						downloadAndPlaySong(song.getVideoId(), "down" + song.getVideoId() + ".wav", song);
-					} catch (IOException | UnsupportedAudioFileException | LineUnavailableException e) {
-						e.printStackTrace();
-					}
+					downloadAndPlaySong(song.getVideoId(), "down" + song.getVideoId() + ".wav", song);
             	}
             	 count++;
  	            if (count % imagesPerRow == 0) {
@@ -466,7 +429,7 @@ public class MusicPlayerGui extends GuiScreen {
         }
     }
 	
-	private void downloadAndPlaySong(String videoUrl, String outputName, SongItem song) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+	private void downloadAndPlaySong(String videoUrl, String outputName, SongItem song) {
         new Thread(() -> {
 	        if (!BIN_DIR.exists()) BIN_DIR.mkdirs();
 	        if (!songDir.exists()) songDir.mkdirs();
@@ -521,10 +484,8 @@ public class MusicPlayerGui extends GuiScreen {
 			     			     				ytState = "Unable to play song.";
 			     			     				if (line1.contains("ffmpeg")) {
 			     			     					if (!ffmpeg.exists()) {
-			    			     			        	SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(null, 
-			    			     			        			LangManager.format("gui.ffmpegNotFound"),
-			    			     			        			LangManager.format("gui.error"), JOptionPane.ERROR_MESSAGE));
-			    			     			        }
+			     			     						ChatUtils.printChat(LangManager.format("gui.error") + " " + LangManager.format("gui.ffmpegNotFound"));
+			     			     					}
 			     			     				}
 			     			                }
 			     			            }
@@ -607,7 +568,7 @@ public class MusicPlayerGui extends GuiScreen {
 		Honertis.INSTANCE.playingSong.releaseClick();
 		for (ModuleBase m : Honertis.INSTANCE.modulesManager.getModulesPriority()) 
 			if (!(m instanceof MiniPlayer))
-				if (m.mouseReleased(mouseX, mouseY)) 
+				if (m.mouseReleased()) 
 					break;
 		
 	}

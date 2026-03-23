@@ -12,7 +12,7 @@ public class BiomeCache
 
     /** The last time this BiomeCache was cleaned, in milliseconds. */
     private long lastCleanupTime;
-    private LongHashMap cacheMap = new LongHashMap();
+    private LongHashMap<BiomeCache.Block> cacheMap = new LongHashMap();
     private List<BiomeCache.Block> cache = Lists.<BiomeCache.Block>newArrayList();
 
     public BiomeCache(WorldChunkManager chunkManagerIn)

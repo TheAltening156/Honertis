@@ -91,9 +91,9 @@ public class BlockChest extends BlockContainer
     {
         this.checkForSurroundingChests(worldIn, pos, state);
 
-        for (Object enumfacing : EnumFacing.Plane.HORIZONTAL)
+        for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
         {
-            BlockPos blockpos = pos.offset((EnumFacing) enumfacing);
+            BlockPos blockpos = pos.offset(enumfacing);
             IBlockState iblockstate = worldIn.getBlockState(blockpos);
 
             if (iblockstate.getBlock() == this)
@@ -278,9 +278,9 @@ public class BlockChest extends BlockContainer
     {
         EnumFacing enumfacing = null;
 
-        for (Object enumfacing1 : EnumFacing.Plane.HORIZONTAL)
+        for (EnumFacing enumfacing1 : EnumFacing.Plane.HORIZONTAL)
         {
-            IBlockState iblockstate = worldIn.getBlockState(pos.offset((EnumFacing) enumfacing1));
+            IBlockState iblockstate = worldIn.getBlockState(pos.offset(enumfacing1));
 
             if (iblockstate.getBlock() == this)
             {
@@ -295,7 +295,7 @@ public class BlockChest extends BlockContainer
                     break;
                 }
 
-                enumfacing = (EnumFacing) enumfacing1;
+                enumfacing = enumfacing1;
             }
         }
 
@@ -385,9 +385,9 @@ public class BlockChest extends BlockContainer
         }
         else
         {
-            for (Object enumfacing : EnumFacing.Plane.HORIZONTAL)
+            for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
             {
-                if (worldIn.getBlockState(pos.offset((EnumFacing) enumfacing)).getBlock() == this)
+                if (worldIn.getBlockState(pos.offset(enumfacing)).getBlock() == this)
                 {
                     return true;
                 }
@@ -470,9 +470,9 @@ public class BlockChest extends BlockContainer
             }
             else
             {
-                for (Object enumfacing : EnumFacing.Plane.HORIZONTAL)
+                for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
                 {
-                    BlockPos blockpos = pos.offset((EnumFacing) enumfacing);
+                    BlockPos blockpos = pos.offset(enumfacing);
                     Block block = worldIn.getBlockState(blockpos).getBlock();
 
                     if (block == this)

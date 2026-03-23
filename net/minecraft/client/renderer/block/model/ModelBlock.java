@@ -35,24 +35,24 @@ public class ModelBlock
     protected ModelBlock parent;
     protected ResourceLocation parentLocation;
 
-    public static ModelBlock deserialize(Reader p_178307_0_)
+    public static ModelBlock deserialize(Reader readerIn)
     {
-        return (ModelBlock)SERIALIZER.fromJson(p_178307_0_, ModelBlock.class);
+        return (ModelBlock)SERIALIZER.fromJson(readerIn, ModelBlock.class);
     }
 
-    public static ModelBlock deserialize(String p_178294_0_)
+    public static ModelBlock deserialize(String jsonString)
     {
-        return deserialize(new StringReader(p_178294_0_));
+        return deserialize(new StringReader(jsonString));
     }
 
-    protected ModelBlock(List<BlockPart> p_i46225_1_, Map<String, String> p_i46225_2_, boolean p_i46225_3_, boolean p_i46225_4_, ItemCameraTransforms p_i46225_5_)
+    protected ModelBlock(List<BlockPart> elementsIn, Map<String, String> texturesIn, boolean ambientOcclusionIn, boolean gui3dIn, ItemCameraTransforms cameraTransformsIn)
     {
-        this((ResourceLocation)null, p_i46225_1_, p_i46225_2_, p_i46225_3_, p_i46225_4_, p_i46225_5_);
+        this((ResourceLocation)null, elementsIn, texturesIn, ambientOcclusionIn, gui3dIn, cameraTransformsIn);
     }
 
-    protected ModelBlock(ResourceLocation p_i46226_1_, Map<String, String> p_i46226_2_, boolean p_i46226_3_, boolean p_i46226_4_, ItemCameraTransforms p_i46226_5_)
+    protected ModelBlock(ResourceLocation parentLocationIn, Map<String, String> texturesIn, boolean ambientOcclusionIn, boolean gui3dIn, ItemCameraTransforms cameraTransformsIn)
     {
-        this(p_i46226_1_, Collections.<BlockPart>emptyList(), p_i46226_2_, p_i46226_3_, p_i46226_4_, p_i46226_5_);
+        this(parentLocationIn, Collections.<BlockPart>emptyList(), texturesIn, ambientOcclusionIn, gui3dIn, cameraTransformsIn);
     }
 
     private ModelBlock(ResourceLocation parentLocationIn, List<BlockPart> elementsIn, Map<String, String> texturesIn, boolean ambientOcclusionIn, boolean gui3dIn, ItemCameraTransforms cameraTransformsIn)
@@ -163,20 +163,20 @@ public class ModelBlock
         return this.hasParent() ? this.parent.getRootModel() : this;
     }
 
-    public ItemCameraTransforms func_181682_g()
+    public ItemCameraTransforms getAllTransforms()
     {
-        ItemTransformVec3f itemtransformvec3f = this.func_181681_a(ItemCameraTransforms.TransformType.THIRD_PERSON);
-        ItemTransformVec3f itemtransformvec3f1 = this.func_181681_a(ItemCameraTransforms.TransformType.FIRST_PERSON);
-        ItemTransformVec3f itemtransformvec3f2 = this.func_181681_a(ItemCameraTransforms.TransformType.HEAD);
-        ItemTransformVec3f itemtransformvec3f3 = this.func_181681_a(ItemCameraTransforms.TransformType.GUI);
-        ItemTransformVec3f itemtransformvec3f4 = this.func_181681_a(ItemCameraTransforms.TransformType.GROUND);
-        ItemTransformVec3f itemtransformvec3f5 = this.func_181681_a(ItemCameraTransforms.TransformType.FIXED);
+        ItemTransformVec3f itemtransformvec3f = this.getTransform(ItemCameraTransforms.TransformType.THIRD_PERSON);
+        ItemTransformVec3f itemtransformvec3f1 = this.getTransform(ItemCameraTransforms.TransformType.FIRST_PERSON);
+        ItemTransformVec3f itemtransformvec3f2 = this.getTransform(ItemCameraTransforms.TransformType.HEAD);
+        ItemTransformVec3f itemtransformvec3f3 = this.getTransform(ItemCameraTransforms.TransformType.GUI);
+        ItemTransformVec3f itemtransformvec3f4 = this.getTransform(ItemCameraTransforms.TransformType.GROUND);
+        ItemTransformVec3f itemtransformvec3f5 = this.getTransform(ItemCameraTransforms.TransformType.FIXED);
         return new ItemCameraTransforms(itemtransformvec3f, itemtransformvec3f1, itemtransformvec3f2, itemtransformvec3f3, itemtransformvec3f4, itemtransformvec3f5);
     }
 
-    private ItemTransformVec3f func_181681_a(ItemCameraTransforms.TransformType p_181681_1_)
+    private ItemTransformVec3f getTransform(ItemCameraTransforms.TransformType type)
     {
-        return this.parent != null && !this.cameraTransforms.func_181687_c(p_181681_1_) ? this.parent.func_181681_a(p_181681_1_) : this.cameraTransforms.getTransform(p_181681_1_);
+        return this.parent != null && !this.cameraTransforms.func_181687_c(type) ? this.parent.getTransform(type) : this.cameraTransforms.getTransform(type);
     }
 
     public static void checkModelHierarchy(Map<ResourceLocation, ModelBlock> p_178312_0_)

@@ -60,7 +60,7 @@ public class CommandTeleport extends CommandBase
             }
             else
             {
-                entity = func_175768_b(sender, args[0]);
+                entity = getEntity(sender, args[0]);
                 i = 1;
             }
 
@@ -152,7 +152,7 @@ public class CommandTeleport extends CommandBase
             }
             else
             {
-                Entity entity1 = func_175768_b(sender, args[args.length - 1]);
+                Entity entity1 = getEntity(sender, args[args.length - 1]);
 
                 if (entity1.worldObj != entity.worldObj)
                 {

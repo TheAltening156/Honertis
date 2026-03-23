@@ -12,21 +12,21 @@ public class InventoryHelper
 {
     private static final Random RANDOM = new Random();
 
-    public static void dropInventoryItems(World worldIn, BlockPos pos, IInventory p_180175_2_)
+    public static void dropInventoryItems(World worldIn, BlockPos pos, IInventory inventory)
     {
-        func_180174_a(worldIn, (double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), p_180175_2_);
+        dropInventoryItems(worldIn, (double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), inventory);
     }
 
-    public static void func_180176_a(World worldIn, Entity p_180176_1_, IInventory p_180176_2_)
+    public static void dropInventoryItems(World worldIn, Entity entityAt, IInventory inventory)
     {
-        func_180174_a(worldIn, p_180176_1_.posX, p_180176_1_.posY, p_180176_1_.posZ, p_180176_2_);
+        dropInventoryItems(worldIn, entityAt.posX, entityAt.posY, entityAt.posZ, inventory);
     }
 
-    private static void func_180174_a(World worldIn, double x, double y, double z, IInventory p_180174_7_)
+    private static void dropInventoryItems(World worldIn, double x, double y, double z, IInventory inventory)
     {
-        for (int i = 0; i < p_180174_7_.getSizeInventory(); ++i)
+        for (int i = 0; i < inventory.getSizeInventory(); ++i)
         {
-            ItemStack itemstack = p_180174_7_.getStackInSlot(i);
+            ItemStack itemstack = inventory.getStackInSlot(i);
 
             if (itemstack != null)
             {

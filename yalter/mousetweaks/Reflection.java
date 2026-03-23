@@ -1,11 +1,3 @@
-/*
- * Decompiled with CFR 0.150.
- * 
- * Could not load the following classes:
- *  net.minecraft.client.gui.inventory.GuiContainer
- *  net.minecraft.client.gui.inventory.GuiContainerCreative
- *  net.minecraft.inventory.Slot
- */
 package yalter.mousetweaks;
 
 import java.lang.reflect.Field;
@@ -13,11 +5,6 @@ import java.lang.reflect.Method;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.inventory.Slot;
-import yalter.mousetweaks.Constants;
-import yalter.mousetweaks.Logger;
-import yalter.mousetweaks.ObfuscatedName;
-import yalter.mousetweaks.Obfuscation;
-import yalter.mousetweaks.ReflectionCache;
 
 public class Reflection {
     private static Obfuscation obfuscation;
@@ -139,7 +126,7 @@ public class Reflection {
                 obfuscation = Obfuscation.VANILLA;
             }
         }
-        Logger.Log("Detected obfuscation: " + (Object)((Object)obfuscation) + ".");
+        Logger.Log("Detected obfuscation: " + (obfuscation) + ".");
     }
 
     static {

@@ -98,7 +98,7 @@ public abstract class BlockLiquid extends Block
         return worldIn.getBlockState(pos).getBlock().getMaterial() == this.blockMaterial ? false : (side == EnumFacing.UP ? true : super.shouldSideBeRendered(worldIn, pos, side));
     }
 
-    public boolean func_176364_g(IBlockAccess blockAccess, BlockPos pos)
+    public boolean shouldRenderSides(IBlockAccess blockAccess, BlockPos pos)
     {
         for (int i = -1; i <= 1; ++i)
         {
@@ -152,9 +152,9 @@ public abstract class BlockLiquid extends Block
         Vec3 vec3 = new Vec3(0.0D, 0.0D, 0.0D);
         int i = this.getEffectiveFlowDecay(worldIn, pos);
 
-        for (Object enumfacing : EnumFacing.Plane.HORIZONTAL)
+        for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
         {
-            BlockPos blockpos = pos.offset((EnumFacing) enumfacing);
+            BlockPos blockpos = pos.offset(enumfacing);
             int j = this.getEffectiveFlowDecay(worldIn, blockpos);
 
             if (j < 0)
@@ -179,11 +179,11 @@ public abstract class BlockLiquid extends Block
 
         if (((Integer)worldIn.getBlockState(pos).getValue(LEVEL)).intValue() >= 8)
         {
-            for (Object enumfacing1 : EnumFacing.Plane.HORIZONTAL)
+            for (EnumFacing enumfacing1 : EnumFacing.Plane.HORIZONTAL)
             {
-                BlockPos blockpos1 = pos.offset((EnumFacing) enumfacing1);
+                BlockPos blockpos1 = pos.offset(enumfacing1);
 
-                if (this.isBlockSolid(worldIn, blockpos1, (EnumFacing) enumfacing1) || this.isBlockSolid(worldIn, blockpos1.up(), (EnumFacing) enumfacing1))
+                if (this.isBlockSolid(worldIn, blockpos1, enumfacing1) || this.isBlockSolid(worldIn, blockpos1.up(), enumfacing1))
                 {
                     vec3 = vec3.normalize().addVector(0.0D, -6.0D, 0.0D);
                     break;
@@ -288,7 +288,7 @@ public abstract class BlockLiquid extends Block
     public static double getFlowDirection(IBlockAccess worldIn, BlockPos pos, Material materialIn)
     {
         Vec3 vec3 = getFlowingBlock(materialIn).getFlowVector(worldIn, pos);
-        return vec3.xCoord == 0.0D && vec3.zCoord == 0.0D ? -1000.0D : MathHelper.func_181159_b(vec3.zCoord, vec3.xCoord) - (Math.PI / 2D);
+        return vec3.xCoord == 0.0D && vec3.zCoord == 0.0D ? -1000.0D : MathHelper.atan2(vec3.zCoord, vec3.xCoord) - (Math.PI / 2D);
     }
 
     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state)

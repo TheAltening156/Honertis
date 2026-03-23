@@ -51,8 +51,8 @@ public class OldServerPinger
 
     public void ping(final ServerData server) throws UnknownHostException
     {
-        ServerAddress serveraddress = ServerAddress.func_78860_a(server.serverIP);
-        final NetworkManager networkmanager = NetworkManager.func_181124_a(InetAddress.getByName(serveraddress.getIP()), serveraddress.getPort(), false);
+        ServerAddress serveraddress = ServerAddress.fromString(server.serverIP);
+        final NetworkManager networkmanager = NetworkManager.createNetworkManagerAndConnect(InetAddress.getByName(serveraddress.getIP()), serveraddress.getPort(), false);
         this.pingDestinations.add(networkmanager);
         server.serverMOTD = "Pinging...";
         server.pingToServer = -1L;
@@ -184,7 +184,7 @@ public class OldServerPinger
 
     private void tryCompatibilityPing(final ServerData server)
     {
-        final ServerAddress serveraddress = ServerAddress.func_78860_a(server.serverIP);
+        final ServerAddress serveraddress = ServerAddress.fromString(server.serverIP);
         ((Bootstrap)((Bootstrap)((Bootstrap)(new Bootstrap()).group((EventLoopGroup)NetworkManager.CLIENT_NIO_EVENTLOOP.getValue())).handler(new ChannelInitializer<Channel>()
         {
             protected void initChannel(Channel p_initChannel_1_) throws Exception

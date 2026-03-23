@@ -3,7 +3,6 @@ package net.minecraft.client.renderer.entity;
 import java.util.Random;
 
 import fr.honertis.Honertis;
-import fr.honertis.module.ModulesManager;
 import fr.honertis.module.modules.ItemPhysics;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GlStateManager;
@@ -28,9 +27,9 @@ public class RenderEntityItem extends Render<EntityItem>
         this.shadowSize = 0.15F;
         this.shadowOpaque = 0.75F;
     }
-    
-    public ItemPhysics ip = Honertis.INSTANCE.getModule(ItemPhysics.class);
 
+    public ItemPhysics ip = Honertis.INSTANCE.getModule(ItemPhysics.class);
+    
     private int func_177077_a(EntityItem itemIn, double p_177077_2_, double p_177077_4_, double p_177077_6_, float p_177077_8_, IBakedModel p_177077_9_)
     {
         ItemStack itemstack = itemIn.getEntityItem();
@@ -38,7 +37,7 @@ public class RenderEntityItem extends Render<EntityItem>
         
         if (ip.isEnabled())
         	p_177077_8_ = -itemIn.getAge();
-
+        
         if (item == null)
         {
             return 0;
@@ -65,14 +64,13 @@ public class RenderEntityItem extends Render<EntityItem>
                 float f5 = -0.046875F * (float)(i - 1) * 0.5F;
                 GlStateManager.translate(f6, f4, f5);
             }
-
             if (ip.isEnabled())
             	rotateItem(itemIn, itemstack, f1,f2);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             return i;
         }
     }
-    
+
     public double rotationValue;
 
 	public void rotateItem(Object entityItem, Object itemStack, float f1, float f2) {
@@ -137,7 +135,7 @@ public class RenderEntityItem extends Render<EntityItem>
 		GlStateManager.rotate(entityItem.rotationYaw, 0.0F, 1.0F, 0.0F);
 		GlStateManager.rotate(entityItem.rotationPitch + 90.0F, 1.0F, 0.0F, 0.0F);
 	}
-	
+    
     private int func_177078_a(ItemStack stack)
     {
         int i = 1;
@@ -163,10 +161,7 @@ public class RenderEntityItem extends Render<EntityItem>
     }
 
     /**
-     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
-     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
-     * (Render<T extends Entity>) and this method has signature public void doRender(T entity, double d, double d1,
-     * double d2, float f, float f1). But JAD is pre 1.5 so doe
+     * Renders the desired {@code T} type Entity.
      */
     public void doRender(EntityItem entity, double x, double y, double z, float entityYaw, float partialTicks)
     {

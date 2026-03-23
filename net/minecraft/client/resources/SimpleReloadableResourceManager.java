@@ -86,10 +86,10 @@ public class SimpleReloadableResourceManager implements IReloadableResourceManag
         this.setResourceDomains.clear();
     }
 
-    public void reloadResources(List<IResourcePack> p_110541_1_)
+    public void reloadResources(List<IResourcePack> resourcesPacksList)
     {
         this.clearResources();
-        logger.info("Reloading ResourceManager: " + joinerResourcePacks.join(Iterables.transform(p_110541_1_, new Function<IResourcePack, String>()
+        logger.info("Reloading ResourceManager: " + joinerResourcePacks.join(Iterables.transform(resourcesPacksList, new Function<IResourcePack, String>()
         {
             public String apply(IResourcePack p_apply_1_)
             {
@@ -97,7 +97,7 @@ public class SimpleReloadableResourceManager implements IReloadableResourceManag
             }
         })));
 
-        for (IResourcePack iresourcepack : p_110541_1_)
+        for (IResourcePack iresourcepack : resourcesPacksList)
         {
             this.reloadResourcePack(iresourcepack);
         }

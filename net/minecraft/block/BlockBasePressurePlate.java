@@ -77,7 +77,10 @@ public abstract class BlockBasePressurePlate extends Block
         return true;
     }
 
-    public boolean func_181623_g()
+    /**
+     * Return true if an entity can be spawned inside the block (used to get the player's bed spawn location)
+     */
+    public boolean canSpawnInBlock()
     {
         return true;
     }

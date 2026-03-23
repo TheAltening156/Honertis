@@ -15,9 +15,9 @@ public class BiomeGenSavanna extends BiomeGenBase
 {
     private static final WorldGenSavannaTree field_150627_aC = new WorldGenSavannaTree(false);
 
-    protected BiomeGenSavanna(int p_i45383_1_)
+    protected BiomeGenSavanna(int id)
     {
-        super(p_i45383_1_);
+        super(id);
         this.spawnableCreatureList.add(new BiomeGenBase.SpawnListEntry(EntityHorse.class, 1, 2, 6));
         this.theBiomeDecorator.treesPerChunk = 1;
         this.theBiomeDecorator.flowersPerChunk = 4;
@@ -63,22 +63,22 @@ public class BiomeGenSavanna extends BiomeGenBase
             this.theBiomeDecorator.grassPerChunk = 5;
         }
 
-        public void genTerrainBlocks(World worldIn, Random rand, ChunkPrimer chunkPrimerIn, int p_180622_4_, int p_180622_5_, double p_180622_6_)
+        public void genTerrainBlocks(World worldIn, Random rand, ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal)
         {
             this.topBlock = Blocks.grass.getDefaultState();
             this.fillerBlock = Blocks.dirt.getDefaultState();
 
-            if (p_180622_6_ > 1.75D)
+            if (noiseVal > 1.75D)
             {
                 this.topBlock = Blocks.stone.getDefaultState();
                 this.fillerBlock = Blocks.stone.getDefaultState();
             }
-            else if (p_180622_6_ > -0.5D)
+            else if (noiseVal > -0.5D)
             {
                 this.topBlock = Blocks.dirt.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.COARSE_DIRT);
             }
 
-            this.generateBiomeTerrain(worldIn, rand, chunkPrimerIn, p_180622_4_, p_180622_5_, p_180622_6_);
+            this.generateBiomeTerrain(worldIn, rand, chunkPrimerIn, x, z, noiseVal);
         }
 
         public void decorate(World worldIn, Random rand, BlockPos pos)

@@ -99,23 +99,23 @@ public class CommandTime extends CommandBase
     /**
      * Set the time in the server object.
      */
-    protected void setTime(ICommandSender p_71552_1_, int p_71552_2_)
+    protected void setTime(ICommandSender sender, int time)
     {
         for (int i = 0; i < MinecraftServer.getServer().worldServers.length; ++i)
         {
-            MinecraftServer.getServer().worldServers[i].setWorldTime((long)p_71552_2_);
+            MinecraftServer.getServer().worldServers[i].setWorldTime((long)time);
         }
     }
 
     /**
      * Adds (or removes) time in the server object.
      */
-    protected void addTime(ICommandSender p_71553_1_, int p_71553_2_)
+    protected void addTime(ICommandSender sender, int time)
     {
         for (int i = 0; i < MinecraftServer.getServer().worldServers.length; ++i)
         {
             WorldServer worldserver = MinecraftServer.getServer().worldServers[i];
-            worldserver.setWorldTime(worldserver.getWorldTime() + (long)p_71553_2_);
+            worldserver.setWorldTime(worldserver.getWorldTime() + (long)time);
         }
     }
 }

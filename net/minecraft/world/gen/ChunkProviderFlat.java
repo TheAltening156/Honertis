@@ -98,7 +98,7 @@ public class ChunkProviderFlat implements IChunkProvider
         {
             for (int i = flatlayerinfo.getMinY(); i < flatlayerinfo.getMinY() + flatlayerinfo.getLayerCount(); ++i)
             {
-                IBlockState iblockstate = flatlayerinfo.func_175900_c();
+                IBlockState iblockstate = flatlayerinfo.getLayerMaterial();
 
                 if (iblockstate.getBlock() != Blocks.air)
                 {
@@ -107,7 +107,7 @@ public class ChunkProviderFlat implements IChunkProvider
                 }
             }
 
-            if (flatlayerinfo.func_175900_c().getBlock() == Blocks.air)
+            if (flatlayerinfo.getLayerMaterial().getBlock() == Blocks.air)
             {
                 k += flatlayerinfo.getLayerCount();
             }
@@ -118,7 +118,7 @@ public class ChunkProviderFlat implements IChunkProvider
             }
         }
 
-        worldIn.func_181544_b(j);
+        worldIn.setSeaLevel(j);
         this.hasDecoration = flag ? false : this.flatWorldGenInfo.getWorldFeatures().containsKey("decoration");
     }
 
@@ -175,18 +175,18 @@ public class ChunkProviderFlat implements IChunkProvider
     /**
      * Populates chunk with ores etc etc
      */
-    public void populate(IChunkProvider p_73153_1_, int p_73153_2_, int p_73153_3_)
+    public void populate(IChunkProvider chunkProvider, int x, int z)
     {
-        int i = p_73153_2_ * 16;
-        int j = p_73153_3_ * 16;
+        int i = x * 16;
+        int j = z * 16;
         BlockPos blockpos = new BlockPos(i, 0, j);
         BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(new BlockPos(i + 16, 0, j + 16));
         boolean flag = false;
         this.random.setSeed(this.worldObj.getSeed());
         long k = this.random.nextLong() / 2L * 2L + 1L;
         long l = this.random.nextLong() / 2L * 2L + 1L;
-        this.random.setSeed((long)p_73153_2_ * k + (long)p_73153_3_ * l ^ this.worldObj.getSeed());
-        ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(p_73153_2_, p_73153_3_);
+        this.random.setSeed((long)x * k + (long)z * l ^ this.worldObj.getSeed());
+        ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(x, z);
 
         for (MapGenStructure mapgenstructure : this.structureGenerators)
         {
@@ -207,7 +207,7 @@ public class ChunkProviderFlat implements IChunkProvider
         {
             BlockPos blockpos1 = blockpos.add(this.random.nextInt(16) + 8, this.random.nextInt(this.random.nextInt(248) + 8), this.random.nextInt(16) + 8);
 
-            if (blockpos1.getY() < this.worldObj.func_181545_F() || this.random.nextInt(10) == 0)
+            if (blockpos1.getY() < this.worldObj.getSeaLevel() || this.random.nextInt(10) == 0)
             {
                 this.lavaLakeGenerator.generate(this.worldObj, this.random, blockpos1);
             }
@@ -227,7 +227,7 @@ public class ChunkProviderFlat implements IChunkProvider
         }
     }
 
-    public boolean func_177460_a(IChunkProvider p_177460_1_, Chunk p_177460_2_, int p_177460_3_, int p_177460_4_)
+    public boolean populateChunk(IChunkProvider chunkProvider, Chunk chunkIn, int x, int z)
     {
         return false;
     }
@@ -236,7 +236,7 @@ public class ChunkProviderFlat implements IChunkProvider
      * Two modes of operation: if passed true, save all Chunks in one go.  If passed false, save up to two chunks.
      * Return true if all chunks have been saved.
      */
-    public boolean saveChunks(boolean p_73151_1_, IProgressUpdate progressCallback)
+    public boolean saveChunks(boolean saveAllChunks, IProgressUpdate progressCallback)
     {
         return true;
     }
@@ -300,11 +300,11 @@ public class ChunkProviderFlat implements IChunkProvider
         return 0;
     }
 
-    public void recreateStructures(Chunk p_180514_1_, int p_180514_2_, int p_180514_3_)
+    public void recreateStructures(Chunk chunkIn, int x, int z)
     {
         for (MapGenStructure mapgenstructure : this.structureGenerators)
         {
-            mapgenstructure.generate(this, this.worldObj, p_180514_2_, p_180514_3_, (ChunkPrimer)null);
+            mapgenstructure.generate(this, this.worldObj, x, z, (ChunkPrimer)null);
         }
     }
 

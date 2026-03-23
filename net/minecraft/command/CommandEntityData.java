@@ -43,7 +43,7 @@ public class CommandEntityData extends CommandBase
         }
         else
         {
-            Entity entity = func_175768_b(sender, args[0]);
+            Entity entity = getEntity(sender, args[0]);
 
             if (entity instanceof EntityPlayer)
             {

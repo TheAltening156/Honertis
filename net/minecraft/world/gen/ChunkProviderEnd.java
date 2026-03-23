@@ -35,10 +35,10 @@ public class ChunkProviderEnd implements IChunkProvider
     double[] noiseData4;
     double[] noiseData5;
 
-    public ChunkProviderEnd(World worldIn, long p_i2007_2_)
+    public ChunkProviderEnd(World worldIn, long seed)
     {
         this.endWorld = worldIn;
-        this.endRNG = new Random(p_i2007_2_);
+        this.endRNG = new Random(seed);
         this.noiseGen1 = new NoiseGeneratorOctaves(this.endRNG, 16);
         this.noiseGen2 = new NoiseGeneratorOctaves(this.endRNG, 16);
         this.noiseGen3 = new NoiseGeneratorOctaves(this.endRNG, 8);
@@ -286,15 +286,15 @@ public class ChunkProviderEnd implements IChunkProvider
     /**
      * Populates chunk with ores etc etc
      */
-    public void populate(IChunkProvider p_73153_1_, int p_73153_2_, int p_73153_3_)
+    public void populate(IChunkProvider chunkProvider, int x, int z)
     {
         BlockFalling.fallInstantly = true;
-        BlockPos blockpos = new BlockPos(p_73153_2_ * 16, 0, p_73153_3_ * 16);
+        BlockPos blockpos = new BlockPos(x * 16, 0, z * 16);
         this.endWorld.getBiomeGenForCoords(blockpos.add(16, 0, 16)).decorate(this.endWorld, this.endWorld.rand, blockpos);
         BlockFalling.fallInstantly = false;
     }
 
-    public boolean func_177460_a(IChunkProvider p_177460_1_, Chunk p_177460_2_, int p_177460_3_, int p_177460_4_)
+    public boolean populateChunk(IChunkProvider chunkProvider, Chunk chunkIn, int x, int z)
     {
         return false;
     }
@@ -303,7 +303,7 @@ public class ChunkProviderEnd implements IChunkProvider
      * Two modes of operation: if passed true, save all Chunks in one go.  If passed false, save up to two chunks.
      * Return true if all chunks have been saved.
      */
-    public boolean saveChunks(boolean p_73151_1_, IProgressUpdate progressCallback)
+    public boolean saveChunks(boolean saveAllChunks, IProgressUpdate progressCallback)
     {
         return true;
     }
@@ -355,7 +355,7 @@ public class ChunkProviderEnd implements IChunkProvider
         return 0;
     }
 
-    public void recreateStructures(Chunk p_180514_1_, int p_180514_2_, int p_180514_3_)
+    public void recreateStructures(Chunk chunkIn, int x, int z)
     {
     }
 

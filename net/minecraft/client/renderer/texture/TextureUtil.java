@@ -1,7 +1,6 @@
 package net.minecraft.client.renderer.texture;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.IntBuffer;
@@ -10,15 +9,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.src.Config;
 import net.minecraft.util.ResourceLocation;
-import optifine.Config;
-import optifine.Mipmaps;
-import optifine.Reflector;
-
+import net.optifine.Mipmaps;
+import net.optifine.reflect.Reflector;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 import org.lwjgl.opengl.GL12;
@@ -30,7 +27,7 @@ public class TextureUtil
     public static final DynamicTexture missingTexture = new DynamicTexture(16, 16);
     public static final int[] missingTextureData = missingTexture.getTextureData();
     private static final int[] mipmapBuffer;
-    private static final String __OBFID = "CL_00001067";
+    private static int[] dataArray = new int[4194304];
 
     public static int glGenTextures()
     {
@@ -62,7 +59,7 @@ public class TextureUtil
         {
             boolean flag = false;
 
-            for (int i = 0; i < p_147949_2_.length; ++i)
+            for (int i = 0; i < p_147949_2_[0].length; ++i)
             {
                 if (p_147949_2_[0][i] >> 24 == 0)
                 {
@@ -195,7 +192,7 @@ public class TextureUtil
         int i = p_110993_0_.getWidth();
         int j = p_110993_0_.getHeight();
         int k = 4194304 / i;
-        int[] aint = new int[k * i];
+        int[] aint = dataArray;
         setTextureBlurred(p_110993_3_);
         setTextureClamped(p_110993_4_);
 
@@ -331,37 +328,6 @@ public class TextureUtil
         int j1 = (j * 30 + k * 70) / 100;
         int k1 = (j * 30 + l * 70) / 100;
         return i << 24 | i1 << 16 | j1 << 8 | k1;
-    }
-
-    public static void saveGlTexture(String p_saveGlTexture_0_, int p_saveGlTexture_1_, int p_saveGlTexture_2_, int p_saveGlTexture_3_, int p_saveGlTexture_4_)
-    {
-        bindTexture(p_saveGlTexture_1_);
-        GL11.glPixelStorei(GL11.GL_PACK_ALIGNMENT, 1);
-        GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-
-        for (int i = 0; i <= p_saveGlTexture_2_; ++i)
-        {
-            File file1 = new File(p_saveGlTexture_0_ + "_" + i + ".png");
-            int j = p_saveGlTexture_3_ >> i;
-            int k = p_saveGlTexture_4_ >> i;
-            int l = j * k;
-            IntBuffer intbuffer = BufferUtils.createIntBuffer(l);
-            int[] aint = new int[l];
-            GL11.glGetTexImage(GL11.GL_TEXTURE_2D, i, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, (IntBuffer)intbuffer);
-            intbuffer.get(aint);
-            BufferedImage bufferedimage = new BufferedImage(j, k, 2);
-            bufferedimage.setRGB(0, 0, j, k, aint, 0, j);
-
-            try
-            {
-                ImageIO.write(bufferedimage, "png", (File)file1);
-                logger.debug("Exported png to: {}", new Object[] {file1.getAbsolutePath()});
-            }
-            catch (Exception exception)
-            {
-                logger.debug((String)"Unable to write: ", (Throwable)exception);
-            }
-        }
     }
 
     public static void processPixelValues(int[] p_147953_0_, int p_147953_1_, int p_147953_2_)

@@ -4,14 +4,14 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.src.Config;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3i;
 import net.minecraft.world.ChunkCache;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import optifine.Config;
-import optifine.DynamicLights;
+import net.optifine.DynamicLights;
 
 public class RegionRenderCache extends ChunkCache
 {
@@ -19,7 +19,6 @@ public class RegionRenderCache extends ChunkCache
     private final BlockPos position;
     private int[] combinedLights;
     private IBlockState[] blockStates;
-    private static final String __OBFID = "CL_00002565";
     private static ArrayDeque<int[]> cacheLights = new ArrayDeque();
     private static ArrayDeque<IBlockState[]> cacheStates = new ArrayDeque();
     private static int maxCacheSize = Config.limit(Runtime.getRuntime().availableProcessors(), 1, 32);
@@ -28,9 +27,9 @@ public class RegionRenderCache extends ChunkCache
     {
         super(worldIn, posFromIn, posToIn, subIn);
         this.position = posFromIn.subtract(new Vec3i(subIn, subIn, subIn));
-        boolean flag = true;
+        int i = 8000;
         this.combinedLights = allocateLights(8000);
-        Arrays.fill((int[])this.combinedLights, (int) - 1);
+        Arrays.fill((int[])((int[])this.combinedLights), (int) - 1);
         this.blockStates = allocateStates(8000);
     }
 
@@ -77,16 +76,7 @@ public class RegionRenderCache extends ChunkCache
 
     private IBlockState getBlockStateRaw(BlockPos pos)
     {
-        if (pos.getY() >= 0 && pos.getY() < 256)
-        {
-            int i = (pos.getX() >> 4) - this.chunkX;
-            int j = (pos.getZ() >> 4) - this.chunkZ;
-            return this.chunkArray[i][j].getBlockState(pos);
-        }
-        else
-        {
-            return DEFAULT_STATE;
-        }
+        return super.getBlockState(pos);
     }
 
     private int getPositionIndex(BlockPos p_175630_1_)

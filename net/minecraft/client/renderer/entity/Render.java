@@ -3,6 +3,7 @@ package net.minecraft.client.renderer.entity;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
@@ -13,27 +14,29 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.src.Config;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import optifine.Config;
-
+import net.optifine.entity.model.IEntityRenderer;
+import net.optifine.shaders.Shaders;
 import org.lwjgl.opengl.GL11;
-import shadersmod.client.Shaders;
 
-public abstract class Render<T extends Entity>
+public abstract class Render<T extends Entity> implements IEntityRenderer
 {
     private static final ResourceLocation shadowTextures = new ResourceLocation("textures/misc/shadow.png");
     protected final RenderManager renderManager;
-    protected float shadowSize;
+    public float shadowSize;
 
     /**
      * Determines the darkness of the object's shadow. Higher value makes a darker shadow.
      */
     protected float shadowOpaque = 1.0F;
-    private static final String __OBFID = "CL_00000992";
+    private Class entityClass = null;
+    private ResourceLocation locationTextureCustom = null;
 
     protected Render(RenderManager renderManager)
     {
@@ -44,7 +47,7 @@ public abstract class Render<T extends Entity>
     {
         AxisAlignedBB axisalignedbb = livingEntity.getEntityBoundingBox();
 
-        if (axisalignedbb.func_181656_b() || axisalignedbb.getAverageEdgeLength() == 0.0D)
+        if (axisalignedbb.hasNaN() || axisalignedbb.getAverageEdgeLength() == 0.0D)
         {
             axisalignedbb = new AxisAlignedBB(livingEntity.posX - 2.0D, livingEntity.posY - 2.0D, livingEntity.posZ - 2.0D, livingEntity.posX + 2.0D, livingEntity.posY + 2.0D, livingEntity.posZ + 2.0D);
         }
@@ -53,10 +56,7 @@ public abstract class Render<T extends Entity>
     }
 
     /**
-     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
-     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
-     * (Render<T extends Entity>) and this method has signature public void doRender(T entity, double d, double d1,
-     * double d2, float f, float f1). But JAD is pre 1.5 so doe
+     * Renders the desired {@code T} type Entity.
      */
     public void doRender(T entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
@@ -89,6 +89,11 @@ public abstract class Render<T extends Entity>
     protected boolean bindEntityTexture(T entity)
     {
         ResourceLocation resourcelocation = this.getEntityTexture(entity);
+
+        if (this.locationTextureCustom != null)
+        {
+            resourcelocation = this.locationTextureCustom;
+        }
 
         if (resourcelocation == null)
         {
@@ -130,11 +135,19 @@ public abstract class Render<T extends Entity>
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         float f5 = 0.0F;
         int i = 0;
+        boolean flag = Config.isMultiTexture();
+
+        if (flag)
+        {
+            worldrenderer.setBlockLayer(EnumWorldBlockLayer.SOLID);
+        }
+
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
 
         while (f3 > 0.0F)
         {
             TextureAtlasSprite textureatlassprite2 = i % 2 == 0 ? textureatlassprite : textureatlassprite1;
+            worldrenderer.setSprite(textureatlassprite2);
             this.bindTexture(TextureMap.locationBlocksTexture);
             float f6 = textureatlassprite2.getMinU();
             float f7 = textureatlassprite2.getMinV();
@@ -160,6 +173,13 @@ public abstract class Render<T extends Entity>
         }
 
         tessellator.draw();
+
+        if (flag)
+        {
+            worldrenderer.setBlockLayer((EnumWorldBlockLayer)null);
+            GlStateManager.bindCurrentTexture();
+        }
+
         GlStateManager.popMatrix();
         GlStateManager.enableLighting();
     }
@@ -212,7 +232,7 @@ public abstract class Render<T extends Entity>
 
                 if (block.getRenderType() != -1 && world.getLightFromNeighbors(blockpos) > 3)
                 {
-                    this.func_180549_a(block, x, y, z, blockpos, shadowAlpha, f, d2, d3, d4);
+                    this.renderShadowBlock(block, x, y, z, blockpos, shadowAlpha, f, d2, d3, d4);
                 }
             }
 
@@ -231,7 +251,7 @@ public abstract class Render<T extends Entity>
         return this.renderManager.worldObj;
     }
 
-    private void func_180549_a(Block blockIn, double p_180549_2_, double p_180549_4_, double p_180549_6_, BlockPos pos, float p_180549_9_, float p_180549_10_, double p_180549_11_, double p_180549_13_, double p_180549_15_)
+    private void renderShadowBlock(Block blockIn, double p_180549_2_, double p_180549_4_, double p_180549_6_, BlockPos pos, float p_180549_9_, float p_180549_10_, double p_180549_11_, double p_180549_13_, double p_180549_15_)
     {
         if (blockIn.isFullCube())
         {
@@ -310,7 +330,7 @@ public abstract class Render<T extends Entity>
     {
         if (this.renderManager.options != null)
         {
-            if (this.renderManager.options.field_181151_V && this.shadowSize > 0.0F && !entityIn.isInvisible() && this.renderManager.isRenderShadow())
+            if (this.renderManager.options.entityShadows && this.shadowSize > 0.0F && !entityIn.isInvisible() && this.renderManager.isRenderShadow())
             {
                 double d0 = this.renderManager.getDistanceToCamera(entityIn.posX, entityIn.posY, entityIn.posZ);
                 float f = (float)((1.0D - d0 / 256.0D) * (double)this.shadowOpaque);
@@ -361,26 +381,26 @@ public abstract class Render<T extends Entity>
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
             Tessellator tessellator = Tessellator.getInstance();
             WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-            byte b0 = 0;
+            int i = 0;
 
             if (str.equals("deadmau5"))
             {
-                b0 = -10;
+                i = -10;
             }
 
-            int i = fontrenderer.getStringWidth(str) / 2;
+            int j = fontrenderer.getStringWidth(str) / 2;
             GlStateManager.disableTexture2D();
             worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
-            worldrenderer.pos((double)(-i - 1), (double)(-1 + b0), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double)(-i - 1), (double)(8 + b0), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double)(i + 1), (double)(8 + b0), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
-            worldrenderer.pos((double)(i + 1), (double)(-1 + b0), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldrenderer.pos((double)(-j - 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldrenderer.pos((double)(-j - 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldrenderer.pos((double)(j + 1), (double)(8 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
+            worldrenderer.pos((double)(j + 1), (double)(-1 + i), 0.0D).color(0.0F, 0.0F, 0.0F, 0.25F).endVertex();
             tessellator.draw();
             GlStateManager.enableTexture2D();
-            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, b0, 553648127);
+            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, 553648127);
             GlStateManager.enableDepth();
             GlStateManager.depthMask(true);
-            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, b0, -1);
+            fontrenderer.drawString(str, -fontrenderer.getStringWidth(str) / 2, i, -1);
             GlStateManager.enableLighting();
             GlStateManager.disableBlend();
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -391,5 +411,39 @@ public abstract class Render<T extends Entity>
     public RenderManager getRenderManager()
     {
         return this.renderManager;
+    }
+
+    public boolean isMultipass()
+    {
+        return false;
+    }
+
+    public void renderMultipass(T p_renderMultipass_1_, double p_renderMultipass_2_, double p_renderMultipass_4_, double p_renderMultipass_6_, float p_renderMultipass_8_, float p_renderMultipass_9_)
+    {
+    }
+
+    public Class getEntityClass()
+    {
+        return this.entityClass;
+    }
+
+    public void setEntityClass(Class p_setEntityClass_1_)
+    {
+        this.entityClass = p_setEntityClass_1_;
+    }
+
+    public ResourceLocation getLocationTextureCustom()
+    {
+        return this.locationTextureCustom;
+    }
+
+    public void setLocationTextureCustom(ResourceLocation p_setLocationTextureCustom_1_)
+    {
+        this.locationTextureCustom = p_setLocationTextureCustom_1_;
+    }
+
+    public static void setModelBipedMain(RenderBiped p_setModelBipedMain_0_, ModelBiped p_setModelBipedMain_1_)
+    {
+        p_setModelBipedMain_0_.modelBipedMain = p_setModelBipedMain_1_;
     }
 }

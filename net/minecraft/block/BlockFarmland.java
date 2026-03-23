@@ -52,7 +52,7 @@ public class BlockFarmland extends Block
     {
         int i = ((Integer)state.getValue(MOISTURE)).intValue();
 
-        if (!this.hasWater(worldIn, pos) && !worldIn.canLightningStrike(pos.up()))
+        if (!this.hasWater(worldIn, pos) && !worldIn.isRainingAt(pos.up()))
         {
             if (i > 0)
             {

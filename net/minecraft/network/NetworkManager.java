@@ -1,22 +1,7 @@
 package net.minecraft.network;
 
-import java.net.InetAddress;
-import java.net.SocketAddress;
-import java.util.Queue;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import javax.crypto.SecretKey;
-
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.Validate;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Marker;
-import org.apache.logging.log4j.MarkerManager;
-
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelException;
@@ -42,6 +27,11 @@ import io.netty.handler.timeout.TimeoutException;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import java.net.InetAddress;
+import java.net.SocketAddress;
+import java.util.Queue;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import javax.crypto.SecretKey;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.CryptManager;
@@ -52,6 +42,12 @@ import net.minecraft.util.MessageDeserializer;
 import net.minecraft.util.MessageDeserializer2;
 import net.minecraft.util.MessageSerializer;
 import net.minecraft.util.MessageSerializer2;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.Validate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
 public class NetworkManager extends SimpleChannelInboundHandler<Packet>
 {
@@ -66,7 +62,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
             return new NioEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Client IO #%d").setDaemon(true).build());
         }
     };
-    public static final LazyLoadBase<EpollEventLoopGroup> field_181125_e = new LazyLoadBase<EpollEventLoopGroup>()
+    public static final LazyLoadBase<EpollEventLoopGroup> CLIENT_EPOLL_EVENTLOOP = new LazyLoadBase<EpollEventLoopGroup>()
     {
         protected EpollEventLoopGroup load()
         {
@@ -82,7 +78,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
     };
     private final EnumPacketDirection direction;
     private final Queue<NetworkManager.InboundHandlerTuplePacketListener> outboundPacketsQueue = Queues.<NetworkManager.InboundHandlerTuplePacketListener>newConcurrentLinkedQueue();
-    private final ReentrantReadWriteLock field_181680_j = new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     /** The active channel */
     private Channel channel;
@@ -185,7 +181,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
         }
         else
         {
-            this.field_181680_j.writeLock().lock();
+            this.readWriteLock.writeLock().lock();
 
             try
             {
@@ -193,7 +189,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
             }
             finally
             {
-                this.field_181680_j.writeLock().unlock();
+                this.readWriteLock.writeLock().unlock();
             }
         }
     }
@@ -207,7 +203,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
         }
         else
         {
-            this.field_181680_j.writeLock().lock();
+            this.readWriteLock.writeLock().lock();
 
             try
             {
@@ -215,7 +211,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
             }
             finally
             {
-                this.field_181680_j.writeLock().unlock();
+                this.readWriteLock.writeLock().unlock();
             }
         }
     }
@@ -282,7 +278,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
     {
         if (this.channel != null && this.channel.isOpen())
         {
-            this.field_181680_j.readLock().lock();
+            this.readWriteLock.readLock().lock();
 
             try
             {
@@ -294,7 +290,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
             }
             finally
             {
-                this.field_181680_j.readLock().unlock();
+                this.readWriteLock.readLock().unlock();
             }
         }
     }
@@ -343,16 +339,23 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
         return this.channel instanceof LocalChannel || this.channel instanceof LocalServerChannel;
     }
 
-    public static NetworkManager func_181124_a(InetAddress p_181124_0_, int p_181124_1_, boolean p_181124_2_)
+    /**
+     * Create a new NetworkManager from the server host and connect it to the server
+     *  
+     * @param address The address of the server
+     * @param serverPort The server port
+     * @param useNativeTransport True if the client use the native transport system
+     */
+    public static NetworkManager createNetworkManagerAndConnect(InetAddress address, int serverPort, boolean useNativeTransport)
     {
         final NetworkManager networkmanager = new NetworkManager(EnumPacketDirection.CLIENTBOUND);
         Class <? extends SocketChannel > oclass;
         LazyLoadBase <? extends EventLoopGroup > lazyloadbase;
 
-        if (Epoll.isAvailable() && p_181124_2_)
+        if (Epoll.isAvailable() && useNativeTransport)
         {
             oclass = EpollSocketChannel.class;
-            lazyloadbase = field_181125_e;
+            lazyloadbase = CLIENT_EPOLL_EVENTLOOP;
         }
         else
         {
@@ -375,7 +378,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
 
                 p_initChannel_1_.pipeline().addLast((String)"timeout", (ChannelHandler)(new ReadTimeoutHandler(30))).addLast((String)"splitter", (ChannelHandler)(new MessageDeserializer2())).addLast((String)"decoder", (ChannelHandler)(new MessageDeserializer(EnumPacketDirection.CLIENTBOUND))).addLast((String)"prepender", (ChannelHandler)(new MessageSerializer2())).addLast((String)"encoder", (ChannelHandler)(new MessageSerializer(EnumPacketDirection.SERVERBOUND))).addLast((String)"packet_handler", (ChannelHandler)networkmanager);
             }
-        })).channel(oclass)).connect(p_181124_0_, p_181124_1_).syncUninterruptibly();
+        })).channel(oclass)).connect(address, serverPort).syncUninterruptibly();
         return networkmanager;
     }
 

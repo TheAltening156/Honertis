@@ -95,7 +95,7 @@ public class WorldServer extends World implements IThreadListener
     private final Teleporter worldTeleporter;
     private final SpawnerAnimals mobSpawner = new SpawnerAnimals();
     protected final VillageSiege villageSiege = new VillageSiege(this);
-    private WorldServer.ServerBlockEventList[] field_147490_S = new WorldServer.ServerBlockEventList[] {new WorldServer.ServerBlockEventList(), new WorldServer.ServerBlockEventList()};
+    private WorldServer.ServerBlockEventList[] blockEventQueue = new WorldServer.ServerBlockEventList[] {new WorldServer.ServerBlockEventList(), new WorldServer.ServerBlockEventList()};
     private int blockEventCacheIndex;
     private static final List<WeightedRandomChestContent> bonusChestContent = Lists.newArrayList(new WeightedRandomChestContent[] {new WeightedRandomChestContent(Items.stick, 0, 1, 3, 10), new WeightedRandomChestContent(Item.getItemFromBlock(Blocks.planks), 0, 1, 3, 10), new WeightedRandomChestContent(Item.getItemFromBlock(Blocks.log), 0, 1, 3, 10), new WeightedRandomChestContent(Items.stone_axe, 0, 1, 1, 3), new WeightedRandomChestContent(Items.wooden_axe, 0, 1, 1, 5), new WeightedRandomChestContent(Items.stone_pickaxe, 0, 1, 1, 3), new WeightedRandomChestContent(Items.wooden_pickaxe, 0, 1, 1, 5), new WeightedRandomChestContent(Items.apple, 0, 2, 3, 5), new WeightedRandomChestContent(Items.bread, 0, 2, 3, 3), new WeightedRandomChestContent(Item.getItemFromBlock(Blocks.log2), 0, 1, 3, 10)});
     private List<NextTickListEntry> pendingTickListEntriesThisTick = Lists.<NextTickListEntry>newArrayList();
@@ -313,7 +313,7 @@ public class WorldServer extends World implements IThreadListener
     {
         if (this.worldInfo.getSpawnY() <= 0)
         {
-            this.worldInfo.setSpawnY(this.func_181545_F() + 1);
+            this.worldInfo.setSpawnY(this.getSeaLevel() + 1);
         }
 
         int i = this.worldInfo.getSpawnX();
@@ -369,7 +369,7 @@ public class WorldServer extends World implements IThreadListener
                     int i1 = this.updateLCG >> 2;
                     BlockPos blockpos = this.adjustPosToNearbyEntity(new BlockPos(k + (i1 & 15), 0, l + (i1 >> 8 & 15)));
 
-                    if (this.canLightningStrike(blockpos))
+                    if (this.isRainingAt(blockpos))
                     {
                         this.addWeatherEffect(new EntityLightningBolt(this, (double)blockpos.getX(), (double)blockpos.getY(), (double)blockpos.getZ()));
                     }
@@ -394,7 +394,7 @@ public class WorldServer extends World implements IThreadListener
                         this.setBlockState(blockpos2, Blocks.snow_layer.getDefaultState());
                     }
 
-                    if (this.isRaining() && this.getBiomeGenForCoords(blockpos1).canSpawnLightningBolt())
+                    if (this.isRaining() && this.getBiomeGenForCoords(blockpos1).canRain())
                     {
                         this.getBlockState(blockpos1).getBlock().fillWithRain(this, blockpos1);
                     }
@@ -798,7 +798,7 @@ public class WorldServer extends World implements IThreadListener
     /**
      * creates a spawn position at random within 256 blocks of 0,0
      */
-    private void createSpawnPosition(WorldSettings p_73052_1_)
+    private void createSpawnPosition(WorldSettings settings)
     {
         if (!this.provider.canRespawnHere())
         {
@@ -846,7 +846,7 @@ public class WorldServer extends World implements IThreadListener
             this.worldInfo.setSpawn(new BlockPos(i, j, k));
             this.findingSpawnPoint = false;
 
-            if (p_73052_1_.isBonusChestEnabled())
+            if (settings.isBonusChestEnabled())
             {
                 this.createBonusChest();
             }
@@ -1009,7 +1009,7 @@ public class WorldServer extends World implements IThreadListener
 
         if (!isSmoking)
         {
-            explosion.func_180342_d();
+            explosion.clearAffectedBlockPositions();
         }
 
         for (EntityPlayer entityplayer : this.playerEntities)
@@ -1027,7 +1027,7 @@ public class WorldServer extends World implements IThreadListener
     {
         BlockEventData blockeventdata = new BlockEventData(pos, blockIn, eventID, eventParam);
 
-        for (BlockEventData blockeventdata1 : this.field_147490_S[this.blockEventCacheIndex])
+        for (BlockEventData blockeventdata1 : this.blockEventQueue[this.blockEventCacheIndex])
         {
             if (blockeventdata1.equals(blockeventdata))
             {
@@ -1035,17 +1035,17 @@ public class WorldServer extends World implements IThreadListener
             }
         }
 
-        this.field_147490_S[this.blockEventCacheIndex].add(blockeventdata);
+        this.blockEventQueue[this.blockEventCacheIndex].add(blockeventdata);
     }
 
     private void sendQueuedBlockEvents()
     {
-        while (!this.field_147490_S[this.blockEventCacheIndex].isEmpty())
+        while (!this.blockEventQueue[this.blockEventCacheIndex].isEmpty())
         {
             int i = this.blockEventCacheIndex;
             this.blockEventCacheIndex ^= 1;
 
-            for (BlockEventData blockeventdata : this.field_147490_S[i])
+            for (BlockEventData blockeventdata : this.blockEventQueue[i])
             {
                 if (this.fireBlockEvent(blockeventdata))
                 {
@@ -1053,7 +1053,7 @@ public class WorldServer extends World implements IThreadListener
                 }
             }
 
-            this.field_147490_S[i].clear();
+            this.blockEventQueue[i].clear();
         }
     }
 
@@ -1136,17 +1136,17 @@ public class WorldServer extends World implements IThreadListener
     /**
      * Spawns the desired particle and sends the necessary packets to the relevant connected players.
      */
-    public void spawnParticle(EnumParticleTypes particleType, double xCoord, double yCoord, double zCoord, int numberOfParticles, double p_175739_9_, double p_175739_11_, double p_175739_13_, double p_175739_15_, int... p_175739_17_)
+    public void spawnParticle(EnumParticleTypes particleType, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)
     {
-        this.spawnParticle(particleType, false, xCoord, yCoord, zCoord, numberOfParticles, p_175739_9_, p_175739_11_, p_175739_13_, p_175739_15_, p_175739_17_);
+        this.spawnParticle(particleType, false, xCoord, yCoord, zCoord, numberOfParticles, xOffset, yOffset, zOffset, particleSpeed, particleArguments);
     }
 
     /**
      * Spawns the desired particle and sends the necessary packets to the relevant connected players.
      */
-    public void spawnParticle(EnumParticleTypes particleType, boolean longDistance, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... p_180505_18_)
+    public void spawnParticle(EnumParticleTypes particleType, boolean longDistance, double xCoord, double yCoord, double zCoord, int numberOfParticles, double xOffset, double yOffset, double zOffset, double particleSpeed, int... particleArguments)
     {
-        Packet packet = new S2APacketParticles(particleType, longDistance, (float)xCoord, (float)yCoord, (float)zCoord, (float)xOffset, (float)yOffset, (float)zOffset, (float)particleSpeed, numberOfParticles, p_180505_18_);
+        Packet packet = new S2APacketParticles(particleType, longDistance, (float)xCoord, (float)yCoord, (float)zCoord, (float)xOffset, (float)yOffset, (float)zOffset, (float)particleSpeed, numberOfParticles, particleArguments);
 
         for (int i = 0; i < this.playerEntities.size(); ++i)
         {

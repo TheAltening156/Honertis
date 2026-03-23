@@ -1,9 +1,4 @@
-/*
- * Decompiled with CFR 0.150.
- */
 package yalter.mousetweaks;
-
-import yalter.mousetweaks.ObfuscatedName;
 
 public class Constants {
     public static final String MOD_NAME = "Mouse Tweaks";

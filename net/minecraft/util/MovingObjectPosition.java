@@ -26,9 +26,9 @@ public class MovingObjectPosition
         this(MovingObjectPosition.MovingObjectType.BLOCK, p_i45552_1_, facing, BlockPos.ORIGIN);
     }
 
-    public MovingObjectPosition(Entity p_i2304_1_)
+    public MovingObjectPosition(Entity entityIn)
     {
-        this(p_i2304_1_, new Vec3(p_i2304_1_.posX, p_i2304_1_.posY, p_i2304_1_.posZ));
+        this(entityIn, new Vec3(entityIn.posX, entityIn.posY, entityIn.posZ));
     }
 
     public MovingObjectPosition(MovingObjectPosition.MovingObjectType typeOfHitIn, Vec3 hitVecIn, EnumFacing sideHitIn, BlockPos blockPosIn)

@@ -149,18 +149,20 @@ import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.entity.projectile.EntityWitherSkull;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.src.PlayerItemsLayer;
-import net.minecraft.src.Reflector;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.optifine.entity.model.CustomEntityModels;
+import net.optifine.player.PlayerItemsLayer;
+import net.optifine.reflect.Reflector;
+import net.optifine.shaders.Shaders;
 
 public class RenderManager {
-   private Map field_78729_o = Maps.newHashMap();
-   private Map field_178636_l = Maps.newHashMap();
+   private Map<Class<? extends Entity>, Render<? extends Entity>> field_78729_o = Maps.<Class<? extends Entity>, Render<? extends Entity>>newHashMap();
+   private Map<String, RenderPlayer> field_178636_l = Maps.<String, RenderPlayer>newHashMap();
    private RenderPlayer field_178637_m;
    private FontRenderer field_78736_p;
    private double field_78725_b;
@@ -179,7 +181,7 @@ public class RenderManager {
    private boolean field_178639_r = false;
    private boolean field_178638_s = true;
    private boolean field_85095_o = false;
-   private static final String __OBFID = "CL_00000991";
+   public Render renderRender = null;
 
    public RenderManager(TextureManager p_i46180_1_, RenderItem p_i46180_2_) {
       this.field_78724_e = p_i46180_1_;
@@ -247,7 +249,7 @@ public class RenderManager {
       this.field_178636_l.put("slim", new RenderPlayer(this, true));
       PlayerItemsLayer.register(this.field_178636_l);
       if(Reflector.RenderingRegistry_loadEntityRenderers.exists()) {
-         Reflector.call(Reflector.RenderingRegistry_loadEntityRenderers, new Object[]{this.field_78729_o});
+         Reflector.call(Reflector.RenderingRegistry_loadEntityRenderers, new Object[]{this, this.field_78729_o});
       }
 
    }
@@ -258,23 +260,23 @@ public class RenderManager {
       this.field_78723_d = p_178628_5_;
    }
 
-   public Render func_78715_a(Class p_78715_1_) {
-      Render render = (Render)this.field_78729_o.get(p_78715_1_);
+   public <T extends Entity> Render<T> func_78715_a(Class<? extends Entity> p_78715_1_) {
+      Render<? extends Entity> render = (Render)this.field_78729_o.get(p_78715_1_);
       if(render == null && p_78715_1_ != Entity.class) {
-         render = this.func_78715_a(p_78715_1_.getSuperclass());
+         render = this.<Entity>func_78715_a(p_78715_1_.getSuperclass());
          this.field_78729_o.put(p_78715_1_, render);
       }
 
       return render;
    }
 
-   public Render func_78713_a(Entity p_78713_1_) {
+   public <T extends Entity> Render<T> func_78713_a(Entity p_78713_1_) {
       if(p_78713_1_ instanceof AbstractClientPlayer) {
          String s = ((AbstractClientPlayer)p_78713_1_).func_175154_l();
          RenderPlayer renderplayer = (RenderPlayer)this.field_178636_l.get(s);
          return renderplayer != null?renderplayer:this.field_178637_m;
       } else {
-         return this.func_78715_a(p_78713_1_.getClass());
+         return this.<T>func_78715_a(p_78713_1_.getClass());
       }
    }
 
@@ -287,8 +289,8 @@ public class RenderManager {
       if(p_180597_3_ instanceof EntityLivingBase && ((EntityLivingBase)p_180597_3_).func_70608_bn()) {
          IBlockState iblockstate = p_180597_1_.func_180495_p(new BlockPos(p_180597_3_));
          Block block = iblockstate.func_177230_c();
-         if(Reflector.callBoolean(Reflector.ForgeBlock_isBed, new Object[]{p_180597_1_, new BlockPos(p_180597_3_), (EntityLivingBase)p_180597_3_})) {
-            EnumFacing enumfacing = (EnumFacing)Reflector.call(block, Reflector.ForgeBlock_getBedDirection, new Object[]{p_180597_1_, new BlockPos(p_180597_3_)});
+         if(Reflector.callBoolean(block, Reflector.ForgeBlock_isBed, new Object[]{iblockstate, p_180597_1_, new BlockPos(p_180597_3_), (EntityLivingBase)p_180597_3_})) {
+            EnumFacing enumfacing = (EnumFacing)Reflector.call(block, Reflector.ForgeBlock_getBedDirection, new Object[]{iblockstate, p_180597_1_, new BlockPos(p_180597_3_)});
             int i = enumfacing.func_176736_b();
             this.field_78735_i = (float)(i * 90 + 180);
             this.field_78732_j = 0.0F;
@@ -302,7 +304,7 @@ public class RenderManager {
          this.field_78732_j = p_180597_3_.field_70127_C + (p_180597_3_.field_70125_A - p_180597_3_.field_70127_C) * p_180597_6_;
       }
 
-      if(p_180597_5_.field_74320_O == 2) {
+      if(p_180597_5_.field_74330_P == 2) {
          this.field_78735_i += 180.0F;
       }
 
@@ -336,7 +338,7 @@ public class RenderManager {
    }
 
    public boolean func_178635_a(Entity p_178635_1_, ICamera p_178635_2_, double p_178635_3_, double p_178635_5_, double p_178635_7_) {
-      Render render = this.func_78713_a(p_178635_1_);
+      Render<Entity> render = this.<Entity>func_78713_a(p_178635_1_);
       return render != null && render.func_177071_a(p_178635_1_, p_178635_2_, p_178635_3_, p_178635_5_, p_178635_7_);
    }
 
@@ -367,7 +369,7 @@ public class RenderManager {
       double d0 = p_178630_1_.field_70142_S + (p_178630_1_.field_70165_t - p_178630_1_.field_70142_S) * (double)p_178630_2_;
       double d1 = p_178630_1_.field_70137_T + (p_178630_1_.field_70163_u - p_178630_1_.field_70137_T) * (double)p_178630_2_;
       double d2 = p_178630_1_.field_70136_U + (p_178630_1_.field_70161_v - p_178630_1_.field_70136_U) * (double)p_178630_2_;
-      Render render = this.func_78713_a(p_178630_1_);
+      Render<Entity> render = this.<Entity>func_78713_a(p_178630_1_);
       if(render != null && this.field_78724_e != null) {
          int i = p_178630_1_.func_70070_b(p_178630_2_);
          int j = i % 65536;
@@ -384,19 +386,23 @@ public class RenderManager {
    }
 
    public boolean func_147939_a(Entity p_147939_1_, double p_147939_2_, double p_147939_4_, double p_147939_6_, float p_147939_8_, float p_147939_9_, boolean p_147939_10_) {
-      Render render = null;
+      Render<Entity> render = null;
 
       try {
-         render = this.func_78713_a(p_147939_1_);
+         render = this.<Entity>func_78713_a(p_147939_1_);
          if(render != null && this.field_78724_e != null) {
             try {
                if(render instanceof RendererLivingEntity) {
                   ((RendererLivingEntity)render).func_177086_a(this.field_178639_r);
                }
 
+               if(CustomEntityModels.isActive()) {
+                  this.renderRender = render;
+               }
+
                render.func_76986_a(p_147939_1_, p_147939_2_, p_147939_4_, p_147939_6_, p_147939_8_, p_147939_9_);
             } catch (Throwable throwable2) {
-               throw new ReportedException(CrashReport.makeCrashReport(throwable2, "Rendering entity in world"));
+               throw new ReportedException(CrashReport.func_85055_a(throwable2, "Rendering entity in world"));
             }
 
             try {
@@ -404,14 +410,14 @@ public class RenderManager {
                   render.func_76979_b(p_147939_1_, p_147939_2_, p_147939_4_, p_147939_6_, p_147939_8_, p_147939_9_);
                }
             } catch (Throwable throwable1) {
-               throw new ReportedException(CrashReport.makeCrashReport(throwable1, "Post-rendering entity in world"));
+               throw new ReportedException(CrashReport.func_85055_a(throwable1, "Post-rendering entity in world"));
             }
 
             if(this.field_85095_o && !p_147939_1_.func_82150_aj() && !p_147939_10_) {
                try {
                   this.func_85094_b(p_147939_1_, p_147939_2_, p_147939_4_, p_147939_6_, p_147939_8_, p_147939_9_);
                } catch (Throwable throwable) {
-                  throw new ReportedException(CrashReport.makeCrashReport(throwable, "Rendering entity hitbox in world"));
+                  throw new ReportedException(CrashReport.func_85055_a(throwable, "Rendering entity hitbox in world"));
                }
             }
          } else if(this.field_78724_e != null) {
@@ -420,7 +426,7 @@ public class RenderManager {
 
          return true;
       } catch (Throwable throwable3) {
-         CrashReport crashreport = CrashReport.makeCrashReport(throwable3, "Rendering entity in world");
+         CrashReport crashreport = CrashReport.func_85055_a(throwable3, "Rendering entity in world");
          CrashReportCategory crashreportcategory = crashreport.func_85058_a("Entity being rendered");
          p_147939_1_.func_85029_a(crashreportcategory);
          CrashReportCategory crashreportcategory1 = crashreport.func_85058_a("Renderer details");
@@ -433,32 +439,34 @@ public class RenderManager {
    }
 
    private void func_85094_b(Entity p_85094_1_, double p_85094_2_, double p_85094_4_, double p_85094_6_, float p_85094_8_, float p_85094_9_) {
-      GlStateManager.func_179132_a(false);
-      GlStateManager.func_179090_x();
-      GlStateManager.func_179140_f();
-      GlStateManager.func_179129_p();
-      GlStateManager.func_179084_k();
-      float f = p_85094_1_.field_70130_N / 2.0F;
-      AxisAlignedBB axisalignedbb = p_85094_1_.func_174813_aQ();
-      AxisAlignedBB axisalignedbb1 = new AxisAlignedBB(axisalignedbb.field_72340_a - p_85094_1_.field_70165_t + p_85094_2_, axisalignedbb.field_72338_b - p_85094_1_.field_70163_u + p_85094_4_, axisalignedbb.field_72339_c - p_85094_1_.field_70161_v + p_85094_6_, axisalignedbb.field_72336_d - p_85094_1_.field_70165_t + p_85094_2_, axisalignedbb.field_72337_e - p_85094_1_.field_70163_u + p_85094_4_, axisalignedbb.field_72334_f - p_85094_1_.field_70161_v + p_85094_6_);
-      RenderGlobal.func_181563_a(axisalignedbb1, 255, 255, 255, 255);
-      if(p_85094_1_ instanceof EntityLivingBase) {
-         float f1 = 0.01F;
-         RenderGlobal.func_181563_a(new AxisAlignedBB(p_85094_2_ - (double)f, p_85094_4_ + (double)p_85094_1_.func_70047_e() - 0.009999999776482582D, p_85094_6_ - (double)f, p_85094_2_ + (double)f, p_85094_4_ + (double)p_85094_1_.func_70047_e() + 0.009999999776482582D, p_85094_6_ + (double)f), 255, 0, 0, 255);
-      }
+      if(!Shaders.isShadowPass) {
+         GlStateManager.func_179132_a(false);
+         GlStateManager.func_179090_x();
+         GlStateManager.func_179140_f();
+         GlStateManager.func_179129_p();
+         GlStateManager.func_179084_k();
+         float f = p_85094_1_.field_70130_N / 2.0F;
+         AxisAlignedBB axisalignedbb = p_85094_1_.func_174813_aQ();
+         AxisAlignedBB axisalignedbb1 = new AxisAlignedBB(axisalignedbb.field_72340_a - p_85094_1_.field_70165_t + p_85094_2_, axisalignedbb.field_72338_b - p_85094_1_.field_70163_u + p_85094_4_, axisalignedbb.field_72339_c - p_85094_1_.field_70161_v + p_85094_6_, axisalignedbb.field_72336_d - p_85094_1_.field_70165_t + p_85094_2_, axisalignedbb.field_72337_e - p_85094_1_.field_70163_u + p_85094_4_, axisalignedbb.field_72334_f - p_85094_1_.field_70161_v + p_85094_6_);
+         RenderGlobal.func_181563_a(axisalignedbb1, 255, 255, 255, 255);
+         if(p_85094_1_ instanceof EntityLivingBase) {
+            float f1 = 0.01F;
+            RenderGlobal.func_181563_a(new AxisAlignedBB(p_85094_2_ - (double)f, p_85094_4_ + (double)p_85094_1_.func_70047_e() - 0.009999999776482582D, p_85094_6_ - (double)f, p_85094_2_ + (double)f, p_85094_4_ + (double)p_85094_1_.func_70047_e() + 0.009999999776482582D, p_85094_6_ + (double)f), 255, 0, 0, 255);
+         }
 
-      Tessellator tessellator = Tessellator.func_178181_a();
-      WorldRenderer worldrenderer = tessellator.func_178180_c();
-      Vec3 vec3 = p_85094_1_.func_70676_i(p_85094_9_);
-      worldrenderer.func_181668_a(3, DefaultVertexFormats.field_181706_f);
-      worldrenderer.func_181662_b(p_85094_2_, p_85094_4_ + (double)p_85094_1_.func_70047_e(), p_85094_6_).func_181669_b(0, 0, 255, 255).func_181675_d();
-      worldrenderer.func_181662_b(p_85094_2_ + vec3.field_72450_a * 2.0D, p_85094_4_ + (double)p_85094_1_.func_70047_e() + vec3.field_72448_b * 2.0D, p_85094_6_ + vec3.field_72449_c * 2.0D).func_181669_b(0, 0, 255, 255).func_181675_d();
-      tessellator.func_78381_a();
-      GlStateManager.func_179098_w();
-      GlStateManager.func_179145_e();
-      GlStateManager.func_179089_o();
-      GlStateManager.func_179084_k();
-      GlStateManager.func_179132_a(true);
+         Tessellator tessellator = Tessellator.func_178181_a();
+         WorldRenderer worldrenderer = tessellator.func_178180_c();
+         Vec3 vec3 = p_85094_1_.func_70676_i(p_85094_9_);
+         worldrenderer.func_181668_a(3, DefaultVertexFormats.field_181706_f);
+         worldrenderer.func_181662_b(p_85094_2_, p_85094_4_ + (double)p_85094_1_.func_70047_e(), p_85094_6_).func_181669_b(0, 0, 255, 255).func_181675_d();
+         worldrenderer.func_181662_b(p_85094_2_ + vec3.field_72450_a * 2.0D, p_85094_4_ + (double)p_85094_1_.func_70047_e() + vec3.field_72448_b * 2.0D, p_85094_6_ + vec3.field_72449_c * 2.0D).func_181669_b(0, 0, 255, 255).func_181675_d();
+         tessellator.func_78381_a();
+         GlStateManager.func_179098_w();
+         GlStateManager.func_179145_e();
+         GlStateManager.func_179089_o();
+         GlStateManager.func_179084_k();
+         GlStateManager.func_179132_a(true);
+      }
    }
 
    public void func_78717_a(World p_78717_1_) {
@@ -480,7 +488,7 @@ public class RenderManager {
       this.field_178639_r = p_178632_1_;
    }
 
-   public Map getEntityRenderMap() {
+   public Map<Class, Render> getEntityRenderMap() {
       return this.field_78729_o;
    }
 

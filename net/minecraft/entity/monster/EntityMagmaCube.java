@@ -75,8 +75,12 @@ public class EntityMagmaCube extends EntitySlime
 
     /**
      * Drop 0-2 items of this living's type
+     *  
+     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
+     * or tameable)
+     * @param lootingModifier level of enchanment to be applied to this drop
      */
-    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
         Item item = this.getDropItem();
 
@@ -84,9 +88,9 @@ public class EntityMagmaCube extends EntitySlime
         {
             int i = this.rand.nextInt(4) - 2;
 
-            if (p_70628_2_ > 0)
+            if (lootingModifier > 0)
             {
-                i += this.rand.nextInt(p_70628_2_ + 1);
+                i += this.rand.nextInt(lootingModifier + 1);
             }
 
             for (int j = 0; j < i; ++j)

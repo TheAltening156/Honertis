@@ -1,10 +1,3 @@
-/*
- * Decompiled with CFR 0.150.
- * 
- * Could not load the following classes:
- *  net.minecraft.inventory.Container
- *  net.minecraft.inventory.Slot
- */
 package yalter.mousetweaks.api;
 
 import net.minecraft.inventory.Container;

@@ -35,9 +35,9 @@ public class NetHandlerLoginClient implements INetHandlerLoginClient
     private final NetworkManager networkManager;
     private GameProfile gameProfile;
 
-    public NetHandlerLoginClient(NetworkManager p_i45059_1_, Minecraft mcIn, GuiScreen p_i45059_3_)
+    public NetHandlerLoginClient(NetworkManager networkManagerIn, Minecraft mcIn, GuiScreen p_i45059_3_)
     {
-        this.networkManager = p_i45059_1_;
+        this.networkManager = networkManagerIn;
         this.mc = mcIn;
         this.previousGuiScreen = p_i45059_3_;
     }
@@ -49,7 +49,7 @@ public class NetHandlerLoginClient implements INetHandlerLoginClient
         PublicKey publickey = packetIn.getPublicKey();
         String s1 = (new BigInteger(CryptManager.getServerIdHash(s, publickey, secretkey))).toString(16);
 
-        if (this.mc.getCurrentServerData() != null && this.mc.getCurrentServerData().func_181041_d())
+        if (this.mc.getCurrentServerData() != null && this.mc.getCurrentServerData().isOnLAN())
         {
             try
             {

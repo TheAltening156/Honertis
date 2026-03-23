@@ -23,7 +23,7 @@ public class VertexFormat
 
         for (int i = 0; i < vertexFormatIn.getElementCount(); ++i)
         {
-            this.func_181721_a(vertexFormatIn.getElement(i));
+            this.addElement(vertexFormatIn.getElement(i));
         }
 
         this.nextOffset = vertexFormatIn.getNextOffset();
@@ -50,19 +50,19 @@ public class VertexFormat
     }
 
     @SuppressWarnings("incomplete-switch")
-    public VertexFormat func_181721_a(VertexFormatElement p_181721_1_)
+    public VertexFormat addElement(VertexFormatElement element)
     {
-        if (p_181721_1_.isPositionElement() && this.hasPosition())
+        if (element.isPositionElement() && this.hasPosition())
         {
             LOGGER.warn("VertexFormat error: Trying to add a position VertexFormatElement when one already exists, ignoring.");
             return this;
         }
         else
         {
-            this.elements.add(p_181721_1_);
+            this.elements.add(element);
             this.offsets.add(Integer.valueOf(this.nextOffset));
 
-            switch (p_181721_1_.getUsage())
+            switch (element.getUsage())
             {
                 case NORMAL:
                     this.normalElementOffset = this.nextOffset;
@@ -73,10 +73,10 @@ public class VertexFormat
                     break;
 
                 case UV:
-                    this.uvOffsetsById.add(p_181721_1_.getIndex(), Integer.valueOf(this.nextOffset));
+                    this.uvOffsetsById.add(element.getIndex(), Integer.valueOf(this.nextOffset));
             }
 
-            this.nextOffset += p_181721_1_.getSize();
+            this.nextOffset += element.getSize();
             return this;
         }
     }
@@ -145,7 +145,7 @@ public class VertexFormat
         return false;
     }
 
-    public int func_181719_f()
+    public int getIntegerSize()
     {
         return this.getNextOffset() / 4;
     }
@@ -170,7 +170,7 @@ public class VertexFormat
         return (VertexFormatElement)this.elements.get(index);
     }
 
-    public int func_181720_d(int p_181720_1_)
+    public int getOffset(int p_181720_1_)
     {
         return ((Integer)this.offsets.get(p_181720_1_)).intValue();
     }

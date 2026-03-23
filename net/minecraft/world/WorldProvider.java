@@ -112,10 +112,10 @@ public abstract class WorldProvider
     /**
      * Calculates the angle of sun and moon in the sky relative to a specified time (usually worldTime)
      */
-    public float calculateCelestialAngle(long p_76563_1_, float p_76563_3_)
+    public float calculateCelestialAngle(long worldTime, float partialTicks)
     {
-        int i = (int)(p_76563_1_ % 24000L);
-        float f = ((float)i + p_76563_3_) / 24000.0F - 0.25F;
+        int i = (int)(worldTime % 24000L);
+        float f = ((float)i + partialTicks) / 24000.0F - 0.25F;
 
         if (f < 0.0F)
         {
@@ -132,9 +132,9 @@ public abstract class WorldProvider
         return f;
     }
 
-    public int getMoonPhase(long p_76559_1_)
+    public int getMoonPhase(long worldTime)
     {
-        return (int)(p_76559_1_ / 24000L % 8L + 8L) % 8;
+        return (int)(worldTime / 24000L % 8L + 8L) % 8;
     }
 
     /**
@@ -220,7 +220,7 @@ public abstract class WorldProvider
 
     public int getAverageGroundLevel()
     {
-        return this.terrainType == WorldType.FLAT ? 4 : this.worldObj.func_181545_F() + 1;
+        return this.terrainType == WorldType.FLAT ? 4 : this.worldObj.getSeaLevel() + 1;
     }
 
     /**

@@ -72,13 +72,13 @@ public class CommandGameRule extends CommandBase
         }
     }
 
-    public static void func_175773_a(GameRules p_175773_0_, String p_175773_1_)
+    public static void func_175773_a(GameRules rules, String p_175773_1_)
     {
         if ("reducedDebugInfo".equals(p_175773_1_))
         {
-            byte b0 = (byte)(p_175773_0_.getBoolean(p_175773_1_) ? 22 : 23);
+            byte b0 = (byte)(rules.getBoolean(p_175773_1_) ? 22 : 23);
 
-            for (EntityPlayerMP entityplayermp : MinecraftServer.getServer().getConfigurationManager().func_181057_v())
+            for (EntityPlayerMP entityplayermp : MinecraftServer.getServer().getConfigurationManager().getPlayerList())
             {
                 entityplayermp.playerNetServerHandler.sendPacket(new S19PacketEntityStatus(entityplayermp, b0));
             }

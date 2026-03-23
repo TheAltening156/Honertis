@@ -73,11 +73,11 @@ public class InventoryPlayer implements IInventory
         return -1;
     }
 
-    private int getInventorySlotContainItemAndDamage(Item itemIn, int p_146024_2_)
+    private int getInventorySlotContainItemAndDamage(Item itemIn, int metadataIn)
     {
         for (int i = 0; i < this.mainInventory.length; ++i)
         {
-            if (this.mainInventory[i] != null && this.mainInventory[i].getItem() == itemIn && this.mainInventory[i].getMetadata() == p_146024_2_)
+            if (this.mainInventory[i] != null && this.mainInventory[i].getItem() == itemIn && this.mainInventory[i].getMetadata() == metadataIn)
             {
                 return i;
             }
@@ -118,10 +118,10 @@ public class InventoryPlayer implements IInventory
         return -1;
     }
 
-    public void setCurrentItem(Item itemIn, int p_146030_2_, boolean p_146030_3_, boolean p_146030_4_)
+    public void setCurrentItem(Item itemIn, int metadataIn, boolean isMetaSpecific, boolean p_146030_4_)
     {
         ItemStack itemstack = this.getCurrentItem();
-        int i = p_146030_3_ ? this.getInventorySlotContainItemAndDamage(itemIn, p_146030_2_) : this.getInventorySlotContainItem(itemIn);
+        int i = isMetaSpecific ? this.getInventorySlotContainItemAndDamage(itemIn, metadataIn) : this.getInventorySlotContainItem(itemIn);
 
         if (i >= 0 && i < 9)
         {
@@ -138,7 +138,7 @@ public class InventoryPlayer implements IInventory
 
             if (itemstack == null || !itemstack.isItemEnchantable() || this.getInventorySlotContainItemAndDamage(itemstack.getItem(), itemstack.getItemDamage()) != this.currentItem)
             {
-                int k = this.getInventorySlotContainItemAndDamage(itemIn, p_146030_2_);
+                int k = this.getInventorySlotContainItemAndDamage(itemIn, metadataIn);
                 int l;
 
                 if (k >= 0)
@@ -151,27 +151,30 @@ public class InventoryPlayer implements IInventory
                     l = 1;
                 }
 
-                this.mainInventory[this.currentItem] = new ItemStack(itemIn, l, p_146030_2_);
+                this.mainInventory[this.currentItem] = new ItemStack(itemIn, l, metadataIn);
             }
         }
     }
 
     /**
      * Switch the current item to the next one or the previous one
+     *  
+     * @param direction Direction to switch (1, 0, -1). 1 (any > 0) to select item left of current (decreasing
+     * currentItem index), -1 (any < 0) to select item right of current (increasing currentItem index). 0 has no effect.
      */
-    public void changeCurrentItem(int p_70453_1_)
+    public void changeCurrentItem(int direction)
     {
-        if (p_70453_1_ > 0)
+        if (direction > 0)
         {
-            p_70453_1_ = 1;
+            direction = 1;
         }
 
-        if (p_70453_1_ < 0)
+        if (direction < 0)
         {
-            p_70453_1_ = -1;
+            direction = -1;
         }
 
-        for (this.currentItem -= p_70453_1_; this.currentItem < 0; this.currentItem += 9)
+        for (this.currentItem -= direction; this.currentItem < 0; this.currentItem += 9)
         {
             ;
         }
@@ -561,8 +564,10 @@ public class InventoryPlayer implements IInventory
     /**
      * Writes the inventory out as a list of compound tags. This is where the slot indices are used (+100 for armor, +80
      * for crafting).
+     *  
+     * @param nbtTagListIn List to append tags to
      */
-    public NBTTagList writeToNBT(NBTTagList p_70442_1_)
+    public NBTTagList writeToNBT(NBTTagList nbtTagListIn)
     {
         for (int i = 0; i < this.mainInventory.length; ++i)
         {
@@ -571,7 +576,7 @@ public class InventoryPlayer implements IInventory
                 NBTTagCompound nbttagcompound = new NBTTagCompound();
                 nbttagcompound.setByte("Slot", (byte)i);
                 this.mainInventory[i].writeToNBT(nbttagcompound);
-                p_70442_1_.appendTag(nbttagcompound);
+                nbtTagListIn.appendTag(nbttagcompound);
             }
         }
 
@@ -582,24 +587,26 @@ public class InventoryPlayer implements IInventory
                 NBTTagCompound nbttagcompound1 = new NBTTagCompound();
                 nbttagcompound1.setByte("Slot", (byte)(j + 100));
                 this.armorInventory[j].writeToNBT(nbttagcompound1);
-                p_70442_1_.appendTag(nbttagcompound1);
+                nbtTagListIn.appendTag(nbttagcompound1);
             }
         }
 
-        return p_70442_1_;
+        return nbtTagListIn;
     }
 
     /**
      * Reads from the given tag list and fills the slots in the inventory with the correct items.
+     *  
+     * @param nbtTagListIn tagList to read from
      */
-    public void readFromNBT(NBTTagList p_70443_1_)
+    public void readFromNBT(NBTTagList nbtTagListIn)
     {
         this.mainInventory = new ItemStack[36];
         this.armorInventory = new ItemStack[4];
 
-        for (int i = 0; i < p_70443_1_.tagCount(); ++i)
+        for (int i = 0; i < nbtTagListIn.tagCount(); ++i)
         {
-            NBTTagCompound nbttagcompound = p_70443_1_.getCompoundTagAt(i);
+            NBTTagCompound nbttagcompound = nbtTagListIn.getCompoundTagAt(i);
             int j = nbttagcompound.getByte("Slot") & 255;
             ItemStack itemstack = ItemStack.loadItemStackFromNBT(nbttagcompound);
 
@@ -643,7 +650,7 @@ public class InventoryPlayer implements IInventory
     }
 
     /**
-     * Gets the name of this command sender (usually username, but possibly "Rcon")
+     * Get the name of this object. For players this returns their username
      */
     public String getName()
     {
@@ -689,10 +696,12 @@ public class InventoryPlayer implements IInventory
 
     /**
      * returns a player armor item (as itemstack) contained in specified armor slot.
+     *  
+     * @param slotIn the slot index requested
      */
-    public ItemStack armorItemInSlot(int p_70440_1_)
+    public ItemStack armorItemInSlot(int slotIn)
     {
-        return this.armorInventory[p_70440_1_];
+        return this.armorInventory[slotIn];
     }
 
     /**

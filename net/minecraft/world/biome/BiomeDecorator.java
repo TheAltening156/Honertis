@@ -138,7 +138,7 @@ public class BiomeDecorator
     /** True if decorator should generate surface lava & water */
     public boolean generateLakes = true;
 
-    public void decorate(World worldIn, Random random, BiomeGenBase p_180292_3_, BlockPos p_180292_4_)
+    public void decorate(World worldIn, Random random, BiomeGenBase biome, BlockPos p_180292_4_)
     {
         if (this.currentWorld != null)
         {
@@ -171,7 +171,7 @@ public class BiomeDecorator
             this.redstoneGen = new WorldGenMinable(Blocks.redstone_ore.getDefaultState(), this.chunkProviderSettings.redstoneSize);
             this.diamondGen = new WorldGenMinable(Blocks.diamond_ore.getDefaultState(), this.chunkProviderSettings.diamondSize);
             this.lapisGen = new WorldGenMinable(Blocks.lapis_ore.getDefaultState(), this.chunkProviderSettings.lapisSize);
-            this.genDecorations(p_180292_3_);
+            this.genDecorations(biome);
             this.currentWorld = null;
             this.randomGenerator = null;
         }

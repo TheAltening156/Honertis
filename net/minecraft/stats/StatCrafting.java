@@ -16,7 +16,7 @@ public class StatCrafting extends StatBase
 
         if (i != 0)
         {
-            IScoreObjectiveCriteria.INSTANCES.put(p_i45910_1_ + i, this.func_150952_k());
+            IScoreObjectiveCriteria.INSTANCES.put(p_i45910_1_ + i, this.getCriteria());
         }
     }
 

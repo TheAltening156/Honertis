@@ -85,7 +85,7 @@ public class Utils {
 				Runtime.getRuntime().exec(new String[] { "/usr/bin/open", s });
 				return;
 			} catch (IOException ioexception1) {
-				LogManager.getLogger().error((String) "Couldn\'t open file", (Throwable) ioexception1);
+				LogManager.getLogger().error("Couldn\'t open file", ioexception1);
 			}
 		} else if (Util.getOSType() == Util.EnumOS.WINDOWS) {
 			String s1 = String.format("cmd.exe /C start \"Open file\" \"%s\"", new Object[] { s });
@@ -94,7 +94,7 @@ public class Utils {
 				Runtime.getRuntime().exec(s1);
 				return;
 			} catch (IOException ioexception) {
-				LogManager.getLogger().error((String) "Couldn\'t open file", (Throwable) ioexception);
+				LogManager.getLogger().error("Couldn\'t open file", ioexception);
 			}
 		}
 
@@ -159,7 +159,7 @@ public class Utils {
 	 * 
 	 */
 	public static int getRainbow(float seconds, float saturation, float brightness, long speed) {
-	    float hue = (float)((System.currentTimeMillis() + speed) % (long)((int)(seconds * 1000.0F))) / (seconds * 1000.0F);
+	    float hue = (System.currentTimeMillis() + speed) % ((int)(seconds * 1000.0F)) / (seconds * 1000.0F);
 	    int color = Color.HSBtoRGB(hue, saturation, brightness);
 	    return color;
 	}

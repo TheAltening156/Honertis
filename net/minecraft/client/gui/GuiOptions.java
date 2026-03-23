@@ -1,7 +1,6 @@
 package net.minecraft.client.gui;
 
 import java.io.IOException;
-
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.client.audio.SoundEventAccessorComposite;
@@ -76,6 +75,11 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback
             {
                 this.field_175357_i.enabled = false;
             }
+        }
+        else
+        {
+            GuiOptionButton guioptionbutton1 = new GuiOptionButton(GameSettings.Options.enumFloat.returnEnumOrdinal(), this.width / 2 - 155 + i % 2 * 160, this.height / 6 - 12 + 24 * (i >> 1), GameSettings.Options.enumFloat, this.game_settings_1.getKeyBinding(GameSettings.Options.enumFloat));
+            this.buttonList.add(guioptionbutton1);
         }
 
         this.buttonList.add(new GuiButton(110, this.width / 2 - 155, this.height / 6 + 48 - 6, 150, 20, I18n.format("options.skinCustomisation", new Object[0])));
@@ -199,7 +203,7 @@ public class GuiOptions extends GuiScreen implements GuiYesNoCallback
             if (button.id == 105)
             {
                 this.mc.gameSettings.saveOptions();
-                mc.displayGuiScreen(new GuiScreenResourcePacks(this));
+                this.mc.displayGuiScreen(new GuiScreenResourcePacks(this));
             }
 
             if (button.id == 106)

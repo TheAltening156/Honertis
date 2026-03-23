@@ -1,10 +1,3 @@
-/*
- * Decompiled with CFR 0.150.
- * 
- * Could not load the following classes:
- *  net.minecraft.crash.CrashReport
- *  net.minecraft.util.ReportedException
- */
 package yalter.mousetweaks;
 
 import java.lang.reflect.Field;
@@ -30,7 +23,7 @@ public class ReflectionCache {
             return method.invoke(obj, args);
         }
         catch (IllegalAccessException e) {
-            CrashReport crashreport = CrashReport.makeCrashReport((Throwable)e, (String)"Invoking method in MouseTweaks' reflection");
+            CrashReport crashreport = CrashReport.makeCrashReport(e, "Invoking method in MouseTweaks' reflection");
             throw new ReportedException(crashreport);
         }
     }
@@ -41,7 +34,7 @@ public class ReflectionCache {
             return field.get(obj);
         }
         catch (IllegalAccessException e) {
-            CrashReport crashreport = CrashReport.makeCrashReport((Throwable)e, (String)"Getting field value in MouseTweaks' reflection");
+            CrashReport crashreport = CrashReport.makeCrashReport(e, "Getting field value in MouseTweaks' reflection");
             throw new ReportedException(crashreport);
         }
     }
@@ -52,7 +45,7 @@ public class ReflectionCache {
             field.set(obj, value);
         }
         catch (IllegalAccessException e) {
-            CrashReport crashreport = CrashReport.makeCrashReport((Throwable)e, (String)"Setting field value in MouseTweaks' reflection");
+            CrashReport crashreport = CrashReport.makeCrashReport(e, "Setting field value in MouseTweaks' reflection");
             throw new ReportedException(crashreport);
         }
     }

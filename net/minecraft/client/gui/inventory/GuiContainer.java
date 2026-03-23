@@ -1,7 +1,6 @@
 package net.minecraft.client.gui.inventory;
 
 import com.google.common.collect.Sets;
-
 import java.io.IOException;
 import java.util.Set;
 import net.minecraft.client.Minecraft;
@@ -19,7 +18,6 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 public abstract class GuiContainer extends GuiScreen
 {
@@ -427,6 +425,7 @@ public abstract class GuiContainer extends GuiScreen
                             {
                                 i1 = 4;
                             }
+
                             this.handleMouseClick(slot, l, mouseButton, i1);
                         }
 

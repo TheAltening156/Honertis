@@ -213,11 +213,11 @@ public final class WorldSettings
             return SURVIVAL;
         }
 
-        public static WorldSettings.GameType getByName(String p_77142_0_)
+        public static WorldSettings.GameType getByName(String gamemodeName)
         {
             for (WorldSettings.GameType worldsettings$gametype : values())
             {
-                if (worldsettings$gametype.name.equals(p_77142_0_))
+                if (worldsettings$gametype.name.equals(gamemodeName))
                 {
                     return worldsettings$gametype;
                 }

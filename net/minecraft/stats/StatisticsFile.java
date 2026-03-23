@@ -85,7 +85,7 @@ public class StatisticsFile extends StatFileWriter
 
             if (this.mcServer.isAnnouncingPlayerAchievements())
             {
-                this.mcServer.getConfigurationManager().sendChatMsg(new ChatComponentTranslation("chat.type.achievement", new Object[] {playerIn.getDisplayName(), statIn.func_150955_j()}));
+                this.mcServer.getConfigurationManager().sendChatMsg(new ChatComponentTranslation("chat.type.achievement", new Object[] {playerIn.getDisplayName(), statIn.createChatComponent()}));
             }
         }
 
@@ -95,7 +95,7 @@ public class StatisticsFile extends StatFileWriter
 
             if (this.mcServer.isAnnouncingPlayerAchievements())
             {
-                this.mcServer.getConfigurationManager().sendChatMsg(new ChatComponentTranslation("chat.type.achievement.taken", new Object[] {playerIn.getDisplayName(), statIn.func_150955_j()}));
+                this.mcServer.getConfigurationManager().sendChatMsg(new ChatComponentTranslation("chat.type.achievement.taken", new Object[] {playerIn.getDisplayName(), statIn.createChatComponent()}));
             }
         }
     }

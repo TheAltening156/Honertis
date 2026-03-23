@@ -100,6 +100,9 @@ public class BlockOre extends Block
         }
     }
 
+    /**
+     * Gets the meta to use for the Pick Block ItemStack result
+     */
     public int getDamageValue(World worldIn, BlockPos pos)
     {
         return 0;

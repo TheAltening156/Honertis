@@ -66,36 +66,42 @@ public class DamageSource
 
     /**
      * returns EntityDamageSourceIndirect of an arrow
+     *  
+     * @param indirectEntityIn The entity that shoot the arrow
      */
-    public static DamageSource causeArrowDamage(EntityArrow arrow, Entity p_76353_1_)
+    public static DamageSource causeArrowDamage(EntityArrow arrow, Entity indirectEntityIn)
     {
-        return (new EntityDamageSourceIndirect("arrow", arrow, p_76353_1_)).setProjectile();
+        return (new EntityDamageSourceIndirect("arrow", arrow, indirectEntityIn)).setProjectile();
     }
 
     /**
      * returns EntityDamageSourceIndirect of a fireball
+     *  
+     * @param indirectEntityIn The entity that shoot the fireball
      */
-    public static DamageSource causeFireballDamage(EntityFireball fireball, Entity p_76362_1_)
+    public static DamageSource causeFireballDamage(EntityFireball fireball, Entity indirectEntityIn)
     {
-        return p_76362_1_ == null ? (new EntityDamageSourceIndirect("onFire", fireball, fireball)).setFireDamage().setProjectile() : (new EntityDamageSourceIndirect("fireball", fireball, p_76362_1_)).setFireDamage().setProjectile();
+        return indirectEntityIn == null ? (new EntityDamageSourceIndirect("onFire", fireball, fireball)).setFireDamage().setProjectile() : (new EntityDamageSourceIndirect("fireball", fireball, indirectEntityIn)).setFireDamage().setProjectile();
     }
 
-    public static DamageSource causeThrownDamage(Entity p_76356_0_, Entity p_76356_1_)
+    public static DamageSource causeThrownDamage(Entity source, Entity indirectEntityIn)
     {
-        return (new EntityDamageSourceIndirect("thrown", p_76356_0_, p_76356_1_)).setProjectile();
+        return (new EntityDamageSourceIndirect("thrown", source, indirectEntityIn)).setProjectile();
     }
 
-    public static DamageSource causeIndirectMagicDamage(Entity p_76354_0_, Entity p_76354_1_)
+    public static DamageSource causeIndirectMagicDamage(Entity source, Entity indirectEntityIn)
     {
-        return (new EntityDamageSourceIndirect("indirectMagic", p_76354_0_, p_76354_1_)).setDamageBypassesArmor().setMagicDamage();
+        return (new EntityDamageSourceIndirect("indirectMagic", source, indirectEntityIn)).setDamageBypassesArmor().setMagicDamage();
     }
 
     /**
      * Returns the EntityDamageSource of the Thorns enchantment
+     *  
+     * @param source The Entity that wears the armor with thorn
      */
-    public static DamageSource causeThornsDamage(Entity p_92087_0_)
+    public static DamageSource causeThornsDamage(Entity source)
     {
-        return (new EntityDamageSource("thorns", p_92087_0_)).setIsThornsDamage().setMagicDamage();
+        return (new EntityDamageSource("thorns", source)).setIsThornsDamage().setMagicDamage();
     }
 
     public static DamageSource setExplosionSource(Explosion explosionIn)
@@ -207,13 +213,15 @@ public class DamageSource
 
     /**
      * Gets the death message that is displayed when the player dies
+     *  
+     * @param entityLivingBaseIn The EntityLivingBase that died
      */
-    public IChatComponent getDeathMessage(EntityLivingBase p_151519_1_)
+    public IChatComponent getDeathMessage(EntityLivingBase entityLivingBaseIn)
     {
-        EntityLivingBase entitylivingbase = p_151519_1_.func_94060_bK();
+        EntityLivingBase entitylivingbase = entityLivingBaseIn.getAttackingEntity();
         String s = "death.attack." + this.damageType;
         String s1 = s + ".player";
-        return entitylivingbase != null && StatCollector.canTranslate(s1) ? new ChatComponentTranslation(s1, new Object[] {p_151519_1_.getDisplayName(), entitylivingbase.getDisplayName()}): new ChatComponentTranslation(s, new Object[] {p_151519_1_.getDisplayName()});
+        return entitylivingbase != null && StatCollector.canTranslate(s1) ? new ChatComponentTranslation(s1, new Object[] {entityLivingBaseIn.getDisplayName(), entitylivingbase.getDisplayName()}): new ChatComponentTranslation(s, new Object[] {entityLivingBaseIn.getDisplayName()});
     }
 
     /**

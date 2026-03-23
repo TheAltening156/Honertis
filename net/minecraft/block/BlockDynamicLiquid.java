@@ -41,9 +41,9 @@ public class BlockDynamicLiquid extends BlockLiquid
             int l = -100;
             this.adjacentSourceBlocks = 0;
 
-            for (Object enumfacing : EnumFacing.Plane.HORIZONTAL)
+            for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
             {
-                l = this.checkAdjacentBlock(worldIn, pos.offset((EnumFacing) enumfacing), l);
+                l = this.checkAdjacentBlock(worldIn, pos.offset(enumfacing), l);
             }
 
             int i1 = l + j;
@@ -178,11 +178,11 @@ public class BlockDynamicLiquid extends BlockLiquid
     {
         int i = 1000;
 
-        for (Object enumfacing : EnumFacing.Plane.HORIZONTAL)
+        for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
         {
             if (enumfacing != calculateFlowCost)
             {
-                BlockPos blockpos = pos.offset((EnumFacing) enumfacing);
+                BlockPos blockpos = pos.offset(enumfacing);
                 IBlockState iblockstate = worldIn.getBlockState(blockpos);
 
                 if (!this.isBlocked(worldIn, blockpos, iblockstate) && (iblockstate.getBlock().getMaterial() != this.blockMaterial || ((Integer)iblockstate.getValue(LEVEL)).intValue() > 0))
@@ -194,7 +194,7 @@ public class BlockDynamicLiquid extends BlockLiquid
 
                     if (distance < 4)
                     {
-                        int j = this.func_176374_a(worldIn, blockpos, distance + 1, ((EnumFacing) enumfacing).getOpposite());
+                        int j = this.func_176374_a(worldIn, blockpos, distance + 1, enumfacing.getOpposite());
 
                         if (j < i)
                         {
@@ -213,9 +213,9 @@ public class BlockDynamicLiquid extends BlockLiquid
         int i = 1000;
         Set<EnumFacing> set = EnumSet.<EnumFacing>noneOf(EnumFacing.class);
 
-        for (Object enumfacing : EnumFacing.Plane.HORIZONTAL)
+        for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
         {
-            BlockPos blockpos = pos.offset((EnumFacing) enumfacing);
+            BlockPos blockpos = pos.offset(enumfacing);
             IBlockState iblockstate = worldIn.getBlockState(blockpos);
 
             if (!this.isBlocked(worldIn, blockpos, iblockstate) && (iblockstate.getBlock().getMaterial() != this.blockMaterial || ((Integer)iblockstate.getValue(LEVEL)).intValue() > 0))
@@ -224,7 +224,7 @@ public class BlockDynamicLiquid extends BlockLiquid
 
                 if (this.isBlocked(worldIn, blockpos.down(), worldIn.getBlockState(blockpos.down())))
                 {
-                    j = this.func_176374_a(worldIn, blockpos, 1, ((EnumFacing) enumfacing).getOpposite());
+                    j = this.func_176374_a(worldIn, blockpos, 1, enumfacing.getOpposite());
                 }
                 else
                 {
@@ -238,7 +238,7 @@ public class BlockDynamicLiquid extends BlockLiquid
 
                 if (j <= i)
                 {
-                    set.add((EnumFacing) enumfacing);
+                    set.add(enumfacing);
                     i = j;
                 }
             }

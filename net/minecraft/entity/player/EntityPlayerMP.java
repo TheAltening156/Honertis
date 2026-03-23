@@ -520,7 +520,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
             score.func_96648_a();
         }
 
-        EntityLivingBase entitylivingbase = this.func_94060_bK();
+        EntityLivingBase entitylivingbase = this.getAttackingEntity();
 
         if (entitylivingbase != null)
         {
@@ -679,14 +679,14 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
     /**
      * Wake up the player if they're sleeping.
      */
-    public void wakeUpPlayer(boolean p_70999_1_, boolean updateWorldFlag, boolean setSpawn)
+    public void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn)
     {
         if (this.isPlayerSleeping())
         {
             this.getServerForPlayer().getEntityTracker().func_151248_b(this, new S0BPacketAnimation(this, 2));
         }
 
-        super.wakeUpPlayer(p_70999_1_, updateWorldFlag, setSpawn);
+        super.wakeUpPlayer(immediately, updateWorldFlag, setSpawn);
 
         if (this.playerNetServerHandler != null)
         {
@@ -886,7 +886,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
         this.playerNetServerHandler.sendPacket(new S31PacketWindowProperty(containerIn.windowId, varToUpdate, newValue));
     }
 
-    public void func_175173_a(Container p_175173_1_, IInventory p_175173_2_)
+    public void sendAllWindowProperties(Container p_175173_1_, IInventory p_175173_2_)
     {
         for (int i = 0; i < p_175173_2_.getFieldCount(); ++i)
         {
@@ -951,7 +951,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
         {
             this.statsFile.increaseStat(this, stat, amount);
 
-            for (ScoreObjective scoreobjective : this.getWorldScoreboard().getObjectivesFromCriteria(stat.func_150952_k()))
+            for (ScoreObjective scoreobjective : this.getWorldScoreboard().getObjectivesFromCriteria(stat.getCriteria()))
             {
                 this.getWorldScoreboard().getValueFromObjective(this.getName(), scoreobjective).increseScore(amount);
             }
@@ -969,7 +969,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
         {
             this.statsFile.unlockAchievement(this, p_175145_1_, 0);
 
-            for (ScoreObjective scoreobjective : this.getWorldScoreboard().getObjectivesFromCriteria(p_175145_1_.func_150952_k()))
+            for (ScoreObjective scoreobjective : this.getWorldScoreboard().getObjectivesFromCriteria(p_175145_1_.getCriteria()))
             {
                 this.getWorldScoreboard().getValueFromObjective(this.getName(), scoreobjective).setScorePoints(0);
             }
@@ -1055,10 +1055,10 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
         this.playerNetServerHandler.sendPacket(new S1DPacketEntityEffect(this.getEntityId(), id));
     }
 
-    protected void onFinishedPotionEffect(PotionEffect p_70688_1_)
+    protected void onFinishedPotionEffect(PotionEffect effect)
     {
-        super.onFinishedPotionEffect(p_70688_1_);
-        this.playerNetServerHandler.sendPacket(new S1EPacketRemoveEntityEffect(this.getEntityId(), p_70688_1_));
+        super.onFinishedPotionEffect(effect);
+        this.playerNetServerHandler.sendPacket(new S1EPacketRemoveEntityEffect(this.getEntityId(), effect));
     }
 
     /**

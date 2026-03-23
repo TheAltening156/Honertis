@@ -173,12 +173,12 @@ public class ModelRabbit extends ModelBase
      * and legs, where par1 represents the time(so that arms and legs swing back and forth) and par2 represents how
      * "far" arms and legs can swing at most.
      */
-    public void setRotationAngles(float p_78087_1_, float p_78087_2_, float p_78087_3_, float p_78087_4_, float p_78087_5_, float p_78087_6_, Entity entityIn)
+    public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)
     {
-        float f = p_78087_3_ - (float)entityIn.ticksExisted;
+        float f = ageInTicks - (float)entityIn.ticksExisted;
         EntityRabbit entityrabbit = (EntityRabbit)entityIn;
-        this.rabbitNose.rotateAngleX = this.rabbitHead.rotateAngleX = this.rabbitRightEar.rotateAngleX = this.rabbitLeftEar.rotateAngleX = p_78087_5_ * 0.017453292F;
-        this.rabbitNose.rotateAngleY = this.rabbitHead.rotateAngleY = p_78087_4_ * 0.017453292F;
+        this.rabbitNose.rotateAngleX = this.rabbitHead.rotateAngleX = this.rabbitRightEar.rotateAngleX = this.rabbitLeftEar.rotateAngleX = headPitch * 0.017453292F;
+        this.rabbitNose.rotateAngleY = this.rabbitHead.rotateAngleY = netHeadYaw * 0.017453292F;
         this.rabbitRightEar.rotateAngleY = this.rabbitNose.rotateAngleY - 0.2617994F;
         this.rabbitLeftEar.rotateAngleY = this.rabbitNose.rotateAngleY + 0.2617994F;
         this.field_178701_m = MathHelper.sin(entityrabbit.func_175521_o(f) * (float)Math.PI);

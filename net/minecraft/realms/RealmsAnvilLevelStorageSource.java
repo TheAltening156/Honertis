@@ -11,9 +11,9 @@ public class RealmsAnvilLevelStorageSource
 {
     private ISaveFormat levelStorageSource;
 
-    public RealmsAnvilLevelStorageSource(ISaveFormat p_i1106_1_)
+    public RealmsAnvilLevelStorageSource(ISaveFormat levelStorageSourceIn)
     {
-        this.levelStorageSource = p_i1106_1_;
+        this.levelStorageSource = levelStorageSourceIn;
     }
 
     public String getName()
@@ -38,7 +38,7 @@ public class RealmsAnvilLevelStorageSource
 
     public boolean isNewLevelIdAcceptable(String p_isNewLevelIdAcceptable_1_)
     {
-        return this.levelStorageSource.func_154335_d(p_isNewLevelIdAcceptable_1_);
+        return this.levelStorageSource.isNewLevelIdAcceptable(p_isNewLevelIdAcceptable_1_);
     }
 
     public boolean deleteLevel(String p_deleteLevel_1_)
@@ -48,7 +48,7 @@ public class RealmsAnvilLevelStorageSource
 
     public boolean isConvertible(String p_isConvertible_1_)
     {
-        return this.levelStorageSource.func_154334_a(p_isConvertible_1_);
+        return this.levelStorageSource.isConvertible(p_isConvertible_1_);
     }
 
     public void renameLevel(String p_renameLevel_1_, String p_renameLevel_2_)

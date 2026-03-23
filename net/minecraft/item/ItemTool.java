@@ -32,9 +32,9 @@ public class ItemTool extends Item
         this.setCreativeTab(CreativeTabs.tabTools);
     }
 
-    public float getStrVsBlock(ItemStack stack, Block block)
+    public float getStrVsBlock(ItemStack stack, Block state)
     {
-        return this.effectiveBlocks.contains(block) ? this.efficiencyOnProperMaterial : 1.0F;
+        return this.effectiveBlocks.contains(state) ? this.efficiencyOnProperMaterial : 1.0F;
     }
 
     /**

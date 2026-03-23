@@ -28,11 +28,11 @@ public class LanguageManager implements IResourceManagerReloadListener
         I18n.setLocale(currentLocale);
     }
 
-    public void parseLanguageMetadata(List<IResourcePack> p_135043_1_)
+    public void parseLanguageMetadata(List<IResourcePack> resourcesPacks)
     {
         this.languageMap.clear();
 
-        for (IResourcePack iresourcepack : p_135043_1_)
+        for (IResourcePack iresourcepack : resourcesPacks)
         {
             try
             {

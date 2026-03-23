@@ -4,6 +4,8 @@ public interface IStatStringFormat
 {
     /**
      * Formats the strings based on 'IStatStringFormat' interface.
+     *  
+     * @param str The String to format
      */
-    String formatString(String p_74535_1_);
+    String formatString(String str);
 }

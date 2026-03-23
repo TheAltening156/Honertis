@@ -16,16 +16,16 @@ public class NettyEncryptionTranslator
         this.cipher = cipherIn;
     }
 
-    private byte[] func_150502_a(ByteBuf p_150502_1_)
+    private byte[] func_150502_a(ByteBuf buf)
     {
-        int i = p_150502_1_.readableBytes();
+        int i = buf.readableBytes();
 
         if (this.field_150505_b.length < i)
         {
             this.field_150505_b = new byte[i];
         }
 
-        p_150502_1_.readBytes((byte[])this.field_150505_b, 0, i);
+        buf.readBytes((byte[])this.field_150505_b, 0, i);
         return this.field_150505_b;
     }
 
@@ -38,10 +38,10 @@ public class NettyEncryptionTranslator
         return bytebuf;
     }
 
-    protected void cipher(ByteBuf p_150504_1_, ByteBuf p_150504_2_) throws ShortBufferException
+    protected void cipher(ByteBuf in, ByteBuf out) throws ShortBufferException
     {
-        int i = p_150504_1_.readableBytes();
-        byte[] abyte = this.func_150502_a(p_150504_1_);
+        int i = in.readableBytes();
+        byte[] abyte = this.func_150502_a(in);
         int j = this.cipher.getOutputSize(i);
 
         if (this.field_150506_c.length < j)
@@ -49,6 +49,6 @@ public class NettyEncryptionTranslator
             this.field_150506_c = new byte[j];
         }
 
-        p_150504_2_.writeBytes((byte[])this.field_150506_c, 0, this.cipher.update(abyte, 0, i, this.field_150506_c));
+        out.writeBytes((byte[])this.field_150506_c, 0, this.cipher.update(abyte, 0, i, this.field_150506_c));
     }
 }

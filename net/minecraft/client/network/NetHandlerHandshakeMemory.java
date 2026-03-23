@@ -12,10 +12,10 @@ public class NetHandlerHandshakeMemory implements INetHandlerHandshakeServer
     private final MinecraftServer mcServer;
     private final NetworkManager networkManager;
 
-    public NetHandlerHandshakeMemory(MinecraftServer p_i45287_1_, NetworkManager p_i45287_2_)
+    public NetHandlerHandshakeMemory(MinecraftServer mcServerIn, NetworkManager networkManagerIn)
     {
-        this.mcServer = p_i45287_1_;
-        this.networkManager = p_i45287_2_;
+        this.mcServer = mcServerIn;
+        this.networkManager = networkManagerIn;
     }
 
     /**

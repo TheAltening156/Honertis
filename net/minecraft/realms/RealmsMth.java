@@ -148,7 +148,7 @@ public class RealmsMth
 
     public static int roundUp(int p_roundUp_0_, int p_roundUp_1_)
     {
-        return MathHelper.func_154354_b(p_roundUp_0_, p_roundUp_1_);
+        return MathHelper.roundUp(p_roundUp_0_, p_roundUp_1_);
     }
 
     public static double average(long[] p_average_0_)

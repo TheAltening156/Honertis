@@ -11,7 +11,6 @@ import com.google.common.collect.Maps;
 import fr.honertis.Honertis;
 import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModuleBase;
-import fr.honertis.module.ModulesManager;
 import fr.honertis.settings.Settings;
 
 public class YamlUtils {

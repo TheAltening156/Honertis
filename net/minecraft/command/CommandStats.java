@@ -155,7 +155,7 @@ public class CommandStats extends CommandBase
                 }
                 else
                 {
-                    Entity entity = func_175768_b(sender, args[1]);
+                    Entity entity = getEntity(sender, args[1]);
                     commandresultstats = entity.getCommandStats();
                 }
 
@@ -169,12 +169,12 @@ public class CommandStats extends CommandBase
                         throw new CommandException("commands.stats.failed", new Object[0]);
                     }
 
-                    CommandResultStats.func_179667_a(commandresultstats, commandresultstats$type, s1, s2);
+                    CommandResultStats.setScoreBoardStat(commandresultstats, commandresultstats$type, s1, s2);
                     notifyOperators(sender, this, "commands.stats.success", new Object[] {commandresultstats$type.getTypeName(), s2, s1});
                 }
                 else if ("clear".equals(s))
                 {
-                    CommandResultStats.func_179667_a(commandresultstats, commandresultstats$type, (String)null, (String)null);
+                    CommandResultStats.setScoreBoardStat(commandresultstats, commandresultstats$type, (String)null, (String)null);
                     notifyOperators(sender, this, "commands.stats.cleared", new Object[] {commandresultstats$type.getTypeName()});
                 }
 

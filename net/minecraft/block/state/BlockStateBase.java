@@ -14,10 +14,9 @@ import net.minecraft.util.ResourceLocation;
 public abstract class BlockStateBase implements IBlockState
 {
     private static final Joiner COMMA_JOINER = Joiner.on(',');
-    private static final Function MAP_ENTRY_TO_STRING = new Function()
+    private static final Function<Entry<IProperty, Comparable>, String> MAP_ENTRY_TO_STRING = new Function<Entry<IProperty, Comparable>, String>()
     {
-        private static final String __OBFID = "CL_00002031";
-        public String apply(Entry p_apply_1_)
+        public String apply(Entry<IProperty, Comparable> p_apply_1_)
         {
             if (p_apply_1_ == null)
             {
@@ -29,12 +28,7 @@ public abstract class BlockStateBase implements IBlockState
                 return iproperty.getName() + "=" + iproperty.getName((Comparable)p_apply_1_.getValue());
             }
         }
-        public Object apply(Object p_apply_1_)
-        {
-            return this.apply((Entry)p_apply_1_);
-        }
     };
-    private static final String __OBFID = "CL_00002032";
     private int blockId = -1;
     private int blockStateId = -1;
     private int metadata = -1;
@@ -80,21 +74,19 @@ public abstract class BlockStateBase implements IBlockState
         return this.blockLocation;
     }
 
-    /**
-     * Create a version of this BlockState with the given property cycled to the next value in order. If the property
-     * was at the highest possible value, it is set to the lowest one instead.
-     */
-    public IBlockState cycleProperty(IProperty property)
+    public ImmutableTable < IProperty<?>, Comparable<?>, IBlockState > getPropertyValueTable()
     {
-        return this.withProperty(property, (Comparable)cyclePropertyValue(property.getAllowedValues(), this.getValue(property)));
+        return null;
     }
 
-    /**
-     * Helper method for cycleProperty.
-     */
-    protected static Object cyclePropertyValue(Collection values, Object currentValue)
+    public <T extends Comparable<T>> IBlockState cycleProperty(IProperty<T> property)
     {
-        Iterator iterator = values.iterator();
+        return this.withProperty(property, cyclePropertyValue(property.getAllowedValues(), this.getValue(property)));
+    }
+
+    protected static <T> T cyclePropertyValue(Collection<T> values, T currentValue)
+    {
+        Iterator<T> iterator = values.iterator();
 
         while (iterator.hasNext())
         {
@@ -102,14 +94,14 @@ public abstract class BlockStateBase implements IBlockState
             {
                 if (iterator.hasNext())
                 {
-                    return iterator.next();
+                    return (T)iterator.next();
                 }
 
-                return values.iterator().next();
+                return (T)values.iterator().next();
             }
         }
 
-        return iterator.next();
+        return (T)iterator.next();
     }
 
     public String toString()
@@ -125,10 +117,5 @@ public abstract class BlockStateBase implements IBlockState
         }
 
         return stringbuilder.toString();
-    }
-
-    public ImmutableTable<IProperty, Comparable, IBlockState> getPropertyValueTable()
-    {
-        return null;
     }
 }

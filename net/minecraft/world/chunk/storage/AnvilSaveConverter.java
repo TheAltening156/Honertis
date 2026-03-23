@@ -29,9 +29,9 @@ public class AnvilSaveConverter extends SaveFormatOld
 {
     private static final Logger logger = LogManager.getLogger();
 
-    public AnvilSaveConverter(File p_i2144_1_)
+    public AnvilSaveConverter(File savesDirectoryIn)
     {
-        super(p_i2144_1_);
+        super(savesDirectoryIn);
     }
 
     /**
@@ -98,7 +98,7 @@ public class AnvilSaveConverter extends SaveFormatOld
         return new AnvilSaveHandler(this.savesDirectory, saveName, storePlayerdata);
     }
 
-    public boolean func_154334_a(String saveName)
+    public boolean isConvertible(String saveName)
     {
         WorldInfo worldinfo = this.getWorldInfo(saveName);
         return worldinfo != null && worldinfo.getSaveVersion() == 19132;

@@ -88,11 +88,11 @@ public class CommandBanIp extends CommandBase
         return args.length == 1 ? getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : null;
     }
 
-    protected void func_147210_a(ICommandSender p_147210_1_, String p_147210_2_, String p_147210_3_)
+    protected void func_147210_a(ICommandSender sender, String address, String reason)
     {
-        IPBanEntry ipbanentry = new IPBanEntry(p_147210_2_, (Date)null, p_147210_1_.getName(), (Date)null, p_147210_3_);
+        IPBanEntry ipbanentry = new IPBanEntry(address, (Date)null, sender.getName(), (Date)null, reason);
         MinecraftServer.getServer().getConfigurationManager().getBannedIPs().addEntry(ipbanentry);
-        List<EntityPlayerMP> list = MinecraftServer.getServer().getConfigurationManager().getPlayersMatchingAddress(p_147210_2_);
+        List<EntityPlayerMP> list = MinecraftServer.getServer().getConfigurationManager().getPlayersMatchingAddress(address);
         String[] astring = new String[list.size()];
         int i = 0;
 
@@ -104,11 +104,11 @@ public class CommandBanIp extends CommandBase
 
         if (list.isEmpty())
         {
-            notifyOperators(p_147210_1_, this, "commands.banip.success", new Object[] {p_147210_2_});
+            notifyOperators(sender, this, "commands.banip.success", new Object[] {address});
         }
         else
         {
-            notifyOperators(p_147210_1_, this, "commands.banip.success.players", new Object[] {p_147210_2_, joinNiceString(astring)});
+            notifyOperators(sender, this, "commands.banip.success.players", new Object[] {address, joinNiceString(astring)});
         }
     }
 }

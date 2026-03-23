@@ -28,6 +28,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.play.server.S1BPacketEntityAttach;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.scoreboard.Team;
+import net.minecraft.src.Config;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumParticleTypes;
@@ -36,10 +38,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.biome.BiomeGenBase;
-import optifine.BlockPosM;
-import optifine.Config;
-import optifine.Reflector;
+import net.optifine.reflect.Reflector;
 
 public abstract class EntityLiving extends EntityLivingBase
 {
@@ -80,10 +79,8 @@ public abstract class EntityLiving extends EntityLivingBase
     private boolean isLeashed;
     private Entity leashedToEntity;
     private NBTTagCompound leashNBTTag;
-    private static final String __OBFID = "CL_00001550";
-    public int randomMobsId = 0;
-    public BiomeGenBase spawnBiome = null;
-    public BlockPos spawnPosition = null;
+    private UUID teamUuid = null;
+    private String teamUuidString = null;
 
     public EntityLiving(World worldIn)
     {
@@ -101,10 +98,6 @@ public abstract class EntityLiving extends EntityLivingBase
         {
             this.equipmentDropChances[i] = 0.085F;
         }
-
-        UUID uuid = this.getUniqueID();
-        long j = uuid.getLeastSignificantBits();
-        this.randomMobsId = (int)(j & 2147483647L);
     }
 
     protected void applyEntityAttributes()
@@ -169,7 +162,7 @@ public abstract class EntityLiving extends EntityLivingBase
     /**
      * Returns true if this entity can attack entities of the specified class.
      */
-    public boolean canAttackClass(Class cls)
+    public boolean canAttackClass(Class <? extends EntityLivingBase > cls)
     {
         return cls != EntityGhast.class;
     }
@@ -306,7 +299,7 @@ public abstract class EntityLiving extends EntityLivingBase
         }
     }
 
-    protected float func_110146_f(float p_110146_1_, float p_110146_2_)
+    protected float updateDistance(float p_110146_1_, float p_110146_2_)
     {
         this.bodyHelper.updateRenderAngles();
         return p_110146_2_;
@@ -327,8 +320,12 @@ public abstract class EntityLiving extends EntityLivingBase
 
     /**
      * Drop 0-2 items of this living's type
+     *  
+     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
+     * or tameable)
+     * @param lootingModifier level of enchanment to be applied to this drop
      */
-    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
         Item item = this.getDropItem();
 
@@ -336,9 +333,9 @@ public abstract class EntityLiving extends EntityLivingBase
         {
             int i = this.rand.nextInt(3);
 
-            if (p_70628_2_ > 0)
+            if (lootingModifier > 0)
             {
-                i += this.rand.nextInt(p_70628_2_ + 1);
+                i += this.rand.nextInt(lootingModifier + 1);
             }
 
             for (int j = 0; j < i; ++j)
@@ -622,13 +619,13 @@ public abstract class EntityLiving extends EntityLivingBase
         }
         else
         {
-            EntityPlayer entityplayer = this.worldObj.getClosestPlayerToEntity(this, -1.0D);
+            Entity entity = this.worldObj.getClosestPlayerToEntity(this, -1.0D);
 
-            if (entityplayer != null)
+            if (entity != null)
             {
-                double d0 = entityplayer.posX - this.posX;
-                double d1 = entityplayer.posY - this.posY;
-                double d2 = entityplayer.posZ - this.posZ;
+                double d0 = entity.posX - this.posX;
+                double d1 = entity.posY - this.posY;
+                double d2 = entity.posZ - this.posZ;
                 double d3 = d0 * d0 + d1 * d1 + d2 * d2;
 
                 if (this.canDespawn() && d3 > 16384.0D)
@@ -713,8 +710,8 @@ public abstract class EntityLiving extends EntityLivingBase
         }
 
         double d3 = (double)MathHelper.sqrt_double(d0 * d0 + d1 * d1);
-        float f = (float)(MathHelper.func_181159_b(d1, d0) * 180.0D / Math.PI) - 90.0F;
-        float f1 = (float)(-(MathHelper.func_181159_b(d2, d3) * 180.0D / Math.PI));
+        float f = (float)(MathHelper.atan2(d1, d0) * 180.0D / Math.PI) - 90.0F;
+        float f1 = (float)(-(MathHelper.atan2(d2, d3) * 180.0D / Math.PI));
         this.rotationPitch = this.updateRotation(this.rotationPitch, f1, p_70625_3_);
         this.rotationYaw = this.updateRotation(this.rotationYaw, f, p_70625_2_);
     }
@@ -833,15 +830,19 @@ public abstract class EntityLiving extends EntityLivingBase
 
     /**
      * Drop the equipment for this entity.
+     *  
+     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
+     * or tameable)
+     * @param lootingModifier level of enchanment to be applied to this drop
      */
-    protected void dropEquipment(boolean p_82160_1_, int p_82160_2_)
+    protected void dropEquipment(boolean wasRecentlyHit, int lootingModifier)
     {
         for (int i = 0; i < this.getInventory().length; ++i)
         {
             ItemStack itemstack = this.getEquipmentInSlot(i);
             boolean flag = this.equipmentDropChances[i] > 1.0F;
 
-            if (itemstack != null && (p_82160_1_ || flag) && this.rand.nextFloat() - (float)p_82160_2_ * 0.01F < this.equipmentDropChances[i])
+            if (itemstack != null && (wasRecentlyHit || flag) && this.rand.nextFloat() - (float)lootingModifier * 0.01F < this.equipmentDropChances[i])
             {
                 if (!flag && itemstack.isItemStackDamageable())
                 {
@@ -1144,7 +1145,14 @@ public abstract class EntityLiving extends EntityLivingBase
                 }
             }
 
-            return this.interact(playerIn) ? true : super.interactFirst(playerIn);
+            if (this.interact(playerIn))
+            {
+                return true;
+            }
+            else
+            {
+                return super.interactFirst(playerIn);
+            }
         }
     }
 
@@ -1322,36 +1330,6 @@ public abstract class EntityLiving extends EntityLivingBase
         return this.dataWatcher.getWatchableObjectByte(15) != 0;
     }
 
-    /**
-     * Checks if this entity is inside of an opaque block
-     */
-    public boolean isEntityInsideOpaqueBlock()
-    {
-        if (this.noClip)
-        {
-            return false;
-        }
-        else
-        {
-            BlockPosM blockposm = new BlockPosM(0, 0, 0);
-
-            for (int i = 0; i < 8; ++i)
-            {
-                double d0 = this.posX + (double)(((float)((i >> 0) % 2) - 0.5F) * this.width * 0.8F);
-                double d1 = this.posY + (double)(((float)((i >> 1) % 2) - 0.5F) * 0.1F);
-                double d2 = this.posZ + (double)(((float)((i >> 2) % 2) - 0.5F) * this.width * 0.8F);
-                blockposm.setXyz(d0, d1 + (double)this.getEyeHeight(), d2);
-
-                if (this.worldObj.getBlockState(blockposm).getBlock().isVisuallyOpaque())
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-    }
-
     private boolean canSkipUpdate()
     {
         if (this.isChild())
@@ -1406,17 +1384,23 @@ public abstract class EntityLiving extends EntityLivingBase
         this.despawnEntity();
     }
 
+    public Team getTeam()
+    {
+        UUID uuid = this.getUniqueID();
+
+        if (this.teamUuid != uuid)
+        {
+            this.teamUuid = uuid;
+            this.teamUuidString = uuid.toString();
+        }
+
+        return this.worldObj.getScoreboard().getPlayersTeam(this.teamUuidString);
+    }
+
     public static enum SpawnPlacementType
     {
-        ON_GROUND("ON_GROUND", 0),
-        IN_AIR("IN_AIR", 1),
-        IN_WATER("IN_WATER", 2);
-
-        private static final EntityLiving.SpawnPlacementType[] $VALUES = new EntityLiving.SpawnPlacementType[]{ON_GROUND, IN_AIR, IN_WATER};
-        private static final String __OBFID = "CL_00002255";
-
-        private SpawnPlacementType(String p_i18_3_, int p_i18_4_)
-        {
-        }
+        ON_GROUND,
+        IN_AIR,
+        IN_WATER;
     }
 }

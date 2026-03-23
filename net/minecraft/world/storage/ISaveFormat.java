@@ -25,13 +25,15 @@ public interface ISaveFormat
      */
     WorldInfo getWorldInfo(String saveName);
 
-    boolean func_154335_d(String p_154335_1_);
+    boolean isNewLevelIdAcceptable(String saveName);
 
     /**
      * @args: Takes one argument - the name of the directory of the world to delete. @desc: Delete the world by deleting
      * the associated directory recursively.
+     *  
+     * @param saveName The current save's name
      */
-    boolean deleteWorldDirectory(String p_75802_1_);
+    boolean deleteWorldDirectory(String saveName);
 
     /**
      * Renames the world by storing the new name in level.dat. It does *not* rename the directory containing the world
@@ -39,7 +41,7 @@ public interface ISaveFormat
      */
     void renameWorld(String dirName, String newName);
 
-    boolean func_154334_a(String saveName);
+    boolean isConvertible(String saveName);
 
     /**
      * gets if the map is old chunk saving (true) or McRegion (false)
@@ -53,6 +55,8 @@ public interface ISaveFormat
 
     /**
      * Return whether the given world can be loaded.
+     *  
+     * @param saveName The current save's name
      */
-    boolean canLoadWorld(String p_90033_1_);
+    boolean canLoadWorld(String saveName);
 }

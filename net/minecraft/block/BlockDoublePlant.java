@@ -27,12 +27,12 @@ public class BlockDoublePlant extends BlockBush implements IGrowable
 {
     public static final PropertyEnum<BlockDoublePlant.EnumPlantType> VARIANT = PropertyEnum.<BlockDoublePlant.EnumPlantType>create("variant", BlockDoublePlant.EnumPlantType.class);
     public static final PropertyEnum<BlockDoublePlant.EnumBlockHalf> HALF = PropertyEnum.<BlockDoublePlant.EnumBlockHalf>create("half", BlockDoublePlant.EnumBlockHalf.class);
-    public static final PropertyEnum<EnumFacing> field_181084_N = BlockDirectional.FACING;
+    public static final PropertyEnum<EnumFacing> FACING = BlockDirectional.FACING;
 
     public BlockDoublePlant()
     {
         super(Material.vine);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockDoublePlant.EnumPlantType.SUNFLOWER).withProperty(HALF, BlockDoublePlant.EnumBlockHalf.LOWER).withProperty(field_181084_N, EnumFacing.NORTH));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, BlockDoublePlant.EnumPlantType.SUNFLOWER).withProperty(HALF, BlockDoublePlant.EnumBlockHalf.LOWER).withProperty(FACING, EnumFacing.NORTH));
         this.setHardness(0.0F);
         this.setStepSound(soundTypeGrass);
         this.setUnlocalizedName("doublePlant");
@@ -248,6 +248,9 @@ public class BlockDoublePlant extends BlockBush implements IGrowable
         }
     }
 
+    /**
+     * Gets the meta to use for the Pick Block ItemStack result
+     */
     public int getDamageValue(World worldIn, BlockPos pos)
     {
         return this.getVariant(worldIn, pos).getMeta();
@@ -304,12 +307,12 @@ public class BlockDoublePlant extends BlockBush implements IGrowable
      */
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(HALF) == BlockDoublePlant.EnumBlockHalf.UPPER ? 8 | ((EnumFacing)state.getValue(field_181084_N)).getHorizontalIndex() : ((BlockDoublePlant.EnumPlantType)state.getValue(VARIANT)).getMeta();
+        return state.getValue(HALF) == BlockDoublePlant.EnumBlockHalf.UPPER ? 8 | ((EnumFacing)state.getValue(FACING)).getHorizontalIndex() : ((BlockDoublePlant.EnumPlantType)state.getValue(VARIANT)).getMeta();
     }
 
     protected BlockState createBlockState()
     {
-        return new BlockState(this, new IProperty[] {HALF, VARIANT, field_181084_N});
+        return new BlockState(this, new IProperty[] {HALF, VARIANT, FACING});
     }
 
     /**

@@ -137,7 +137,7 @@ public class Item
         return false;
     }
 
-    public float getStrVsBlock(ItemStack stack, Block block)
+    public float getStrVsBlock(ItemStack stack, Block state)
     {
         return 1.0F;
     }

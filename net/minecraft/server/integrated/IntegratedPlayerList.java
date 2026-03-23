@@ -13,9 +13,9 @@ public class IntegratedPlayerList extends ServerConfigurationManager
      */
     private NBTTagCompound hostPlayerData;
 
-    public IntegratedPlayerList(IntegratedServer p_i1314_1_)
+    public IntegratedPlayerList(IntegratedServer server)
     {
-        super(p_i1314_1_);
+        super(server);
         this.setViewDistance(10);
     }
 

@@ -41,7 +41,7 @@ public class ItemModelGenerator
         else
         {
             map.put("particle", blockModel.isTexturePresent("particle") ? blockModel.resolveTextureName("particle") : (String)map.get("layer0"));
-            return new ModelBlock(list, map, false, false, blockModel.func_181682_g());
+            return new ModelBlock(list, map, false, false, blockModel.getAllTransforms());
         }
     }
 

@@ -264,7 +264,7 @@ public class BlockFire extends Block
 
     protected boolean canDie(World worldIn, BlockPos pos)
     {
-        return worldIn.canLightningStrike(pos) || worldIn.canLightningStrike(pos.west()) || worldIn.canLightningStrike(pos.east()) || worldIn.canLightningStrike(pos.north()) || worldIn.canLightningStrike(pos.south());
+        return worldIn.isRainingAt(pos) || worldIn.isRainingAt(pos.west()) || worldIn.isRainingAt(pos.east()) || worldIn.isRainingAt(pos.north()) || worldIn.isRainingAt(pos.south());
     }
 
     public boolean requiresUpdates()
@@ -292,7 +292,7 @@ public class BlockFire extends Block
         {
             IBlockState iblockstate = worldIn.getBlockState(pos);
 
-            if (random.nextInt(age + 10) < 5 && !worldIn.canLightningStrike(pos))
+            if (random.nextInt(age + 10) < 5 && !worldIn.isRainingAt(pos))
             {
                 int j = age + random.nextInt(5) / 4;
 

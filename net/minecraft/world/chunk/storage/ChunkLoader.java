@@ -36,11 +36,11 @@ public class ChunkLoader
         return chunkloader$anvilconverterdata;
     }
 
-    public static void convertToAnvilFormat(ChunkLoader.AnvilConverterData p_76690_0_, NBTTagCompound p_76690_1_, WorldChunkManager p_76690_2_)
+    public static void convertToAnvilFormat(ChunkLoader.AnvilConverterData p_76690_0_, NBTTagCompound compound, WorldChunkManager p_76690_2_)
     {
-        p_76690_1_.setInteger("xPos", p_76690_0_.x);
-        p_76690_1_.setInteger("zPos", p_76690_0_.z);
-        p_76690_1_.setLong("LastUpdate", p_76690_0_.lastUpdated);
+        compound.setInteger("xPos", p_76690_0_.x);
+        compound.setInteger("zPos", p_76690_0_.z);
+        compound.setLong("LastUpdate", p_76690_0_.lastUpdated);
         int[] aint = new int[p_76690_0_.heightmap.length];
 
         for (int i = 0; i < p_76690_0_.heightmap.length; ++i)
@@ -48,8 +48,8 @@ public class ChunkLoader
             aint[i] = p_76690_0_.heightmap[i];
         }
 
-        p_76690_1_.setIntArray("HeightMap", aint);
-        p_76690_1_.setBoolean("TerrainPopulated", p_76690_0_.terrainPopulated);
+        compound.setIntArray("HeightMap", aint);
+        compound.setBoolean("TerrainPopulated", p_76690_0_.terrainPopulated);
         NBTTagList nbttaglist = new NBTTagList();
 
         for (int j = 0; j < 8; ++j)
@@ -107,7 +107,7 @@ public class ChunkLoader
             }
         }
 
-        p_76690_1_.setTag("Sections", nbttaglist);
+        compound.setTag("Sections", nbttaglist);
         byte[] abyte = new byte[256];
         BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
 
@@ -115,18 +115,18 @@ public class ChunkLoader
         {
             for (int i3 = 0; i3 < 16; ++i3)
             {
-                blockpos$mutableblockpos.func_181079_c(p_76690_0_.x << 4 | l2, 0, p_76690_0_.z << 4 | i3);
+                blockpos$mutableblockpos.set(p_76690_0_.x << 4 | l2, 0, p_76690_0_.z << 4 | i3);
                 abyte[i3 << 4 | l2] = (byte)(p_76690_2_.getBiomeGenerator(blockpos$mutableblockpos, BiomeGenBase.field_180279_ad).biomeID & 255);
             }
         }
 
-        p_76690_1_.setByteArray("Biomes", abyte);
-        p_76690_1_.setTag("Entities", p_76690_0_.entities);
-        p_76690_1_.setTag("TileEntities", p_76690_0_.tileEntities);
+        compound.setByteArray("Biomes", abyte);
+        compound.setTag("Entities", p_76690_0_.entities);
+        compound.setTag("TileEntities", p_76690_0_.tileEntities);
 
         if (p_76690_0_.tileTicks != null)
         {
-            p_76690_1_.setTag("TileTicks", p_76690_0_.tileTicks);
+            compound.setTag("TileTicks", p_76690_0_.tileTicks);
         }
     }
 
@@ -145,10 +145,10 @@ public class ChunkLoader
         public final int x;
         public final int z;
 
-        public AnvilConverterData(int p_i1999_1_, int p_i1999_2_)
+        public AnvilConverterData(int xIn, int zIn)
         {
-            this.x = p_i1999_1_;
-            this.z = p_i1999_2_;
+            this.x = xIn;
+            this.z = zIn;
         }
     }
 }

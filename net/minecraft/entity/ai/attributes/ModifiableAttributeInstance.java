@@ -187,9 +187,9 @@ public class ModifiableAttributeInstance implements IAttributeInstance
         return this.genericAttribute.clampValue(d1);
     }
 
-    private Collection<AttributeModifier> func_180375_b(int p_180375_1_)
+    private Collection<AttributeModifier> func_180375_b(int operation)
     {
-        Set<AttributeModifier> set = Sets.newHashSet(this.getModifiersByOperation(p_180375_1_));
+        Set<AttributeModifier> set = Sets.newHashSet(this.getModifiersByOperation(operation));
 
         for (IAttribute iattribute = this.genericAttribute.func_180372_d(); iattribute != null; iattribute = iattribute.func_180372_d())
         {
@@ -197,7 +197,7 @@ public class ModifiableAttributeInstance implements IAttributeInstance
 
             if (iattributeinstance != null)
             {
-                set.addAll(iattributeinstance.getModifiersByOperation(p_180375_1_));
+                set.addAll(iattributeinstance.getModifiersByOperation(operation));
             }
         }
 

@@ -25,15 +25,15 @@ public interface IChunkProvider
     /**
      * Populates chunk with ores etc etc
      */
-    void populate(IChunkProvider p_73153_1_, int p_73153_2_, int p_73153_3_);
+    void populate(IChunkProvider chunkProvider, int x, int z);
 
-    boolean func_177460_a(IChunkProvider p_177460_1_, Chunk p_177460_2_, int p_177460_3_, int p_177460_4_);
+    boolean populateChunk(IChunkProvider chunkProvider, Chunk chunkIn, int x, int z);
 
     /**
      * Two modes of operation: if passed true, save all Chunks in one go.  If passed false, save up to two chunks.
      * Return true if all chunks have been saved.
      */
-    boolean saveChunks(boolean p_73151_1_, IProgressUpdate progressCallback);
+    boolean saveChunks(boolean saveAllChunks, IProgressUpdate progressCallback);
 
     /**
      * Unloads chunks that are marked to be unloaded. This is not guaranteed to unload every such chunk.
@@ -56,7 +56,7 @@ public interface IChunkProvider
 
     int getLoadedChunkCount();
 
-    void recreateStructures(Chunk p_180514_1_, int p_180514_2_, int p_180514_3_);
+    void recreateStructures(Chunk chunkIn, int x, int z);
 
     /**
      * Save extra data not associated with any Chunk.  Not saved during autosave, only during world unload.  Currently

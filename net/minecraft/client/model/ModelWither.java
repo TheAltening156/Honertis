@@ -61,14 +61,14 @@ public class ModelWither extends ModelBase
      * and legs, where par1 represents the time(so that arms and legs swing back and forth) and par2 represents how
      * "far" arms and legs can swing at most.
      */
-    public void setRotationAngles(float p_78087_1_, float p_78087_2_, float p_78087_3_, float p_78087_4_, float p_78087_5_, float p_78087_6_, Entity entityIn)
+    public void setRotationAngles(float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor, Entity entityIn)
     {
-        float f = MathHelper.cos(p_78087_3_ * 0.1F);
+        float f = MathHelper.cos(ageInTicks * 0.1F);
         this.field_82905_a[1].rotateAngleX = (0.065F + 0.05F * f) * (float)Math.PI;
         this.field_82905_a[2].setRotationPoint(-2.0F, 6.9F + MathHelper.cos(this.field_82905_a[1].rotateAngleX) * 10.0F, -0.5F + MathHelper.sin(this.field_82905_a[1].rotateAngleX) * 10.0F);
         this.field_82905_a[2].rotateAngleX = (0.265F + 0.1F * f) * (float)Math.PI;
-        this.field_82904_b[0].rotateAngleY = p_78087_4_ / (180F / (float)Math.PI);
-        this.field_82904_b[0].rotateAngleX = p_78087_5_ / (180F / (float)Math.PI);
+        this.field_82904_b[0].rotateAngleY = netHeadYaw / (180F / (float)Math.PI);
+        this.field_82904_b[0].rotateAngleX = headPitch / (180F / (float)Math.PI);
     }
 
     /**

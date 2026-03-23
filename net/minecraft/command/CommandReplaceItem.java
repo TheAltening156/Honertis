@@ -155,7 +155,7 @@ public class CommandReplaceItem extends CommandBase
             }
             else
             {
-                Entity entity = func_175768_b(sender, args[1]);
+                Entity entity = getEntity(sender, args[1]);
                 sender.setCommandStat(CommandResultStats.Type.AFFECTED_ITEMS, 0);
 
                 if (entity instanceof EntityPlayer)

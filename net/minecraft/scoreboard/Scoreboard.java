@@ -237,7 +237,7 @@ public class Scoreboard
             map.remove(p_96519_1_);
         }
 
-        this.func_96533_c(p_96519_1_);
+        this.onScoreObjectiveRemoved(p_96519_1_);
     }
 
     /**
@@ -264,24 +264,24 @@ public class Scoreboard
         return (ScorePlayerTeam)this.teams.get(p_96508_1_);
     }
 
-    public ScorePlayerTeam createTeam(String p_96527_1_)
+    public ScorePlayerTeam createTeam(String name)
     {
-        if (p_96527_1_.length() > 16)
+        if (name.length() > 16)
         {
-            throw new IllegalArgumentException("The team name \'" + p_96527_1_ + "\' is too long!");
+            throw new IllegalArgumentException("The team name \'" + name + "\' is too long!");
         }
         else
         {
-            ScorePlayerTeam scoreplayerteam = this.getTeam(p_96527_1_);
+            ScorePlayerTeam scoreplayerteam = this.getTeam(name);
 
             if (scoreplayerteam != null)
             {
-                throw new IllegalArgumentException("A team with the name \'" + p_96527_1_ + "\' already exists!");
+                throw new IllegalArgumentException("A team with the name \'" + name + "\' already exists!");
             }
             else
             {
-                scoreplayerteam = new ScorePlayerTeam(this, p_96527_1_);
-                this.teams.put(p_96527_1_, scoreplayerteam);
+                scoreplayerteam = new ScorePlayerTeam(this, name);
+                this.teams.put(name, scoreplayerteam);
                 this.broadcastTeamCreated(scoreplayerteam);
                 return scoreplayerteam;
             }
@@ -294,6 +294,7 @@ public class Scoreboard
     public void removeTeam(ScorePlayerTeam p_96511_1_)
     {
         this.teams.remove(p_96511_1_.getRegisteredName());
+
         for (String s : p_96511_1_.getMembershipCollection())
         {
             this.teamMemberships.remove(s);
@@ -387,11 +388,11 @@ public class Scoreboard
     {
     }
 
-    public void func_96532_b(ScoreObjective p_96532_1_)
+    public void onObjectiveDisplayNameChanged(ScoreObjective p_96532_1_)
     {
     }
 
-    public void func_96533_c(ScoreObjective p_96533_1_)
+    public void onScoreObjectiveRemoved(ScoreObjective p_96533_1_)
     {
     }
 

@@ -24,10 +24,10 @@ public class EntityEnderCrystal extends Entity
         this.innerRotation = this.rand.nextInt(100000);
     }
 
-    public EntityEnderCrystal(World worldIn, double p_i1699_2_, double p_i1699_4_, double p_i1699_6_)
+    public EntityEnderCrystal(World worldIn, double x, double y, double z)
     {
         this(worldIn);
-        this.setPosition(p_i1699_2_, p_i1699_4_, p_i1699_6_);
+        this.setPosition(x, y, z);
     }
 
     /**

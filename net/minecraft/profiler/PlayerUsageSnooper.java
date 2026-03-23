@@ -15,8 +15,8 @@ import net.minecraft.util.HttpUtil;
 
 public class PlayerUsageSnooper
 {
-    private final Map<String, Object> field_152773_a = Maps.<String, Object>newHashMap();
-    private final Map<String, Object> field_152774_b = Maps.<String, Object>newHashMap();
+    private final Map<String, Object> snooperStats = Maps.<String, Object>newHashMap();
+    private final Map<String, Object> clientStats = Maps.<String, Object>newHashMap();
     private final String uniqueID = UUID.randomUUID().toString();
 
     /** URL of the server to send the report to */
@@ -32,11 +32,11 @@ public class PlayerUsageSnooper
     /** incremented on every getSelfCounterFor */
     private int selfCounter;
 
-    public PlayerUsageSnooper(String p_i1563_1_, IPlayerUsage playerStatCollector, long startTime)
+    public PlayerUsageSnooper(String side, IPlayerUsage playerStatCollector, long startTime)
     {
         try
         {
-            this.serverUrl = new URL("http://snoop.minecraft.net/" + p_i1563_1_ + "?version=" + 2);
+            this.serverUrl = new URL("http://snoop.minecraft.net/" + side + "?version=" + 2);
         }
         catch (MalformedURLException var6)
         {
@@ -55,7 +55,7 @@ public class PlayerUsageSnooper
         if (!this.isRunning)
         {
             this.isRunning = true;
-            this.func_152766_h();
+            this.addOSData();
             this.threadTrigger.schedule(new TimerTask()
             {
                 public void run()
@@ -66,11 +66,11 @@ public class PlayerUsageSnooper
 
                         synchronized (PlayerUsageSnooper.this.syncLock)
                         {
-                            map = Maps.<String, Object>newHashMap(PlayerUsageSnooper.this.field_152774_b);
+                            map = Maps.<String, Object>newHashMap(PlayerUsageSnooper.this.clientStats);
 
                             if (PlayerUsageSnooper.this.selfCounter == 0)
                             {
-                                map.putAll(PlayerUsageSnooper.this.field_152773_a);
+                                map.putAll(PlayerUsageSnooper.this.snooperStats);
                             }
 
                             map.put("snooper_count", Integer.valueOf(PlayerUsageSnooper.this.selfCounter++));
@@ -84,7 +84,10 @@ public class PlayerUsageSnooper
         }
     }
 
-    private void func_152766_h()
+    /**
+     * Add OS data into the snooper
+     */
+    private void addOSData()
     {
         this.addJvmArgsToSnooper();
         this.addClientStat("snooper_token", this.uniqueID);
@@ -93,7 +96,7 @@ public class PlayerUsageSnooper
         this.addStatToSnooper("os_version", System.getProperty("os.version"));
         this.addStatToSnooper("os_architecture", System.getProperty("os.arch"));
         this.addStatToSnooper("java_version", System.getProperty("java.version"));
-        this.addClientStat("version", "1.8.8");
+        this.addClientStat("version", "1.8.9");
         this.playerStatsCollector.addServerTypeToSnooper(this);
     }
 
@@ -123,19 +126,19 @@ public class PlayerUsageSnooper
         this.playerStatsCollector.addServerStatsToSnooper(this);
     }
 
-    public void addClientStat(String p_152768_1_, Object p_152768_2_)
+    public void addClientStat(String statName, Object statValue)
     {
         synchronized (this.syncLock)
         {
-            this.field_152774_b.put(p_152768_1_, p_152768_2_);
+            this.clientStats.put(statName, statValue);
         }
     }
 
-    public void addStatToSnooper(String p_152767_1_, Object p_152767_2_)
+    public void addStatToSnooper(String statName, Object statValue)
     {
         synchronized (this.syncLock)
         {
-            this.field_152773_a.put(p_152767_1_, p_152767_2_);
+            this.snooperStats.put(statName, statValue);
         }
     }
 
@@ -147,12 +150,12 @@ public class PlayerUsageSnooper
         {
             this.addMemoryStatsToSnooper();
 
-            for (Entry<String, Object> entry : this.field_152773_a.entrySet())
+            for (Entry<String, Object> entry : this.snooperStats.entrySet())
             {
                 map.put(entry.getKey(), entry.getValue().toString());
             }
 
-            for (Entry<String, Object> entry1 : this.field_152774_b.entrySet())
+            for (Entry<String, Object> entry1 : this.clientStats.entrySet())
             {
                 map.put(entry1.getKey(), entry1.getValue().toString());
             }

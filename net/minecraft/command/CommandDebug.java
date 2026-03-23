@@ -14,8 +14,12 @@ import org.apache.logging.log4j.Logger;
 public class CommandDebug extends CommandBase
 {
     private static final Logger logger = LogManager.getLogger();
-    private long field_147206_b;
-    private int field_147207_c;
+
+    /** The time (in milliseconds) that profiling was started */
+    private long profileStartTime;
+
+    /** The tick number that profiling was started on */
+    private int profileStartTick;
 
     /**
      * Gets the name of the command
@@ -61,8 +65,8 @@ public class CommandDebug extends CommandBase
 
                 notifyOperators(sender, this, "commands.debug.start", new Object[0]);
                 MinecraftServer.getServer().enableProfiling();
-                this.field_147206_b = MinecraftServer.getCurrentTimeMillis();
-                this.field_147207_c = MinecraftServer.getServer().getTickCounter();
+                this.profileStartTime = MinecraftServer.getCurrentTimeMillis();
+                this.profileStartTick = MinecraftServer.getServer().getTickCounter();
             }
             else
             {
@@ -83,16 +87,19 @@ public class CommandDebug extends CommandBase
 
                 long i = MinecraftServer.getCurrentTimeMillis();
                 int j = MinecraftServer.getServer().getTickCounter();
-                long k = i - this.field_147206_b;
-                int l = j - this.field_147207_c;
-                this.func_147205_a(k, l);
+                long k = i - this.profileStartTime;
+                int l = j - this.profileStartTick;
+                this.saveProfileResults(k, l);
                 MinecraftServer.getServer().theProfiler.profilingEnabled = false;
                 notifyOperators(sender, this, "commands.debug.stop", new Object[] {Float.valueOf((float)k / 1000.0F), Integer.valueOf(l)});
             }
         }
     }
 
-    private void func_147205_a(long p_147205_1_, int p_147205_3_)
+    /**
+     * Save the profiling results from the last profile
+     */
+    private void saveProfileResults(long timeSpan, int tickSpan)
     {
         File file1 = new File(MinecraftServer.getServer().getFile("debug"), "profile-results-" + (new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")).format(new Date()) + ".txt");
         file1.getParentFile().mkdirs();
@@ -100,7 +107,7 @@ public class CommandDebug extends CommandBase
         try
         {
             FileWriter filewriter = new FileWriter(file1);
-            filewriter.write(this.func_147204_b(p_147205_1_, p_147205_3_));
+            filewriter.write(this.getProfileResults(timeSpan, tickSpan));
             filewriter.close();
         }
         catch (Throwable throwable)
@@ -109,23 +116,26 @@ public class CommandDebug extends CommandBase
         }
     }
 
-    private String func_147204_b(long p_147204_1_, int p_147204_3_)
+    /**
+     * Get the profiling results from the last profile
+     */
+    private String getProfileResults(long timeSpan, int tickSpan)
     {
         StringBuilder stringbuilder = new StringBuilder();
         stringbuilder.append("---- Minecraft Profiler Results ----\n");
         stringbuilder.append("// ");
-        stringbuilder.append(func_147203_d());
+        stringbuilder.append(getWittyComment());
         stringbuilder.append("\n\n");
-        stringbuilder.append("Time span: ").append(p_147204_1_).append(" ms\n");
-        stringbuilder.append("Tick span: ").append(p_147204_3_).append(" ticks\n");
-        stringbuilder.append("// This is approximately ").append(String.format("%.2f", new Object[] {Float.valueOf((float)p_147204_3_ / ((float)p_147204_1_ / 1000.0F))})).append(" ticks per second. It should be ").append((int)20).append(" ticks per second\n\n");
+        stringbuilder.append("Time span: ").append(timeSpan).append(" ms\n");
+        stringbuilder.append("Tick span: ").append(tickSpan).append(" ticks\n");
+        stringbuilder.append("// This is approximately ").append(String.format("%.2f", new Object[] {Float.valueOf((float)tickSpan / ((float)timeSpan / 1000.0F))})).append(" ticks per second. It should be ").append((int)20).append(" ticks per second\n\n");
         stringbuilder.append("--- BEGIN PROFILE DUMP ---\n\n");
         this.func_147202_a(0, "root", stringbuilder);
         stringbuilder.append("--- END PROFILE DUMP ---\n\n");
         return stringbuilder.toString();
     }
 
-    private void func_147202_a(int p_147202_1_, String p_147202_2_, StringBuilder p_147202_3_)
+    private void func_147202_a(int p_147202_1_, String p_147202_2_, StringBuilder stringBuilder)
     {
         List<Profiler.Result> list = MinecraftServer.getServer().theProfiler.getProfilingData(p_147202_2_);
 
@@ -134,31 +144,34 @@ public class CommandDebug extends CommandBase
             for (int i = 1; i < list.size(); ++i)
             {
                 Profiler.Result profiler$result = (Profiler.Result)list.get(i);
-                p_147202_3_.append(String.format("[%02d] ", new Object[] {Integer.valueOf(p_147202_1_)}));
+                stringBuilder.append(String.format("[%02d] ", new Object[] {Integer.valueOf(p_147202_1_)}));
 
                 for (int j = 0; j < p_147202_1_; ++j)
                 {
-                    p_147202_3_.append(" ");
+                    stringBuilder.append(" ");
                 }
 
-                p_147202_3_.append(profiler$result.field_76331_c).append(" - ").append(String.format("%.2f", new Object[] {Double.valueOf(profiler$result.field_76332_a)})).append("%/").append(String.format("%.2f", new Object[] {Double.valueOf(profiler$result.field_76330_b)})).append("%\n");
+                stringBuilder.append(profiler$result.field_76331_c).append(" - ").append(String.format("%.2f", new Object[] {Double.valueOf(profiler$result.field_76332_a)})).append("%/").append(String.format("%.2f", new Object[] {Double.valueOf(profiler$result.field_76330_b)})).append("%\n");
 
                 if (!profiler$result.field_76331_c.equals("unspecified"))
                 {
                     try
                     {
-                        this.func_147202_a(p_147202_1_ + 1, p_147202_2_ + "." + profiler$result.field_76331_c, p_147202_3_);
+                        this.func_147202_a(p_147202_1_ + 1, p_147202_2_ + "." + profiler$result.field_76331_c, stringBuilder);
                     }
                     catch (Exception exception)
                     {
-                        p_147202_3_.append("[[ EXCEPTION ").append((Object)exception).append(" ]]");
+                        stringBuilder.append("[[ EXCEPTION ").append((Object)exception).append(" ]]");
                     }
                 }
             }
         }
     }
 
-    private static String func_147203_d()
+    /**
+     * Get a random witty comment
+     */
+    private static String getWittyComment()
     {
         String[] astring = new String[] {"Shiny numbers!", "Am I not running fast enough? :(", "I\'m working as hard as I can!", "Will I ever be good enough for you? :(", "Speedy. Zoooooom!", "Hello world", "40% better than a crash report.", "Now with extra numbers", "Now with less numbers", "Now with the same numbers", "You should add flames to things, it makes them go faster!", "Do you feel the need for... optimization?", "*cracks redstone whip*", "Maybe if you treated it better then it\'ll have more motivation to work faster! Poor server."};
 

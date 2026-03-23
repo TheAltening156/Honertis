@@ -1,19 +1,23 @@
-
 package net.minecraft.client.main;
 
-import java.io.*;
-import java.net.*;
-import java.net.Proxy.*;
-import java.util.*;
-
-import com.google.gson.*;
-import com.mojang.authlib.properties.*;
-import com.mojang.authlib.properties.PropertyMap.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mojang.authlib.properties.PropertyMap;
+import com.mojang.authlib.properties.PropertyMap.Serializer;
 
 import fr.honertis.Honertis;
-import joptsimple.*;
-import net.minecraft.client.*;
-import net.minecraft.client.main.*;
+
+import java.io.File;
+import java.net.Authenticator;
+import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
+import java.net.Proxy;
+import java.net.Proxy.Type;
+import java.util.List;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.Session;
 import net.minecraft.util.Util.EnumOS;
 
@@ -58,14 +62,14 @@ public class Main
             System.out.println("Completely ignored arguments: " + list);
         }
 
-        String s = (String)optionset.valueOf(optionspec5);
+        String s = optionset.valueOf(optionspec5);
         Proxy proxy = Proxy.NO_PROXY;
 
         if (s != null)
         {
             try
             {
-                proxy = new Proxy(Type.SOCKS, new InetSocketAddress(s, ((Integer)optionset.valueOf(optionspec6)).intValue()));
+                proxy = new Proxy(Type.SOCKS, new InetSocketAddress(s, optionset.valueOf(optionspec6).intValue()));
             }
             catch (Exception var46)
             {
@@ -73,8 +77,8 @@ public class Main
             }
         }
 
-        final String s1 = (String)optionset.valueOf(optionspec7);
-        final String s2 = (String)optionset.valueOf(optionspec8);
+        final String s1 = optionset.valueOf(optionspec7);
+        final String s2 = optionset.valueOf(optionspec8);
 
         if (!proxy.equals(Proxy.NO_PROXY) && isNullOrEmpty(s1) && isNullOrEmpty(s2))
         {
@@ -87,23 +91,23 @@ public class Main
             });
         }
 
-        int i = ((Integer)optionset.valueOf(optionspec13)).intValue();
-        int j = ((Integer)optionset.valueOf(optionspec14)).intValue();
+        int i = optionset.valueOf(optionspec13).intValue();
+        int j = optionset.valueOf(optionspec14).intValue();
         boolean flag = optionset.has("fullscreen");
         boolean flag1 = optionset.has("checkGlErrors");
         boolean flag2 = optionset.has("demo");
-        String s3 = (String)optionset.valueOf(optionspec12);
+        String s3 = optionset.valueOf(optionspec12);
         Gson gson = (new GsonBuilder()).registerTypeAdapter(PropertyMap.class, new Serializer()).create();
-        PropertyMap propertymap = (PropertyMap)gson.fromJson((String)optionset.valueOf(optionspec15), PropertyMap.class);
-        PropertyMap propertymap1 = (PropertyMap)gson.fromJson((String)optionset.valueOf(optionspec16), PropertyMap.class);
-        File file1 = (File)optionset.valueOf(optionspec2);
+        PropertyMap propertymap = gson.fromJson(optionset.valueOf(optionspec15), PropertyMap.class);
+        PropertyMap propertymap1 = gson.fromJson(optionset.valueOf(optionspec16), PropertyMap.class);
+        File file1 = optionset.valueOf(optionspec2);
         File file2 = optionset.has(optionspec3) ? (File)optionset.valueOf(optionspec3) : new File(file1, "assets/");
         File file3 = optionset.has(optionspec4) ? (File)optionset.valueOf(optionspec4) : new File(new File(getAppData(), ".minecraft"), "resourcepacks/");
         String s4 = optionset.has(optionspec10) ? (String)optionspec10.value(optionset) : (String)optionspec9.value(optionset);
         String s5 = optionset.has(optionspec17) ? (String)optionspec17.value(optionset) : null;
-        String s6 = (String)optionset.valueOf(optionspec);
-        Integer integer = (Integer)optionset.valueOf(optionspec1);
-        Session session = new Session((String)optionspec9.value(optionset), s4, (String)optionspec11.value(optionset), (String)optionspec18.value(optionset));
+        String s6 = optionset.valueOf(optionspec);
+        Integer integer = optionset.valueOf(optionspec1);
+        Session session = new Session(optionspec9.value(optionset), s4, optionspec11.value(optionset), optionspec18.value(optionset));
         GameConfiguration gameconfiguration = new GameConfiguration(new GameConfiguration.UserInformation(session, propertymap, propertymap1, proxy), new GameConfiguration.DisplayInformation(i, j, flag, flag1), new GameConfiguration.FolderInformation(file1, file3, file2, s5), new GameConfiguration.GameInformation(flag2, s3), new GameConfiguration.ServerInformation(s6, integer.intValue()));
         
         Honertis.INSTANCE.isLauncher = optionspec20.value(optionset) != "-1";
@@ -119,7 +123,7 @@ public class Main
         Thread.currentThread().setName("Client thread");
         (new Minecraft(gameconfiguration)).run();
     }
-    
+
     public static File getAppData() {
 		EnumOS os = net.minecraft.util.Util.getOSType();
 		if (os == EnumOS.WINDOWS)
@@ -128,7 +132,7 @@ public class Main
 			return new File(new File(System.getProperty("user.home"), "Library"), "Application Support");
 		return new File(System.getProperty("user.home"));
 	}
-
+    
     private static boolean isNullOrEmpty(String str)
     {
         return str != null && !str.isEmpty();

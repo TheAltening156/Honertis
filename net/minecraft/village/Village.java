@@ -451,17 +451,17 @@ public class Village
     /**
      * Read this village's data from NBT.
      */
-    public void readVillageDataFromNBT(NBTTagCompound p_82690_1_)
+    public void readVillageDataFromNBT(NBTTagCompound compound)
     {
-        this.numVillagers = p_82690_1_.getInteger("PopSize");
-        this.villageRadius = p_82690_1_.getInteger("Radius");
-        this.numIronGolems = p_82690_1_.getInteger("Golems");
-        this.lastAddDoorTimestamp = p_82690_1_.getInteger("Stable");
-        this.tickCounter = p_82690_1_.getInteger("Tick");
-        this.noBreedTicks = p_82690_1_.getInteger("MTick");
-        this.center = new BlockPos(p_82690_1_.getInteger("CX"), p_82690_1_.getInteger("CY"), p_82690_1_.getInteger("CZ"));
-        this.centerHelper = new BlockPos(p_82690_1_.getInteger("ACX"), p_82690_1_.getInteger("ACY"), p_82690_1_.getInteger("ACZ"));
-        NBTTagList nbttaglist = p_82690_1_.getTagList("Doors", 10);
+        this.numVillagers = compound.getInteger("PopSize");
+        this.villageRadius = compound.getInteger("Radius");
+        this.numIronGolems = compound.getInteger("Golems");
+        this.lastAddDoorTimestamp = compound.getInteger("Stable");
+        this.tickCounter = compound.getInteger("Tick");
+        this.noBreedTicks = compound.getInteger("MTick");
+        this.center = new BlockPos(compound.getInteger("CX"), compound.getInteger("CY"), compound.getInteger("CZ"));
+        this.centerHelper = new BlockPos(compound.getInteger("ACX"), compound.getInteger("ACY"), compound.getInteger("ACZ"));
+        NBTTagList nbttaglist = compound.getTagList("Doors", 10);
 
         for (int i = 0; i < nbttaglist.tagCount(); ++i)
         {
@@ -470,7 +470,7 @@ public class Village
             this.villageDoorInfoList.add(villagedoorinfo);
         }
 
-        NBTTagList nbttaglist1 = p_82690_1_.getTagList("Players", 10);
+        NBTTagList nbttaglist1 = compound.getTagList("Players", 10);
 
         for (int j = 0; j < nbttaglist1.tagCount(); ++j)
         {
@@ -496,20 +496,20 @@ public class Village
     /**
      * Write this village's data to NBT.
      */
-    public void writeVillageDataToNBT(NBTTagCompound p_82689_1_)
+    public void writeVillageDataToNBT(NBTTagCompound compound)
     {
-        p_82689_1_.setInteger("PopSize", this.numVillagers);
-        p_82689_1_.setInteger("Radius", this.villageRadius);
-        p_82689_1_.setInteger("Golems", this.numIronGolems);
-        p_82689_1_.setInteger("Stable", this.lastAddDoorTimestamp);
-        p_82689_1_.setInteger("Tick", this.tickCounter);
-        p_82689_1_.setInteger("MTick", this.noBreedTicks);
-        p_82689_1_.setInteger("CX", this.center.getX());
-        p_82689_1_.setInteger("CY", this.center.getY());
-        p_82689_1_.setInteger("CZ", this.center.getZ());
-        p_82689_1_.setInteger("ACX", this.centerHelper.getX());
-        p_82689_1_.setInteger("ACY", this.centerHelper.getY());
-        p_82689_1_.setInteger("ACZ", this.centerHelper.getZ());
+        compound.setInteger("PopSize", this.numVillagers);
+        compound.setInteger("Radius", this.villageRadius);
+        compound.setInteger("Golems", this.numIronGolems);
+        compound.setInteger("Stable", this.lastAddDoorTimestamp);
+        compound.setInteger("Tick", this.tickCounter);
+        compound.setInteger("MTick", this.noBreedTicks);
+        compound.setInteger("CX", this.center.getX());
+        compound.setInteger("CY", this.center.getY());
+        compound.setInteger("CZ", this.center.getZ());
+        compound.setInteger("ACX", this.centerHelper.getX());
+        compound.setInteger("ACY", this.centerHelper.getY());
+        compound.setInteger("ACZ", this.centerHelper.getZ());
         NBTTagList nbttaglist = new NBTTagList();
 
         for (VillageDoorInfo villagedoorinfo : this.villageDoorInfoList)
@@ -524,7 +524,7 @@ public class Village
             nbttaglist.appendTag(nbttagcompound);
         }
 
-        p_82689_1_.setTag("Doors", nbttaglist);
+        compound.setTag("Doors", nbttaglist);
         NBTTagList nbttaglist1 = new NBTTagList();
 
         for (String s : this.playerReputation.keySet())
@@ -541,7 +541,7 @@ public class Village
             }
         }
 
-        p_82689_1_.setTag("Players", nbttaglist1);
+        compound.setTag("Players", nbttaglist1);
     }
 
     /**

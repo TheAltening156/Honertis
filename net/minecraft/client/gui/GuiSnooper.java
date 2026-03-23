@@ -36,9 +36,9 @@ public class GuiSnooper extends GuiScreen
         String s = I18n.format("options.snooper.desc", new Object[0]);
         java.util.List<String> list = Lists.<String>newArrayList();
 
-        for (Object s1 : this.fontRendererObj.listFormattedStringToWidth(s, this.width - 30))
+        for (String s1 : this.fontRendererObj.listFormattedStringToWidth(s, this.width - 30))
         {
-            list.add((String) s1);
+            list.add(s1);
         }
 
         this.field_146607_r = (String[])list.toArray(new String[list.size()]);

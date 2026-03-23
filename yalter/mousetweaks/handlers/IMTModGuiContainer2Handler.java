@@ -1,16 +1,7 @@
-/*
- * Decompiled with CFR 0.150.
- * 
- * Could not load the following classes:
- *  net.minecraft.client.Minecraft
- *  net.minecraft.entity.player.EntityPlayer
- *  net.minecraft.inventory.Slot
- */
 package yalter.mousetweaks.handlers;
 
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import yalter.mousetweaks.IGuiScreenHandler;
 import yalter.mousetweaks.MouseButton;
@@ -52,7 +43,7 @@ implements IGuiScreenHandler {
 
     @Override
     public void clickSlot(Slot slot, MouseButton mouseButton, boolean shiftPressed) {
-        this.mc.playerController.windowClick(this.modGuiContainer.MT_getContainer().windowId, slot.slotNumber, mouseButton.getValue(), shiftPressed ? 1 : 0, (EntityPlayer)this.mc.thePlayer);
+        this.mc.playerController.windowClick(this.modGuiContainer.MT_getContainer().windowId, slot.slotNumber, mouseButton.getValue(), shiftPressed ? 1 : 0, this.mc.thePlayer);
     }
 
     @Override

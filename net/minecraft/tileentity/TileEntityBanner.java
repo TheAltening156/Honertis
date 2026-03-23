@@ -63,16 +63,16 @@ public class TileEntityBanner extends TileEntity
     public void writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
-        func_181020_a(compound, this.baseColor, this.patterns);
+        setBaseColorAndPatterns(compound, this.baseColor, this.patterns);
     }
 
-    public static void func_181020_a(NBTTagCompound p_181020_0_, int p_181020_1_, NBTTagList p_181020_2_)
+    public static void setBaseColorAndPatterns(NBTTagCompound compound, int baseColorIn, NBTTagList patternsIn)
     {
-        p_181020_0_.setInteger("Base", p_181020_1_);
+        compound.setInteger("Base", baseColorIn);
 
-        if (p_181020_2_ != null)
+        if (patternsIn != null)
         {
-            p_181020_0_.setTag("Patterns", p_181020_2_);
+            compound.setTag("Patterns", patternsIn);
         }
     }
 
@@ -124,7 +124,7 @@ public class TileEntityBanner extends TileEntity
         return this.patternList;
     }
 
-    public NBTTagList func_181021_d()
+    public NBTTagList getPatterns()
     {
         return this.patterns;
     }
@@ -135,7 +135,7 @@ public class TileEntityBanner extends TileEntity
         return this.colorList;
     }
 
-    public String func_175116_e()
+    public String getPatternResourceLocation()
     {
         this.initializeBannerData();
         return this.patternResourceLocation;

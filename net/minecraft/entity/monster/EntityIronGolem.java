@@ -102,14 +102,14 @@ public class EntityIronGolem extends EntityGolem
         return p_70682_1_;
     }
 
-    protected void collideWithEntity(Entity p_82167_1_)
+    protected void collideWithEntity(Entity entityIn)
     {
-        if (p_82167_1_ instanceof IMob && !(p_82167_1_ instanceof EntityCreeper) && this.getRNG().nextInt(20) == 0)
+        if (entityIn instanceof IMob && !(entityIn instanceof EntityCreeper) && this.getRNG().nextInt(20) == 0)
         {
-            this.setAttackTarget((EntityLivingBase)p_82167_1_);
+            this.setAttackTarget((EntityLivingBase)entityIn);
         }
 
-        super.collideWithEntity(p_82167_1_);
+        super.collideWithEntity(entityIn);
     }
 
     /**
@@ -148,10 +148,10 @@ public class EntityIronGolem extends EntityGolem
     /**
      * Returns true if this entity can attack entities of the specified class.
      */
-//    public boolean canAttackClass(Class <? extends EntityLivingBase > cls)
-//    {
-//        return this.isPlayerCreated() && EntityPlayer.class.isAssignableFrom(cls) ? false : (cls == EntityCreeper.class ? false : super.canAttackClass(cls));
-//    }
+    public boolean canAttackClass(Class <? extends EntityLivingBase > cls)
+    {
+        return this.isPlayerCreated() && EntityPlayer.class.isAssignableFrom(cls) ? false : (cls == EntityCreeper.class ? false : super.canAttackClass(cls));
+    }
 
     /**
      * (abstract) Protected helper method to write subclass entity data to NBT.
@@ -243,8 +243,12 @@ public class EntityIronGolem extends EntityGolem
 
     /**
      * Drop 0-2 items of this living's type
+     *  
+     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
+     * or tameable)
+     * @param lootingModifier level of enchanment to be applied to this drop
      */
-    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
         int i = this.rand.nextInt(3);
 

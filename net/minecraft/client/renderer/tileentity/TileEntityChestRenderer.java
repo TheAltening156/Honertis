@@ -19,7 +19,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
     private static final ResourceLocation textureNormal = new ResourceLocation("textures/entity/chest/normal.png");
     private ModelChest simpleChest = new ModelChest();
     private ModelChest largeChest = new ModelLargeChest();
-    private boolean isChristams;
+    private boolean isChristmas;
 
     public TileEntityChestRenderer()
     {
@@ -27,7 +27,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
 
         if (calendar.get(2) + 1 == 12 && calendar.get(5) >= 24 && calendar.get(5) <= 26)
         {
-            this.isChristams = true;
+            this.isChristmas = true;
         }
     }
 
@@ -73,13 +73,13 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
                     GlStateManager.translate(0.0625F, 0.0625F, 0.0625F);
                     GlStateManager.matrixMode(5888);
                 }
+                else if (this.isChristmas)
+                {
+                    this.bindTexture(textureChristmas);
+                }
                 else if (te.getChestType() == 1)
                 {
                     this.bindTexture(textureTrapped);
-                }
-                else if (this.isChristams)
-                {
-                    this.bindTexture(textureChristmas);
                 }
                 else
                 {
@@ -99,13 +99,13 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
                     GlStateManager.translate(0.0625F, 0.0625F, 0.0625F);
                     GlStateManager.matrixMode(5888);
                 }
+                else if (this.isChristmas)
+                {
+                    this.bindTexture(textureChristmasDouble);
+                }
                 else if (te.getChestType() == 1)
                 {
                     this.bindTexture(textureTrappedDouble);
-                }
-                else if (this.isChristams)
-                {
-                    this.bindTexture(textureChristmasDouble);
                 }
                 else
                 {

@@ -181,11 +181,11 @@ public class BlockVine extends Block
     {
         IBlockState iblockstate = state;
 
-        for (Object enumfacing : EnumFacing.Plane.HORIZONTAL)
+        for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
         {
-            PropertyBool propertybool = getPropertyFor((EnumFacing) enumfacing);
+            PropertyBool propertybool = getPropertyFor(enumfacing);
 
-            if (((Boolean)state.getValue(propertybool)).booleanValue() && !this.canPlaceOn(worldIn.getBlockState(pos.offset((EnumFacing) enumfacing)).getBlock()))
+            if (((Boolean)state.getValue(propertybool)).booleanValue() && !this.canPlaceOn(worldIn.getBlockState(pos.offset(enumfacing)).getBlock()))
             {
                 IBlockState iblockstate1 = worldIn.getBlockState(pos.up());
 
@@ -278,11 +278,11 @@ public class BlockVine extends Block
                     {
                         IBlockState iblockstate2 = state;
 
-                        for (Object enumfacing3 : EnumFacing.Plane.HORIZONTAL)
+                        for (EnumFacing enumfacing3 : EnumFacing.Plane.HORIZONTAL)
                         {
-                            if (rand.nextBoolean() || !this.canPlaceOn(worldIn.getBlockState(blockpos1.offset((EnumFacing) enumfacing3)).getBlock()))
+                            if (rand.nextBoolean() || !this.canPlaceOn(worldIn.getBlockState(blockpos1.offset(enumfacing3)).getBlock()))
                             {
-                                iblockstate2 = iblockstate2.withProperty(getPropertyFor((EnumFacing) enumfacing3), Boolean.valueOf(false));
+                                iblockstate2 = iblockstate2.withProperty(getPropertyFor(enumfacing3), Boolean.valueOf(false));
                             }
                         }
 
@@ -347,11 +347,11 @@ public class BlockVine extends Block
                         {
                             IBlockState iblockstate1 = state;
 
-                            for (Object enumfacing : EnumFacing.Plane.HORIZONTAL)
+                            for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
                             {
                                 if (rand.nextBoolean())
                                 {
-                                    iblockstate1 = iblockstate1.withProperty(getPropertyFor((EnumFacing) enumfacing), Boolean.valueOf(false));
+                                    iblockstate1 = iblockstate1.withProperty(getPropertyFor(enumfacing), Boolean.valueOf(false));
                                 }
                             }
 
@@ -364,9 +364,9 @@ public class BlockVine extends Block
                         {
                             IBlockState iblockstate3 = iblockstate;
 
-                            for (Object enumfacing5 : EnumFacing.Plane.HORIZONTAL)
+                            for (EnumFacing enumfacing5 : EnumFacing.Plane.HORIZONTAL)
                             {
-                                PropertyBool propertybool = getPropertyFor((EnumFacing) enumfacing5);
+                                PropertyBool propertybool = getPropertyFor(enumfacing5);
 
                                 if (rand.nextBoolean() && ((Boolean)state.getValue(propertybool)).booleanValue())
                                 {

@@ -4,13 +4,10 @@ import static net.minecraft.client.renderer.GlStateManager.*;
 
 import java.awt.Color;
 
-import org.lwjgl.input.Mouse;
-
 import fr.honertis.Honertis;
 
 import static fr.honertis.utils.DrawUtils.*;
 
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 

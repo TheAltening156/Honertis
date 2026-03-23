@@ -152,6 +152,9 @@ public abstract class BlockSlab extends Block
      */
     public abstract String getUnlocalizedName(int meta);
 
+    /**
+     * Gets the meta to use for the Pick Block ItemStack result
+     */
     public int getDamageValue(World worldIn, BlockPos pos)
     {
         return super.getDamageValue(worldIn, pos) & 7;

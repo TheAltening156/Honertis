@@ -65,7 +65,10 @@ public class WorldType
         return "generator." + this.worldType;
     }
 
-    public String func_151359_c()
+    /**
+     * Gets the translation key for the info text for this world type.
+     */
+    public String getTranslatedInfo()
     {
         return this.getTranslateName() + ".info";
     }

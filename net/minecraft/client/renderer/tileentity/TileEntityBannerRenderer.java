@@ -84,7 +84,7 @@ public class TileEntityBannerRenderer extends TileEntitySpecialRenderer<TileEnti
 
     private ResourceLocation func_178463_a(TileEntityBanner bannerObj)
     {
-        String s = bannerObj.func_175116_e();
+        String s = bannerObj.getPatternResourceLocation();
 
         if (s.isEmpty())
         {

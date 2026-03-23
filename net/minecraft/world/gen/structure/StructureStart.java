@@ -118,7 +118,7 @@ public abstract class StructureStart
      */
     protected void markAvailableHeight(World worldIn, Random rand, int p_75067_3_)
     {
-        int i = worldIn.func_181545_F() - p_75067_3_;
+        int i = worldIn.getSeaLevel() - p_75067_3_;
         int j = this.boundingBox.getYSize() + 1;
 
         if (j < i)

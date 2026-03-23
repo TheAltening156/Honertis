@@ -12,9 +12,9 @@ import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 
 public class BiomeGenSwamp extends BiomeGenBase
 {
-    protected BiomeGenSwamp(int p_i1988_1_)
+    protected BiomeGenSwamp(int id)
     {
-        super(p_i1988_1_);
+        super(id);
         this.theBiomeDecorator.treesPerChunk = 2;
         this.theBiomeDecorator.flowersPerChunk = 1;
         this.theBiomeDecorator.deadBushPerChunk = 1;
@@ -50,14 +50,14 @@ public class BiomeGenSwamp extends BiomeGenBase
         return BlockFlower.EnumFlowerType.BLUE_ORCHID;
     }
 
-    public void genTerrainBlocks(World worldIn, Random rand, ChunkPrimer chunkPrimerIn, int p_180622_4_, int p_180622_5_, double p_180622_6_)
+    public void genTerrainBlocks(World worldIn, Random rand, ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal)
     {
-        double d0 = GRASS_COLOR_NOISE.func_151601_a((double)p_180622_4_ * 0.25D, (double)p_180622_5_ * 0.25D);
+        double d0 = GRASS_COLOR_NOISE.func_151601_a((double)x * 0.25D, (double)z * 0.25D);
 
         if (d0 > 0.0D)
         {
-            int i = p_180622_4_ & 15;
-            int j = p_180622_5_ & 15;
+            int i = x & 15;
+            int j = z & 15;
 
             for (int k = 255; k >= 0; --k)
             {
@@ -78,6 +78,6 @@ public class BiomeGenSwamp extends BiomeGenBase
             }
         }
 
-        this.generateBiomeTerrain(worldIn, rand, chunkPrimerIn, p_180622_4_, p_180622_5_, p_180622_6_);
+        this.generateBiomeTerrain(worldIn, rand, chunkPrimerIn, x, z, noiseVal);
     }
 }

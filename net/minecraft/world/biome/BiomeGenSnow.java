@@ -15,9 +15,9 @@ public class BiomeGenSnow extends BiomeGenBase
     private WorldGenIceSpike field_150616_aD = new WorldGenIceSpike();
     private WorldGenIcePath field_150617_aE = new WorldGenIcePath(4);
 
-    public BiomeGenSnow(int p_i45378_1_, boolean p_i45378_2_)
+    public BiomeGenSnow(int id, boolean p_i45378_2_)
     {
-        super(p_i45378_1_);
+        super(id);
         this.field_150615_aC = p_i45378_2_;
 
         if (p_i45378_2_)

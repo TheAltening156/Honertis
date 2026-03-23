@@ -56,9 +56,9 @@ public class WorldGenDesertWells extends WorldGenerator
 
             worldIn.setBlockState(position, this.field_175910_d, 2);
 
-            for (Object enumfacing : EnumFacing.Plane.HORIZONTAL)
+            for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
             {
-                worldIn.setBlockState(position.offset((EnumFacing) enumfacing), this.field_175910_d, 2);
+                worldIn.setBlockState(position.offset(enumfacing), this.field_175910_d, 2);
             }
 
             for (int i1 = -2; i1 <= 2; ++i1)

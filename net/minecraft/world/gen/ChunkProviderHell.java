@@ -74,11 +74,11 @@ public class ChunkProviderHell implements IChunkProvider
     double[] noiseData4;
     double[] noiseData5;
 
-    public ChunkProviderHell(World worldIn, boolean p_i45637_2_, long p_i45637_3_)
+    public ChunkProviderHell(World worldIn, boolean p_i45637_2_, long seed)
     {
         this.worldObj = worldIn;
         this.field_177466_i = p_i45637_2_;
-        this.hellRNG = new Random(p_i45637_3_);
+        this.hellRNG = new Random(seed);
         this.netherNoiseGen1 = new NoiseGeneratorOctaves(this.hellRNG, 16);
         this.netherNoiseGen2 = new NoiseGeneratorOctaves(this.hellRNG, 16);
         this.netherNoiseGen3 = new NoiseGeneratorOctaves(this.hellRNG, 8);
@@ -86,13 +86,13 @@ public class ChunkProviderHell implements IChunkProvider
         this.netherrackExculsivityNoiseGen = new NoiseGeneratorOctaves(this.hellRNG, 4);
         this.netherNoiseGen6 = new NoiseGeneratorOctaves(this.hellRNG, 10);
         this.netherNoiseGen7 = new NoiseGeneratorOctaves(this.hellRNG, 16);
-        worldIn.func_181544_b(63);
+        worldIn.setSeaLevel(63);
     }
 
     public void func_180515_a(int p_180515_1_, int p_180515_2_, ChunkPrimer p_180515_3_)
     {
         int i = 4;
-        int j = this.worldObj.func_181545_F() / 2 + 1;
+        int j = this.worldObj.getSeaLevel() / 2 + 1;
         int k = i + 1;
         int l = 17;
         int i1 = i + 1;
@@ -165,7 +165,7 @@ public class ChunkProviderHell implements IChunkProvider
 
     public void func_180516_b(int p_180516_1_, int p_180516_2_, ChunkPrimer p_180516_3_)
     {
-        int i = this.worldObj.func_181545_F() + 1;
+        int i = this.worldObj.getSeaLevel() + 1;
         double d0 = 0.03125D;
         this.slowsandNoise = this.slowsandGravelNoiseGen.generateNoiseOctaves(this.slowsandNoise, p_180516_1_ * 16, p_180516_2_ * 16, 0, 16, 16, 1, d0, d0, 1.0D);
         this.gravelNoise = this.slowsandGravelNoiseGen.generateNoiseOctaves(this.gravelNoise, p_180516_1_ * 16, 109, p_180516_2_ * 16, 16, 1, 16, d0, 1.0D, d0);
@@ -384,11 +384,11 @@ public class ChunkProviderHell implements IChunkProvider
     /**
      * Populates chunk with ores etc etc
      */
-    public void populate(IChunkProvider p_73153_1_, int p_73153_2_, int p_73153_3_)
+    public void populate(IChunkProvider chunkProvider, int x, int z)
     {
         BlockFalling.fallInstantly = true;
-        BlockPos blockpos = new BlockPos(p_73153_2_ * 16, 0, p_73153_3_ * 16);
-        ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(p_73153_2_, p_73153_3_);
+        BlockPos blockpos = new BlockPos(x * 16, 0, z * 16);
+        ChunkCoordIntPair chunkcoordintpair = new ChunkCoordIntPair(x, z);
         this.genNetherBridge.generateStructure(this.worldObj, this.hellRNG, chunkcoordintpair);
 
         for (int i = 0; i < 8; ++i)
@@ -434,7 +434,7 @@ public class ChunkProviderHell implements IChunkProvider
         BlockFalling.fallInstantly = false;
     }
 
-    public boolean func_177460_a(IChunkProvider p_177460_1_, Chunk p_177460_2_, int p_177460_3_, int p_177460_4_)
+    public boolean populateChunk(IChunkProvider chunkProvider, Chunk chunkIn, int x, int z)
     {
         return false;
     }
@@ -443,7 +443,7 @@ public class ChunkProviderHell implements IChunkProvider
      * Two modes of operation: if passed true, save all Chunks in one go.  If passed false, save up to two chunks.
      * Return true if all chunks have been saved.
      */
-    public boolean saveChunks(boolean p_73151_1_, IProgressUpdate progressCallback)
+    public boolean saveChunks(boolean saveAllChunks, IProgressUpdate progressCallback)
     {
         return true;
     }
@@ -489,7 +489,7 @@ public class ChunkProviderHell implements IChunkProvider
                 return this.genNetherBridge.getSpawnList();
             }
 
-            if (this.genNetherBridge.func_175796_a(this.worldObj, pos) && this.worldObj.getBlockState(pos.down()).getBlock() == Blocks.nether_brick)
+            if (this.genNetherBridge.isPositionInStructure(this.worldObj, pos) && this.worldObj.getBlockState(pos.down()).getBlock() == Blocks.nether_brick)
             {
                 return this.genNetherBridge.getSpawnList();
             }
@@ -509,9 +509,9 @@ public class ChunkProviderHell implements IChunkProvider
         return 0;
     }
 
-    public void recreateStructures(Chunk p_180514_1_, int p_180514_2_, int p_180514_3_)
+    public void recreateStructures(Chunk chunkIn, int x, int z)
     {
-        this.genNetherBridge.generate(this, this.worldObj, p_180514_2_, p_180514_3_, (ChunkPrimer)null);
+        this.genNetherBridge.generate(this, this.worldObj, x, z, (ChunkPrimer)null);
     }
 
     public Chunk provideChunk(BlockPos blockPosIn)

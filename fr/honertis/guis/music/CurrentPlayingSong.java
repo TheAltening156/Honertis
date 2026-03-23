@@ -59,21 +59,19 @@ public class CurrentPlayingSong {
         mc.fontRendererObj.drawStringWithShadow(millisecToTime(musicPlayer.currentStateMillis), (int)posX + 93 - mc.fontRendererObj.getStringWidth(millisecToTime(musicPlayer.currentStateMillis)), (int)posY + 244, -1);
         mc.fontRendererObj.drawStringWithShadow(millisecToTime(musicPlayer.durationMillis), (int)posX + 277 - mc.fontRendererObj.getStringWidth(millisecToTime(musicPlayer.durationMillis)), (int)posY + 244, -1);
         if (!ytState.isEmpty() || !ytState.equals("")) {
-        	drawRoundedRect((double)width - mc.fontRendererObj.getStringWidth(ytState + "    "), (double)height-30D,(double) width - 2D, (double)height -12D, 5D, Color.DARK_GRAY.getRGB());
+        	drawRoundedRect(width - mc.fontRendererObj.getStringWidth(ytState + "    "), height-30D,width - 2D, height -12D, 5D, Color.DARK_GRAY.getRGB());
         	mc.fontRendererObj.drawString(ytState, width - mc.fontRendererObj.getStringWidth(ytState + "    ") + 5, height - 25, -1);
         }
         if (mode != 0) posY += 6;
 	}
 	
 	public void mouseClick() {
-        double pos = 0;
         for (Buttons buttons : buttons.values()) {
         	if (buttons == Buttons.VOLUME) {
         		if (buttons.hover) {
         			buttons.volumeClicked = true;
         		}
         	}
-        	pos += 25;
         }
 		
 	}

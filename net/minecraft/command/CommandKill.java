@@ -45,7 +45,7 @@ public class CommandKill extends CommandBase
         }
         else
         {
-            Entity entity = func_175768_b(sender, args[0]);
+            Entity entity = getEntity(sender, args[0]);
             entity.onKillCommand();
             notifyOperators(sender, this, "commands.kill.successful", new Object[] {entity.getDisplayName()});
         }

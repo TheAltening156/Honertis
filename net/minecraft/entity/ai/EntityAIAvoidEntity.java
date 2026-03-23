@@ -26,15 +26,15 @@ public class EntityAIAvoidEntity<T extends Entity> extends EntityAIBase
 
     /** The PathNavigate of our entity */
     private PathNavigate entityPathNavigate;
-    private Class<T> field_181064_i;
+    private Class<T> classToAvoid;
     private Predicate <? super T > avoidTargetSelector;
 
-    public EntityAIAvoidEntity(EntityCreature p_i46404_1_, Class<T> p_i46404_2_, float p_i46404_3_, double p_i46404_4_, double p_i46404_6_)
+    public EntityAIAvoidEntity(EntityCreature theEntityIn, Class<T> classToAvoidIn, float avoidDistanceIn, double farSpeedIn, double nearSpeedIn)
     {
-        this(p_i46404_1_, p_i46404_2_, Predicates.<T>alwaysTrue(), p_i46404_3_, p_i46404_4_, p_i46404_6_);
+        this(theEntityIn, classToAvoidIn, Predicates.<T>alwaysTrue(), avoidDistanceIn, farSpeedIn, nearSpeedIn);
     }
 
-    public EntityAIAvoidEntity(EntityCreature p_i46405_1_, Class<T> p_i46405_2_, Predicate <? super T > p_i46405_3_, float p_i46405_4_, double p_i46405_5_, double p_i46405_7_)
+    public EntityAIAvoidEntity(EntityCreature theEntityIn, Class<T> classToAvoidIn, Predicate <? super T > avoidTargetSelectorIn, float avoidDistanceIn, double farSpeedIn, double nearSpeedIn)
     {
         this.canBeSeenSelector = new Predicate<Entity>()
         {
@@ -43,13 +43,13 @@ public class EntityAIAvoidEntity<T extends Entity> extends EntityAIBase
                 return p_apply_1_.isEntityAlive() && EntityAIAvoidEntity.this.theEntity.getEntitySenses().canSee(p_apply_1_);
             }
         };
-        this.theEntity = p_i46405_1_;
-        this.field_181064_i = p_i46405_2_;
-        this.avoidTargetSelector = p_i46405_3_;
-        this.avoidDistance = p_i46405_4_;
-        this.farSpeed = p_i46405_5_;
-        this.nearSpeed = p_i46405_7_;
-        this.entityPathNavigate = p_i46405_1_.getNavigator();
+        this.theEntity = theEntityIn;
+        this.classToAvoid = classToAvoidIn;
+        this.avoidTargetSelector = avoidTargetSelectorIn;
+        this.avoidDistance = avoidDistanceIn;
+        this.farSpeed = farSpeedIn;
+        this.nearSpeed = nearSpeedIn;
+        this.entityPathNavigate = theEntityIn.getNavigator();
         this.setMutexBits(1);
     }
 
@@ -58,7 +58,7 @@ public class EntityAIAvoidEntity<T extends Entity> extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        List<T> list = this.theEntity.worldObj.<T>getEntitiesWithinAABB(this.field_181064_i, this.theEntity.getEntityBoundingBox().expand((double)this.avoidDistance, 3.0D, (double)this.avoidDistance), Predicates.and(new Predicate[] {EntitySelectors.NOT_SPECTATING, this.canBeSeenSelector, this.avoidTargetSelector}));
+        List<T> list = this.theEntity.worldObj.<T>getEntitiesWithinAABB(this.classToAvoid, this.theEntity.getEntityBoundingBox().expand((double)this.avoidDistance, 3.0D, (double)this.avoidDistance), Predicates.and(new Predicate[] {EntitySelectors.NOT_SPECTATING, this.canBeSeenSelector, this.avoidTargetSelector}));
 
         if (list.isEmpty())
         {

@@ -1,7 +1,6 @@
 package fr.honertis.utils;
 
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
 
 public class AnimUtils extends GuiScreen{
 	

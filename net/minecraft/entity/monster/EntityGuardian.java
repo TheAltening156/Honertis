@@ -463,26 +463,30 @@ public class EntityGuardian extends EntityMob
 
     /**
      * Drop 0-2 items of this living's type
+     *  
+     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
+     * or tameable)
+     * @param lootingModifier level of enchanment to be applied to this drop
      */
-    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
-        int i = this.rand.nextInt(3) + this.rand.nextInt(p_70628_2_ + 1);
+        int i = this.rand.nextInt(3) + this.rand.nextInt(lootingModifier + 1);
 
         if (i > 0)
         {
             this.entityDropItem(new ItemStack(Items.prismarine_shard, i, 0), 1.0F);
         }
 
-        if (this.rand.nextInt(3 + p_70628_2_) > 1)
+        if (this.rand.nextInt(3 + lootingModifier) > 1)
         {
             this.entityDropItem(new ItemStack(Items.fish, 1, ItemFishFood.FishType.COD.getMetadata()), 1.0F);
         }
-        else if (this.rand.nextInt(3 + p_70628_2_) > 1)
+        else if (this.rand.nextInt(3 + lootingModifier) > 1)
         {
             this.entityDropItem(new ItemStack(Items.prismarine_crystals, 1, 0), 1.0F);
         }
 
-        if (p_70628_1_ && this.isElder())
+        if (wasRecentlyHit && this.isElder())
         {
             this.entityDropItem(new ItemStack(Blocks.sponge, 1, 1), 1.0F);
         }
@@ -586,9 +590,9 @@ public class EntityGuardian extends EntityMob
         private EntityGuardian theEntity;
         private int tickCounter;
 
-        public AIGuardianAttack(EntityGuardian p_i45833_1_)
+        public AIGuardianAttack(EntityGuardian guardian)
         {
-            this.theEntity = p_i45833_1_;
+            this.theEntity = guardian;
             this.setMutexBits(3);
         }
 
@@ -669,10 +673,10 @@ public class EntityGuardian extends EntityMob
     {
         private EntityGuardian entityGuardian;
 
-        public GuardianMoveHelper(EntityGuardian p_i45831_1_)
+        public GuardianMoveHelper(EntityGuardian guardian)
         {
-            super(p_i45831_1_);
-            this.entityGuardian = p_i45831_1_;
+            super(guardian);
+            this.entityGuardian = guardian;
         }
 
         public void onUpdateMoveHelper()
@@ -685,7 +689,7 @@ public class EntityGuardian extends EntityMob
                 double d3 = d0 * d0 + d1 * d1 + d2 * d2;
                 d3 = (double)MathHelper.sqrt_double(d3);
                 d1 = d1 / d3;
-                float f = (float)(MathHelper.func_181159_b(d2, d0) * 180.0D / Math.PI) - 90.0F;
+                float f = (float)(MathHelper.atan2(d2, d0) * 180.0D / Math.PI) - 90.0F;
                 this.entityGuardian.rotationYaw = this.limitAngle(this.entityGuardian.rotationYaw, f, 30.0F);
                 this.entityGuardian.renderYawOffset = this.entityGuardian.rotationYaw;
                 float f1 = (float)(this.speed * this.entityGuardian.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
@@ -728,9 +732,9 @@ public class EntityGuardian extends EntityMob
     {
         private EntityGuardian parentEntity;
 
-        public GuardianTargetSelector(EntityGuardian p_i45832_1_)
+        public GuardianTargetSelector(EntityGuardian guardian)
         {
-            this.parentEntity = p_i45832_1_;
+            this.parentEntity = guardian;
         }
 
         public boolean apply(EntityLivingBase p_apply_1_)

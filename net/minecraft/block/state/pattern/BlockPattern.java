@@ -134,9 +134,9 @@ public class BlockPattern
         private final World world;
         private final boolean field_181626_b;
 
-        public CacheLoader(World p_i46460_1_, boolean p_i46460_2_)
+        public CacheLoader(World worldIn, boolean p_i46460_2_)
         {
-            this.world = p_i46460_1_;
+            this.world = worldIn;
             this.field_181626_b = p_i46460_2_;
         }
 
@@ -156,18 +156,18 @@ public class BlockPattern
         private final int field_181121_f;
         private final int field_181122_g;
 
-        public PatternHelper(BlockPos p_i46378_1_, EnumFacing p_i46378_2_, EnumFacing p_i46378_3_, LoadingCache<BlockPos, BlockWorldState> p_i46378_4_, int p_i46378_5_, int p_i46378_6_, int p_i46378_7_)
+        public PatternHelper(BlockPos posIn, EnumFacing fingerIn, EnumFacing thumbIn, LoadingCache<BlockPos, BlockWorldState> lcacheIn, int p_i46378_5_, int p_i46378_6_, int p_i46378_7_)
         {
-            this.pos = p_i46378_1_;
-            this.finger = p_i46378_2_;
-            this.thumb = p_i46378_3_;
-            this.lcache = p_i46378_4_;
+            this.pos = posIn;
+            this.finger = fingerIn;
+            this.thumb = thumbIn;
+            this.lcache = lcacheIn;
             this.field_181120_e = p_i46378_5_;
             this.field_181121_f = p_i46378_6_;
             this.field_181122_g = p_i46378_7_;
         }
 
-        public BlockPos func_181117_a()
+        public BlockPos getPos()
         {
             return this.pos;
         }

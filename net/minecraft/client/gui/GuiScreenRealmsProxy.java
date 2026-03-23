@@ -10,7 +10,7 @@ import net.minecraft.realms.RealmsScreen;
 
 public class GuiScreenRealmsProxy extends GuiScreen
 {
-    private static RealmsScreen field_154330_a;
+    private RealmsScreen field_154330_a;
 
     public GuiScreenRealmsProxy(RealmsScreen p_i1087_1_)
     {
@@ -38,18 +38,25 @@ public class GuiScreenRealmsProxy extends GuiScreen
         super.drawCenteredString(this.fontRendererObj, p_154325_1_, p_154325_2_, p_154325_3_, p_154325_4_);
     }
 
-    public void func_154322_b(String p_154322_1_, int p_154322_2_, int p_154322_3_, int p_154322_4_)
+    public void a(String p_a_1_, int p_a_2_, int p_a_3_, int p_a_4_, boolean p_a_5_)
     {
-        super.drawString(this.fontRendererObj, p_154322_1_, p_154322_2_, p_154322_3_, p_154322_4_);
+        if (p_a_5_)
+        {
+            super.drawString(this.fontRendererObj, p_a_1_, p_a_2_, p_a_3_, p_a_4_);
+        }
+        else
+        {
+            this.fontRendererObj.drawString(p_a_1_, p_a_2_, p_a_3_, p_a_4_);
+        }
     }
 
     /**
      * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
      */
-    public static void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height)
+    public void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height)
     {
-        field_154330_a.blit(x, y, textureX, textureY, width, height);
-        Gui.drawTexturedModalRect(x, y, textureX, textureY, width, height);
+        this.field_154330_a.blit(x, y, textureX, textureY, width, height);
+        super.drawTexturedModalRect(x, y, textureX, textureY, width, height);
     }
 
     /**
@@ -131,9 +138,9 @@ public class GuiScreenRealmsProxy extends GuiScreen
         return this.fontRendererObj.getStringWidth(p_154326_1_);
     }
 
-    public void func_154319_c(String p_154319_1_, int p_154319_2_, int p_154319_3_, int p_154319_4_)
+    public void func_154322_b(String p_154322_1_, int p_154322_2_, int p_154322_3_, int p_154322_4_)
     {
-        this.fontRendererObj.drawStringWithShadow(p_154319_1_, (float)p_154319_2_, (float)p_154319_3_, p_154319_4_);
+        this.fontRendererObj.drawStringWithShadow(p_154322_1_, (float)p_154322_2_, (float)p_154322_3_, p_154322_4_);
     }
 
     public List<String> func_154323_a(String p_154323_1_, int p_154323_2_)
@@ -171,10 +178,9 @@ public class GuiScreenRealmsProxy extends GuiScreen
         return list;
     }
 
-    @SuppressWarnings("unlikely-arg-type")
-	public void func_154328_b(RealmsButton p_154328_1_)
+    public void func_154328_b(RealmsButton p_154328_1_)
     {
-        super.buttonList.remove(p_154328_1_);
+        super.buttonList.remove(p_154328_1_.getProxy());
     }
 
     /**

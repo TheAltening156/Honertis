@@ -1,6 +1,3 @@
-/*
- * Decompiled with CFR 0.150.
- */
 package yalter.mousetweaks;
 
 import java.io.File;
@@ -11,10 +8,6 @@ import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Properties;
 import java.util.Set;
-import yalter.mousetweaks.Logger;
-import yalter.mousetweaks.OnTickMethod;
-import yalter.mousetweaks.WheelScrollDirection;
-import yalter.mousetweaks.WheelSearchOrder;
 
 public class Config {
     protected static final Properties defaultValues = new Properties();

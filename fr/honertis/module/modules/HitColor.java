@@ -1,6 +1,5 @@
 package fr.honertis.module.modules;
 
-import fr.honertis.event.EventUpdate;
 import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.settings.BooleanSettings;

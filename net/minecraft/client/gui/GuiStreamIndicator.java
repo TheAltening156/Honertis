@@ -11,8 +11,8 @@ public class GuiStreamIndicator
 {
     private static final ResourceLocation locationStreamIndicator = new ResourceLocation("textures/gui/stream_indicator.png");
     private final Minecraft mc;
-    private float field_152443_c = 1.0F;
-    private int field_152444_d = 1;
+    private float streamAlpha = 1.0F;
+    private int streamAlphaDelta = 1;
 
     public GuiStreamIndicator(Minecraft mcIn)
     {
@@ -37,7 +37,7 @@ public class GuiStreamIndicator
                 GlStateManager.disableTexture2D();
                 Tessellator tessellator = Tessellator.getInstance();
                 WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-                GlStateManager.color(0.0F, 0.0F, 0.0F, (0.65F + 0.35000002F * this.field_152443_c) / 2.0F);
+                GlStateManager.color(0.0F, 0.0F, 0.0F, (0.65F + 0.35000002F * this.streamAlpha) / 2.0F);
                 worldrenderer.begin(7, DefaultVertexFormats.POSITION);
                 worldrenderer.pos((double)l, (double)j1, 0.0D).endVertex();
                 worldrenderer.pos((double)p_152437_1_, (double)j1, 0.0D).endVertex();
@@ -55,7 +55,7 @@ public class GuiStreamIndicator
 
     private void render(int p_152436_1_, int p_152436_2_, int p_152436_3_, int p_152436_4_)
     {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 0.65F + 0.35000002F * this.field_152443_c);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 0.65F + 0.35000002F * this.streamAlpha);
         this.mc.getTextureManager().bindTexture(locationStreamIndicator);
         float f = 150.0F;
         float f1 = 0.0F;
@@ -83,27 +83,27 @@ public class GuiStreamIndicator
         return this.mc.getTwitchStream().func_152929_G() ? 48 : 32;
     }
 
-    public void func_152439_a()
+    public void updateStreamAlpha()
     {
         if (this.mc.getTwitchStream().isBroadcasting())
         {
-            this.field_152443_c += 0.025F * (float)this.field_152444_d;
+            this.streamAlpha += 0.025F * (float)this.streamAlphaDelta;
 
-            if (this.field_152443_c < 0.0F)
+            if (this.streamAlpha < 0.0F)
             {
-                this.field_152444_d *= -1;
-                this.field_152443_c = 0.0F;
+                this.streamAlphaDelta *= -1;
+                this.streamAlpha = 0.0F;
             }
-            else if (this.field_152443_c > 1.0F)
+            else if (this.streamAlpha > 1.0F)
             {
-                this.field_152444_d *= -1;
-                this.field_152443_c = 1.0F;
+                this.streamAlphaDelta *= -1;
+                this.streamAlpha = 1.0F;
             }
         }
         else
         {
-            this.field_152443_c = 1.0F;
-            this.field_152444_d = 1;
+            this.streamAlpha = 1.0F;
+            this.streamAlphaDelta = 1;
         }
     }
 }

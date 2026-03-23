@@ -8,9 +8,9 @@ import net.minecraft.world.gen.feature.WorldGenDesertWells;
 
 public class BiomeGenDesert extends BiomeGenBase
 {
-    public BiomeGenDesert(int p_i1977_1_)
+    public BiomeGenDesert(int id)
     {
-        super(p_i1977_1_);
+        super(id);
         this.spawnableCreatureList.clear();
         this.topBlock = Blocks.sand.getDefaultState();
         this.fillerBlock = Blocks.sand.getDefaultState();

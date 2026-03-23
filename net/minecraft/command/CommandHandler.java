@@ -20,6 +20,15 @@ public class CommandHandler implements ICommandManager
     private final Map<String, ICommand> commandMap = Maps.<String, ICommand>newHashMap();
     private final Set<ICommand> commandSet = Sets.<ICommand>newHashSet();
 
+    /**
+     * Attempt to execute a command. This method should return the number of times that the command was executed. If the
+     * command does not exist or if the player does not have permission, 0 will be returned. A number greater than 1 can
+     * be returned if a player selector is used.
+     *  
+     * @param sender The person who executed the command. This could be an EntityPlayer, RCon Source, Command Block,
+     * etc.
+     * @param rawCommand The raw arguments that were passed. This includes the command name.
+     */
     public int executeCommand(ICommandSender sender, String rawCommand)
     {
         rawCommand = rawCommand.trim();

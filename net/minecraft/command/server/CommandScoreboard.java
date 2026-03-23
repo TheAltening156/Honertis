@@ -919,7 +919,7 @@ public class CommandScoreboard extends CommandBase
 
             if (p_147197_2_.length > p_147197_3_)
             {
-                Entity entity = func_175768_b(p_147197_1_, p_147197_2_[i]);
+                Entity entity = getEntity(p_147197_1_, p_147197_2_[i]);
 
                 try
                 {

@@ -905,7 +905,7 @@ public class StructureOceanMonumentPieces
 
         public boolean addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn)
         {
-            int i = Math.max(worldIn.func_181545_F(), 64) - this.boundingBox.minY;
+            int i = Math.max(worldIn.getSeaLevel(), 64) - this.boundingBox.minY;
             this.func_181655_a(worldIn, structureBoundingBoxIn, 0, 0, 0, 58, i, 58, false);
             this.func_175840_a(false, 0, worldIn, randomIn, structureBoundingBoxIn);
             this.func_175840_a(true, 33, worldIn, randomIn, structureBoundingBoxIn);
@@ -1583,7 +1583,7 @@ public class StructureOceanMonumentPieces
                     {
                         if (!p_181655_9_ || this.getBlockStateFromPos(p_181655_1_, j, i, k, p_181655_2_).getBlock().getMaterial() != Material.air)
                         {
-                            if (this.getYWithOffset(i) >= p_181655_1_.func_181545_F())
+                            if (this.getYWithOffset(i) >= p_181655_1_.getSeaLevel())
                             {
                                 this.setBlockState(p_181655_1_, Blocks.air.getDefaultState(), j, i, k, p_181655_2_);
                             }

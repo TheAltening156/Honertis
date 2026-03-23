@@ -5,14 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import fr.honertis.event.Event;
-import fr.honertis.guis.GuiHonertisOptions;
 import fr.honertis.guis.music.CurrentPlayingSong;
-import fr.honertis.guis.music.MusicPlayer;
 import fr.honertis.guis.music.MusicPlayerGui;
 import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.module.ModulesManager;
-import fr.honertis.utils.WebUtils;
 import yalter.mousetweaks.Constants;
 
 public class Honertis {
@@ -34,7 +31,7 @@ public class Honertis {
 	public void start() {
 		name = "Honertis";
 		version = "1.8U2";
-		title = "Minecraft 1.8.8 | Honertis v" + version;
+		title = "Minecraft 1.8.9 | Honertis v" + version;
 		
 		modulesManager = new ModulesManager();
 		event = new Event();

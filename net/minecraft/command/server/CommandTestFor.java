@@ -50,7 +50,7 @@ public class CommandTestFor extends CommandBase
         }
         else
         {
-            Entity entity = func_175768_b(sender, args[0]);
+            Entity entity = getEntity(sender, args[0]);
             NBTTagCompound nbttagcompound = null;
 
             if (args.length >= 2)

@@ -473,7 +473,7 @@ public class GuiScreenBook extends GuiScreen
                     try
                     {
                         IChatComponent ichatcomponent = IChatComponent.Serializer.jsonToComponent(s5);
-                        this.field_175386_A = ichatcomponent != null ? GuiUtilRenderComponents.func_178908_a(ichatcomponent, 116, this.fontRendererObj, true, true) : null;
+                        this.field_175386_A = ichatcomponent != null ? GuiUtilRenderComponents.splitText(ichatcomponent, 116, this.fontRendererObj, true, true) : null;
                     }
                     catch (JsonParseException var13)
                     {
@@ -538,10 +538,12 @@ public class GuiScreenBook extends GuiScreen
 
     /**
      * Executes the click event specified by the given chat component
+     *  
+     * @param component The ChatComponent to check for click
      */
-    protected boolean handleComponentClick(IChatComponent p_175276_1_)
+    protected boolean handleComponentClick(IChatComponent component)
     {
-        ClickEvent clickevent = p_175276_1_ == null ? null : p_175276_1_.getChatStyle().getChatClickEvent();
+        ClickEvent clickevent = component == null ? null : component.getChatStyle().getChatClickEvent();
 
         if (clickevent == null)
         {
@@ -571,7 +573,7 @@ public class GuiScreenBook extends GuiScreen
         }
         else
         {
-            boolean flag = super.handleComponentClick(p_175276_1_);
+            boolean flag = super.handleComponentClick(component);
 
             if (flag && clickevent.getAction() == ClickEvent.Action.RUN_COMMAND)
             {

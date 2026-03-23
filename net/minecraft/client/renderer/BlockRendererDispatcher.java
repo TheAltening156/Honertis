@@ -12,14 +12,10 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ReportedException;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.WorldType;
-import optifine.Config;
-import optifine.Reflector;
-import shadersmod.client.SVertexBuilder;
 
 public class BlockRendererDispatcher implements IResourceManagerReloadListener
 {
@@ -28,7 +24,6 @@ public class BlockRendererDispatcher implements IResourceManagerReloadListener
     private final BlockModelRenderer blockModelRenderer = new BlockModelRenderer();
     private final ChestRenderer chestRenderer = new ChestRenderer();
     private final BlockFluidRenderer fluidRenderer = new BlockFluidRenderer();
-    private static final String __OBFID = "CL_00002520";
 
     public BlockRendererDispatcher(BlockModelShapes blockModelShapesIn, GameSettings gameSettingsIn)
     {
@@ -50,25 +45,6 @@ public class BlockRendererDispatcher implements IResourceManagerReloadListener
         {
             state = block.getActualState(state, blockAccess, pos);
             IBakedModel ibakedmodel = this.blockModelShapes.getModelForState(state);
-
-            if (Reflector.ISmartBlockModel.isInstance(ibakedmodel))
-            {
-                IBlockState iblockstate = (IBlockState)Reflector.call(block, Reflector.ForgeBlock_getExtendedState, new Object[] {state, blockAccess, pos});
-
-                for (EnumWorldBlockLayer enumworldblocklayer : EnumWorldBlockLayer.values())
-                {
-                    if (Reflector.callBoolean(block, Reflector.ForgeBlock_canRenderInLayer, new Object[] {enumworldblocklayer}))
-                    {
-                        Reflector.callVoid(Reflector.ForgeHooksClient_setRenderLayer, new Object[] {enumworldblocklayer});
-                        IBakedModel ibakedmodel2 = (IBakedModel)Reflector.call(ibakedmodel, Reflector.ISmartBlockModel_handleBlockState, new Object[] {iblockstate});
-                        IBakedModel ibakedmodel3 = (new SimpleBakedModel.Builder(ibakedmodel2, texture)).makeBakedModel();
-                        this.blockModelRenderer.renderModel(blockAccess, ibakedmodel3, state, pos, Tessellator.getInstance().getWorldRenderer());
-                    }
-                }
-
-                return;
-            }
-
             IBakedModel ibakedmodel1 = (new SimpleBakedModel.Builder(ibakedmodel, texture)).makeBakedModel();
             this.blockModelRenderer.renderModel(blockAccess, ibakedmodel1, state, pos, Tessellator.getInstance().getWorldRenderer());
         }
@@ -89,39 +65,14 @@ public class BlockRendererDispatcher implements IResourceManagerReloadListener
                 switch (i)
                 {
                     case 1:
-                        if (Config.isShaders())
-                        {
-                            SVertexBuilder.pushEntity(state, pos, blockAccess, worldRendererIn);
-                        }
-
-                        boolean flag1 = this.fluidRenderer.renderFluid(blockAccess, state, pos, worldRendererIn);
-
-                        if (Config.isShaders())
-                        {
-                            SVertexBuilder.popEntity(worldRendererIn);
-                        }
-
-                        return flag1;
+                        return this.fluidRenderer.renderFluid(blockAccess, state, pos, worldRendererIn);
 
                     case 2:
                         return false;
 
                     case 3:
                         IBakedModel ibakedmodel = this.getModelFromBlockState(state, blockAccess, pos);
-
-                        if (Config.isShaders())
-                        {
-                            SVertexBuilder.pushEntity(state, pos, blockAccess, worldRendererIn);
-                        }
-
-                        boolean flag = this.blockModelRenderer.renderModel(blockAccess, ibakedmodel, state, pos, worldRendererIn);
-
-                        if (Config.isShaders())
-                        {
-                            SVertexBuilder.popEntity(worldRendererIn);
-                        }
-
-                        return flag;
+                        return this.blockModelRenderer.renderModel(blockAccess, ibakedmodel, state, pos, worldRendererIn);
 
                     default:
                         return false;
@@ -164,7 +115,7 @@ public class BlockRendererDispatcher implements IResourceManagerReloadListener
             {
                 state = block.getActualState(state, worldIn, pos);
             }
-            catch (Exception var7)
+            catch (Exception var6)
             {
                 ;
             }
@@ -175,12 +126,6 @@ public class BlockRendererDispatcher implements IResourceManagerReloadListener
         if (pos != null && this.gameSettings.allowBlockAlternatives && ibakedmodel instanceof WeightedBakedModel)
         {
             ibakedmodel = ((WeightedBakedModel)ibakedmodel).getAlternativeModel(MathHelper.getPositionRandom(pos));
-        }
-
-        if (Reflector.ISmartBlockModel.isInstance(ibakedmodel))
-        {
-            IBlockState iblockstate = (IBlockState)Reflector.call(block, Reflector.ForgeBlock_getExtendedState, new Object[] {state, worldIn, pos});
-            ibakedmodel = (IBakedModel)Reflector.call(ibakedmodel, Reflector.ISmartBlockModel_handleBlockState, new Object[] {iblockstate});
         }
 
         return ibakedmodel;

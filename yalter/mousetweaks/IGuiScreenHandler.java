@@ -1,14 +1,7 @@
-/*
- * Decompiled with CFR 0.150.
- * 
- * Could not load the following classes:
- *  net.minecraft.inventory.Slot
- */
 package yalter.mousetweaks;
 
 import java.util.List;
 import net.minecraft.inventory.Slot;
-import yalter.mousetweaks.MouseButton;
 
 public interface IGuiScreenHandler {
     public boolean isMouseTweaksDisabled();

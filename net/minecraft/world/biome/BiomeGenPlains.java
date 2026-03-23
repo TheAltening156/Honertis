@@ -11,9 +11,9 @@ public class BiomeGenPlains extends BiomeGenBase
 {
     protected boolean field_150628_aC;
 
-    protected BiomeGenPlains(int p_i1986_1_)
+    protected BiomeGenPlains(int id)
     {
-        super(p_i1986_1_);
+        super(id);
         this.setTemperatureRainfall(0.8F, 0.4F);
         this.setHeight(height_LowPlains);
         this.spawnableCreatureList.add(new BiomeGenBase.SpawnListEntry(EntityHorse.class, 5, 2, 6));

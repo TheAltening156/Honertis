@@ -90,7 +90,7 @@ public class CommandWhitelist extends CommandBase
                     throw new WrongUsageException("commands.whitelist.remove.usage", new Object[0]);
                 }
 
-                GameProfile gameprofile1 = minecraftserver.getConfigurationManager().getWhitelistedPlayers().func_152706_a(args[1]);
+                GameProfile gameprofile1 = minecraftserver.getConfigurationManager().getWhitelistedPlayers().getBannedProfile(args[1]);
 
                 if (gameprofile1 == null)
                 {

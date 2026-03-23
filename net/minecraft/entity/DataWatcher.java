@@ -14,6 +14,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.Rotations;
+import net.minecraft.world.biome.BiomeGenBase;
 import org.apache.commons.lang3.ObjectUtils;
 
 public class DataWatcher
@@ -28,6 +29,8 @@ public class DataWatcher
     /** true if one or more object was changed */
     private boolean objectChanged;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
+    public BiomeGenBase spawnBiome = BiomeGenBase.plains;
+    public BlockPos spawnPosition = BlockPos.ORIGIN;
 
     public DataWatcher(Entity owner)
     {

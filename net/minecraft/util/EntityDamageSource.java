@@ -14,9 +14,9 @@ public class EntityDamageSource extends DamageSource
      */
     private boolean isThornsDamage = false;
 
-    public EntityDamageSource(String p_i1567_1_, Entity damageSourceEntityIn)
+    public EntityDamageSource(String damageTypeIn, Entity damageSourceEntityIn)
     {
-        super(p_i1567_1_);
+        super(damageTypeIn);
         this.damageSourceEntity = damageSourceEntityIn;
     }
 
@@ -41,13 +41,15 @@ public class EntityDamageSource extends DamageSource
 
     /**
      * Gets the death message that is displayed when the player dies
+     *  
+     * @param entityLivingBaseIn The EntityLivingBase that died
      */
-    public IChatComponent getDeathMessage(EntityLivingBase p_151519_1_)
+    public IChatComponent getDeathMessage(EntityLivingBase entityLivingBaseIn)
     {
         ItemStack itemstack = this.damageSourceEntity instanceof EntityLivingBase ? ((EntityLivingBase)this.damageSourceEntity).getHeldItem() : null;
         String s = "death.attack." + this.damageType;
         String s1 = s + ".item";
-        return itemstack != null && itemstack.hasDisplayName() && StatCollector.canTranslate(s1) ? new ChatComponentTranslation(s1, new Object[] {p_151519_1_.getDisplayName(), this.damageSourceEntity.getDisplayName(), itemstack.getChatComponent()}): new ChatComponentTranslation(s, new Object[] {p_151519_1_.getDisplayName(), this.damageSourceEntity.getDisplayName()});
+        return itemstack != null && itemstack.hasDisplayName() && StatCollector.canTranslate(s1) ? new ChatComponentTranslation(s1, new Object[] {entityLivingBaseIn.getDisplayName(), this.damageSourceEntity.getDisplayName(), itemstack.getChatComponent()}): new ChatComponentTranslation(s, new Object[] {entityLivingBaseIn.getDisplayName(), this.damageSourceEntity.getDisplayName()});
     }
 
     /**

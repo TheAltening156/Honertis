@@ -11,30 +11,33 @@ import net.minecraft.world.World;
 
 public class EntityDiggingFX extends EntityFX
 {
-    private IBlockState field_174847_a;
-    private BlockPos field_181019_az;
+    private IBlockState sourceState;
+    private BlockPos sourcePos;
 
     protected EntityDiggingFX(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, double xSpeedIn, double ySpeedIn, double zSpeedIn, IBlockState state)
     {
         super(worldIn, xCoordIn, yCoordIn, zCoordIn, xSpeedIn, ySpeedIn, zSpeedIn);
-        this.field_174847_a = state;
+        this.sourceState = state;
         this.setParticleIcon(Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getTexture(state));
         this.particleGravity = state.getBlock().blockParticleGravity;
         this.particleRed = this.particleGreen = this.particleBlue = 0.6F;
         this.particleScale /= 2.0F;
     }
 
-    public EntityDiggingFX func_174846_a(BlockPos pos)
+    /**
+     * Sets the position of the block that this particle came from. Used for calculating texture and color multiplier.
+     */
+    public EntityDiggingFX setBlockPos(BlockPos pos)
     {
-        this.field_181019_az = pos;
+        this.sourcePos = pos;
 
-        if (this.field_174847_a.getBlock() == Blocks.grass)
+        if (this.sourceState.getBlock() == Blocks.grass)
         {
             return this;
         }
         else
         {
-            int i = this.field_174847_a.getBlock().colorMultiplier(this.worldObj, pos);
+            int i = this.sourceState.getBlock().colorMultiplier(this.worldObj, pos);
             this.particleRed *= (float)(i >> 16 & 255) / 255.0F;
             this.particleGreen *= (float)(i >> 8 & 255) / 255.0F;
             this.particleBlue *= (float)(i & 255) / 255.0F;
@@ -44,8 +47,8 @@ public class EntityDiggingFX extends EntityFX
 
     public EntityDiggingFX func_174845_l()
     {
-        this.field_181019_az = new BlockPos(this.posX, this.posY, this.posZ);
-        Block block = this.field_174847_a.getBlock();
+        this.sourcePos = new BlockPos(this.posX, this.posY, this.posZ);
+        Block block = this.sourceState.getBlock();
 
         if (block == Blocks.grass)
         {
@@ -53,7 +56,7 @@ public class EntityDiggingFX extends EntityFX
         }
         else
         {
-            int i = block.getRenderColor(this.field_174847_a);
+            int i = block.getRenderColor(this.sourceState);
             this.particleRed *= (float)(i >> 16 & 255) / 255.0F;
             this.particleGreen *= (float)(i >> 8 & 255) / 255.0F;
             this.particleBlue *= (float)(i & 255) / 255.0F;
@@ -69,7 +72,7 @@ public class EntityDiggingFX extends EntityFX
     /**
      * Renders the particle
      */
-    public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float p_180434_4_, float p_180434_5_, float p_180434_6_, float p_180434_7_, float p_180434_8_)
+    public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
     {
         float f = ((float)this.particleTextureIndexX + this.particleTextureJitterX / 4.0F) / 16.0F;
         float f1 = f + 0.015609375F;
@@ -91,10 +94,10 @@ public class EntityDiggingFX extends EntityFX
         int i = this.getBrightnessForRender(partialTicks);
         int j = i >> 16 & 65535;
         int k = i & 65535;
-        worldRendererIn.pos((double)(f5 - p_180434_4_ * f4 - p_180434_7_ * f4), (double)(f6 - p_180434_5_ * f4), (double)(f7 - p_180434_6_ * f4 - p_180434_8_ * f4)).tex((double)f, (double)f3).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).lightmap(j, k).endVertex();
-        worldRendererIn.pos((double)(f5 - p_180434_4_ * f4 + p_180434_7_ * f4), (double)(f6 + p_180434_5_ * f4), (double)(f7 - p_180434_6_ * f4 + p_180434_8_ * f4)).tex((double)f, (double)f2).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).lightmap(j, k).endVertex();
-        worldRendererIn.pos((double)(f5 + p_180434_4_ * f4 + p_180434_7_ * f4), (double)(f6 + p_180434_5_ * f4), (double)(f7 + p_180434_6_ * f4 + p_180434_8_ * f4)).tex((double)f1, (double)f2).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).lightmap(j, k).endVertex();
-        worldRendererIn.pos((double)(f5 + p_180434_4_ * f4 - p_180434_7_ * f4), (double)(f6 - p_180434_5_ * f4), (double)(f7 + p_180434_6_ * f4 - p_180434_8_ * f4)).tex((double)f1, (double)f3).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).lightmap(j, k).endVertex();
+        worldRendererIn.pos((double)(f5 - rotationX * f4 - rotationXY * f4), (double)(f6 - rotationZ * f4), (double)(f7 - rotationYZ * f4 - rotationXZ * f4)).tex((double)f, (double)f3).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).lightmap(j, k).endVertex();
+        worldRendererIn.pos((double)(f5 - rotationX * f4 + rotationXY * f4), (double)(f6 + rotationZ * f4), (double)(f7 - rotationYZ * f4 + rotationXZ * f4)).tex((double)f, (double)f2).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).lightmap(j, k).endVertex();
+        worldRendererIn.pos((double)(f5 + rotationX * f4 + rotationXY * f4), (double)(f6 + rotationZ * f4), (double)(f7 + rotationYZ * f4 + rotationXZ * f4)).tex((double)f1, (double)f2).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).lightmap(j, k).endVertex();
+        worldRendererIn.pos((double)(f5 + rotationX * f4 - rotationXY * f4), (double)(f6 - rotationZ * f4), (double)(f7 + rotationYZ * f4 - rotationXZ * f4)).tex((double)f1, (double)f3).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).lightmap(j, k).endVertex();
     }
 
     public int getBrightnessForRender(float partialTicks)
@@ -102,9 +105,9 @@ public class EntityDiggingFX extends EntityFX
         int i = super.getBrightnessForRender(partialTicks);
         int j = 0;
 
-        if (this.worldObj.isBlockLoaded(this.field_181019_az))
+        if (this.worldObj.isBlockLoaded(this.sourcePos))
         {
-            j = this.worldObj.getCombinedLight(this.field_181019_az, 0);
+            j = this.worldObj.getCombinedLight(this.sourcePos, 0);
         }
 
         return i == 0 ? j : i;

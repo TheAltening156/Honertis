@@ -1,9 +1,4 @@
-/*
- * Decompiled with CFR 0.150.
- */
 package yalter.mousetweaks;
-
-import yalter.mousetweaks.Config;
 
 public class Logger {
     public static void Log(String text) {

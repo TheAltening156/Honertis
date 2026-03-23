@@ -139,7 +139,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
     }
 
     /**
-     * Gets the name of this command sender (usually username, but possibly "Rcon")
+     * Get the name of this object. For players this returns their username
      */
     public String getName()
     {
@@ -459,7 +459,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
 
         if (animalchest != null)
         {
-            animalchest.func_110132_b(this);
+            animalchest.removeInventoryChangeListener(this);
             int i = Math.min(animalchest.getSizeInventory(), this.horseChest.getSizeInventory());
 
             for (int j = 0; j < i; ++j)
@@ -473,7 +473,7 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
             }
         }
 
-        this.horseChest.func_110134_a(this);
+        this.horseChest.addInventoryChangeListener(this);
         this.updateHorseSlots();
     }
 

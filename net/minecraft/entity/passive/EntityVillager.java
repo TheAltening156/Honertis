@@ -947,16 +947,16 @@ public class EntityVillager extends EntityAgeable implements IMerchant, INpc
 
     static class ItemAndEmeraldToItem implements EntityVillager.ITradeList
     {
-        public ItemStack field_179411_a;
-        public EntityVillager.PriceInfo field_179409_b;
-        public ItemStack field_179410_c;
+        public ItemStack buyingItemStack;
+        public EntityVillager.PriceInfo buyingPriceInfo;
+        public ItemStack sellingItemstack;
         public EntityVillager.PriceInfo field_179408_d;
 
         public ItemAndEmeraldToItem(Item p_i45813_1_, EntityVillager.PriceInfo p_i45813_2_, Item p_i45813_3_, EntityVillager.PriceInfo p_i45813_4_)
         {
-            this.field_179411_a = new ItemStack(p_i45813_1_);
-            this.field_179409_b = p_i45813_2_;
-            this.field_179410_c = new ItemStack(p_i45813_3_);
+            this.buyingItemStack = new ItemStack(p_i45813_1_);
+            this.buyingPriceInfo = p_i45813_2_;
+            this.sellingItemstack = new ItemStack(p_i45813_3_);
             this.field_179408_d = p_i45813_4_;
         }
 
@@ -964,9 +964,9 @@ public class EntityVillager extends EntityAgeable implements IMerchant, INpc
         {
             int i = 1;
 
-            if (this.field_179409_b != null)
+            if (this.buyingPriceInfo != null)
             {
-                i = this.field_179409_b.getPrice(random);
+                i = this.buyingPriceInfo.getPrice(random);
             }
 
             int j = 1;
@@ -976,7 +976,7 @@ public class EntityVillager extends EntityAgeable implements IMerchant, INpc
                 j = this.field_179408_d.getPrice(random);
             }
 
-            recipeList.add(new MerchantRecipe(new ItemStack(this.field_179411_a.getItem(), i, this.field_179411_a.getMetadata()), new ItemStack(Items.emerald), new ItemStack(this.field_179410_c.getItem(), j, this.field_179410_c.getMetadata())));
+            recipeList.add(new MerchantRecipe(new ItemStack(this.buyingItemStack.getItem(), i, this.buyingItemStack.getMetadata()), new ItemStack(Items.emerald), new ItemStack(this.sellingItemstack.getItem(), j, this.sellingItemstack.getMetadata())));
         }
     }
 
@@ -1000,26 +1000,26 @@ public class EntityVillager extends EntityAgeable implements IMerchant, INpc
 
     static class ListEnchantedItemForEmeralds implements EntityVillager.ITradeList
     {
-        public ItemStack field_179407_a;
-        public EntityVillager.PriceInfo field_179406_b;
+        public ItemStack enchantedItemStack;
+        public EntityVillager.PriceInfo priceInfo;
 
         public ListEnchantedItemForEmeralds(Item p_i45814_1_, EntityVillager.PriceInfo p_i45814_2_)
         {
-            this.field_179407_a = new ItemStack(p_i45814_1_);
-            this.field_179406_b = p_i45814_2_;
+            this.enchantedItemStack = new ItemStack(p_i45814_1_);
+            this.priceInfo = p_i45814_2_;
         }
 
         public void modifyMerchantRecipeList(MerchantRecipeList recipeList, Random random)
         {
             int i = 1;
 
-            if (this.field_179406_b != null)
+            if (this.priceInfo != null)
             {
-                i = this.field_179406_b.getPrice(random);
+                i = this.priceInfo.getPrice(random);
             }
 
             ItemStack itemstack = new ItemStack(Items.emerald, i, 0);
-            ItemStack itemstack1 = new ItemStack(this.field_179407_a.getItem(), 1, this.field_179407_a.getMetadata());
+            ItemStack itemstack1 = new ItemStack(this.enchantedItemStack.getItem(), 1, this.enchantedItemStack.getMetadata());
             itemstack1 = EnchantmentHelper.addRandomEnchantment(random, itemstack1, 5 + random.nextInt(15));
             recipeList.add(new MerchantRecipe(itemstack, itemstack1));
         }
@@ -1027,28 +1027,28 @@ public class EntityVillager extends EntityAgeable implements IMerchant, INpc
 
     static class ListItemForEmeralds implements EntityVillager.ITradeList
     {
-        public ItemStack field_179403_a;
-        public EntityVillager.PriceInfo field_179402_b;
+        public ItemStack itemToBuy;
+        public EntityVillager.PriceInfo priceInfo;
 
         public ListItemForEmeralds(Item par1Item, EntityVillager.PriceInfo priceInfo)
         {
-            this.field_179403_a = new ItemStack(par1Item);
-            this.field_179402_b = priceInfo;
+            this.itemToBuy = new ItemStack(par1Item);
+            this.priceInfo = priceInfo;
         }
 
         public ListItemForEmeralds(ItemStack stack, EntityVillager.PriceInfo priceInfo)
         {
-            this.field_179403_a = stack;
-            this.field_179402_b = priceInfo;
+            this.itemToBuy = stack;
+            this.priceInfo = priceInfo;
         }
 
         public void modifyMerchantRecipeList(MerchantRecipeList recipeList, Random random)
         {
             int i = 1;
 
-            if (this.field_179402_b != null)
+            if (this.priceInfo != null)
             {
-                i = this.field_179402_b.getPrice(random);
+                i = this.priceInfo.getPrice(random);
             }
 
             ItemStack itemstack;
@@ -1057,12 +1057,12 @@ public class EntityVillager extends EntityAgeable implements IMerchant, INpc
             if (i < 0)
             {
                 itemstack = new ItemStack(Items.emerald, 1, 0);
-                itemstack1 = new ItemStack(this.field_179403_a.getItem(), -i, this.field_179403_a.getMetadata());
+                itemstack1 = new ItemStack(this.itemToBuy.getItem(), -i, this.itemToBuy.getMetadata());
             }
             else
             {
                 itemstack = new ItemStack(Items.emerald, i, 0);
-                itemstack1 = new ItemStack(this.field_179403_a.getItem(), 1, this.field_179403_a.getMetadata());
+                itemstack1 = new ItemStack(this.itemToBuy.getItem(), 1, this.itemToBuy.getMetadata());
             }
 
             recipeList.add(new MerchantRecipe(itemstack, itemstack1));

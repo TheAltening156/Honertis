@@ -55,7 +55,7 @@ public class EntitySheep extends EntityAnimal
     private int sheepTimer;
     private EntityAIEatGrass entityAIEatGrass = new EntityAIEatGrass(this);
 
-    public static float[] func_175513_a(EnumDyeColor dyeColor)
+    public static float[] getDyeRgb(EnumDyeColor dyeColor)
     {
         return (float[])DYE_TO_RGB.get(dyeColor);
     }
@@ -113,15 +113,19 @@ public class EntitySheep extends EntityAnimal
 
     /**
      * Drop 0-2 items of this living's type
+     *  
+     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
+     * or tameable)
+     * @param lootingModifier level of enchanment to be applied to this drop
      */
-    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
         if (!this.getSheared())
         {
             this.entityDropItem(new ItemStack(Item.getItemFromBlock(Blocks.wool), 1, this.getFleeceColor().getMetadata()), 0.0F);
         }
 
-        int i = this.rand.nextInt(2) + 1 + this.rand.nextInt(1 + p_70628_2_);
+        int i = this.rand.nextInt(2) + 1 + this.rand.nextInt(1 + lootingModifier);
 
         for (int j = 0; j < i; ++j)
         {

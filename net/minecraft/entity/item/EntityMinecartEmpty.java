@@ -11,9 +11,9 @@ public class EntityMinecartEmpty extends EntityMinecart
         super(worldIn);
     }
 
-    public EntityMinecartEmpty(World worldIn, double p_i1723_2_, double p_i1723_4_, double p_i1723_6_)
+    public EntityMinecartEmpty(World worldIn, double x, double y, double z)
     {
-        super(worldIn, p_i1723_2_, p_i1723_4_, p_i1723_6_);
+        super(worldIn, x, y, z);
     }
 
     /**

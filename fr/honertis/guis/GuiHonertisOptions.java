@@ -54,5 +54,10 @@ public class GuiHonertisOptions extends GuiScreen {
 	public void handleMouseInput() throws IOException {
 		super.handleMouseInput();
 	}
+
+	@Override
+	public boolean doesGuiPauseGame() {
+		return true;
+	}
 	
 }

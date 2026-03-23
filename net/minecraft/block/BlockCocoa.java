@@ -172,6 +172,9 @@ public class BlockCocoa extends BlockDirectional implements IGrowable
         return Items.dye;
     }
 
+    /**
+     * Gets the meta to use for the Pick Block ItemStack result
+     */
     public int getDamageValue(World worldIn, BlockPos pos)
     {
         return EnumDyeColor.BROWN.getDyeDamage();

@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerEnderDragonDeath;
 import net.minecraft.client.renderer.entity.layers.LayerEnderDragonEyes;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.util.MathHelper;
@@ -56,7 +55,7 @@ public class RenderDragon extends RenderLiving<EntityDragon>
     /**
      * Renders the model in RenderLiving
      */
-    protected void renderModel(EntityDragon entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float p_77036_7_)
+    protected void renderModel(EntityDragon entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float scaleFactor)
     {
         if (entitylivingbaseIn.deathTicks > 0)
         {
@@ -65,13 +64,13 @@ public class RenderDragon extends RenderLiving<EntityDragon>
             GlStateManager.enableAlpha();
             GlStateManager.alphaFunc(516, f);
             this.bindTexture(enderDragonExplodingTextures);
-            this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
+            this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
             GlStateManager.alphaFunc(516, 0.1F);
             GlStateManager.depthFunc(514);
         }
 
         this.bindEntityTexture(entitylivingbaseIn);
-        this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
+        this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
 
         if (entitylivingbaseIn.hurtTime > 0)
         {
@@ -80,7 +79,7 @@ public class RenderDragon extends RenderLiving<EntityDragon>
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(770, 771);
             GlStateManager.color(1.0F, 0.0F, 0.0F, 0.5F);
-            this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
+            this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
             GlStateManager.enableTexture2D();
             GlStateManager.disableBlend();
             GlStateManager.depthFunc(515);
@@ -88,10 +87,7 @@ public class RenderDragon extends RenderLiving<EntityDragon>
     }
 
     /**
-     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
-     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
-     * (Render<T extends Entity>) and this method has signature public void doRender(T entity, double d, double d1,
-     * double d2, float f, float f1). But JAD is pre 1.5 so doe
+     * Renders the desired {@code T} type Entity.
      */
     public void doRender(EntityDragon entity, double x, double y, double z, float entityYaw, float partialTicks)
     {

@@ -19,14 +19,14 @@ public class EntityMinecartChest extends EntityMinecartContainer
         super(worldIn);
     }
 
-    public EntityMinecartChest(World worldIn, double p_i1715_2_, double p_i1715_4_, double p_i1715_6_)
+    public EntityMinecartChest(World worldIn, double x, double y, double z)
     {
-        super(worldIn, p_i1715_2_, p_i1715_4_, p_i1715_6_);
+        super(worldIn, x, y, z);
     }
 
-    public void killMinecart(DamageSource p_94095_1_)
+    public void killMinecart(DamageSource source)
     {
-        super.killMinecart(p_94095_1_);
+        super.killMinecart(source);
 
         if (this.worldObj.getGameRules().getBoolean("doEntityDrops"))
         {

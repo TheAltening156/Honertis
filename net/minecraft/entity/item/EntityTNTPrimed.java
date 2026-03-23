@@ -19,19 +19,19 @@ public class EntityTNTPrimed extends Entity
         this.setSize(0.98F, 0.98F);
     }
 
-    public EntityTNTPrimed(World worldIn, double p_i1730_2_, double p_i1730_4_, double p_i1730_6_, EntityLivingBase p_i1730_8_)
+    public EntityTNTPrimed(World worldIn, double x, double y, double z, EntityLivingBase igniter)
     {
         this(worldIn);
-        this.setPosition(p_i1730_2_, p_i1730_4_, p_i1730_6_);
+        this.setPosition(x, y, z);
         float f = (float)(Math.random() * Math.PI * 2.0D);
         this.motionX = (double)(-((float)Math.sin((double)f)) * 0.02F);
         this.motionY = 0.20000000298023224D;
         this.motionZ = (double)(-((float)Math.cos((double)f)) * 0.02F);
         this.fuse = 80;
-        this.prevPosX = p_i1730_2_;
-        this.prevPosY = p_i1730_4_;
-        this.prevPosZ = p_i1730_6_;
-        this.tntPlacedBy = p_i1730_8_;
+        this.prevPosX = x;
+        this.prevPosY = y;
+        this.prevPosZ = z;
+        this.tntPlacedBy = igniter;
     }
 
     protected void entityInit()

@@ -11,7 +11,7 @@ public class ScoreHealthCriteria extends ScoreDummyCriteria
         super(name);
     }
 
-    public int func_96635_a(List<EntityPlayer> p_96635_1_)
+    public int setScore(List<EntityPlayer> p_96635_1_)
     {
         float f = 0.0F;
 

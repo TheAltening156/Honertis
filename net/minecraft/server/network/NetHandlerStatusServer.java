@@ -12,10 +12,10 @@ import net.minecraft.util.IChatComponent;
 
 public class NetHandlerStatusServer implements INetHandlerStatusServer
 {
-    private static final IChatComponent field_183007_a = new ChatComponentText("Status request has been handled.");
+    private static final IChatComponent EXIT_MESSAGE = new ChatComponentText("Status request has been handled.");
     private final MinecraftServer server;
     private final NetworkManager networkManager;
-    private boolean field_183008_d;
+    private boolean handled;
 
     public NetHandlerStatusServer(MinecraftServer serverIn, NetworkManager netManager)
     {
@@ -32,13 +32,13 @@ public class NetHandlerStatusServer implements INetHandlerStatusServer
 
     public void processServerQuery(C00PacketServerQuery packetIn)
     {
-        if (this.field_183008_d)
+        if (this.handled)
         {
-            this.networkManager.closeChannel(field_183007_a);
+            this.networkManager.closeChannel(EXIT_MESSAGE);
         }
         else
         {
-            this.field_183008_d = true;
+            this.handled = true;
             this.networkManager.sendPacket(new S00PacketServerInfo(this.server.getServerStatusResponse()));
         }
     }
@@ -46,6 +46,6 @@ public class NetHandlerStatusServer implements INetHandlerStatusServer
     public void processPing(C01PacketPing packetIn)
     {
         this.networkManager.sendPacket(new S01PacketPong(packetIn.getClientTime()));
-        this.networkManager.closeChannel(field_183007_a);
+        this.networkManager.closeChannel(EXIT_MESSAGE);
     }
 }

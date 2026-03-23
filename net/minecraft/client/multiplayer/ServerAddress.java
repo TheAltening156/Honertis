@@ -11,10 +11,10 @@ public class ServerAddress
     private final String ipAddress;
     private final int serverPort;
 
-    private ServerAddress(String p_i1192_1_, int p_i1192_2_)
+    private ServerAddress(String address, int port)
     {
-        this.ipAddress = p_i1192_1_;
-        this.serverPort = p_i1192_2_;
+        this.ipAddress = address;
+        this.serverPort = port;
     }
 
     public String getIP()
@@ -27,7 +27,7 @@ public class ServerAddress
         return this.serverPort;
     }
 
-    public static ServerAddress func_78860_a(String p_78860_0_)
+    public static ServerAddress fromString(String p_78860_0_)
     {
         if (p_78860_0_ == null)
         {

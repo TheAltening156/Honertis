@@ -112,13 +112,13 @@ public class PlayerSelector
                     {
                         List<Predicate<Entity>> list2 = Lists.<Predicate<Entity>>newArrayList();
                         list2.addAll(func_179663_a(map, s));
-                        list2.addAll(func_179648_b(map));
-                        list2.addAll(func_179649_c(map));
-                        list2.addAll(func_179659_d(map));
-                        list2.addAll(func_179657_e(map));
-                        list2.addAll(func_179647_f(map));
+                        list2.addAll(getXpLevelPredicates(map));
+                        list2.addAll(getGamemodePredicates(map));
+                        list2.addAll(getTeamPredicates(map));
+                        list2.addAll(getScorePredicates(map));
+                        list2.addAll(getNamePredicates(map));
                         list2.addAll(func_180698_a(map, blockpos));
-                        list2.addAll(func_179662_g(map));
+                        list2.addAll(getRotationsPredicates(map));
                         list1.addAll(filterResults(map, targetClass, list2, s, world, blockpos));
                     }
                 }
@@ -208,7 +208,7 @@ public class PlayerSelector
         return list;
     }
 
-    private static List<Predicate<Entity>> func_179648_b(Map<String, String> p_179648_0_)
+    private static List<Predicate<Entity>> getXpLevelPredicates(Map<String, String> p_179648_0_)
     {
         List<Predicate<Entity>> list = Lists.<Predicate<Entity>>newArrayList();
         final int i = parseIntWithDefault(p_179648_0_, "lm", -1);
@@ -236,7 +236,7 @@ public class PlayerSelector
         return list;
     }
 
-    private static List<Predicate<Entity>> func_179649_c(Map<String, String> p_179649_0_)
+    private static List<Predicate<Entity>> getGamemodePredicates(Map<String, String> p_179649_0_)
     {
         List<Predicate<Entity>> list = Lists.<Predicate<Entity>>newArrayList();
         final int i = parseIntWithDefault(p_179649_0_, "m", WorldSettings.GameType.NOT_SET.getID());
@@ -263,7 +263,7 @@ public class PlayerSelector
         return list;
     }
 
-    private static List<Predicate<Entity>> func_179659_d(Map<String, String> p_179659_0_)
+    private static List<Predicate<Entity>> getTeamPredicates(Map<String, String> p_179659_0_)
     {
         List<Predicate<Entity>> list = Lists.<Predicate<Entity>>newArrayList();
         String s = func_179651_b(p_179659_0_, "team");
@@ -299,7 +299,7 @@ public class PlayerSelector
         return list;
     }
 
-    private static List<Predicate<Entity>> func_179657_e(Map<String, String> p_179657_0_)
+    private static List<Predicate<Entity>> getScorePredicates(Map<String, String> p_179657_0_)
     {
         List<Predicate<Entity>> list = Lists.<Predicate<Entity>>newArrayList();
         final Map<String, Integer> map = func_96560_a(p_179657_0_);
@@ -359,7 +359,7 @@ public class PlayerSelector
         return list;
     }
 
-    private static List<Predicate<Entity>> func_179647_f(Map<String, String> p_179647_0_)
+    private static List<Predicate<Entity>> getNamePredicates(Map<String, String> p_179647_0_)
     {
         List<Predicate<Entity>> list = Lists.<Predicate<Entity>>newArrayList();
         String s = func_179651_b(p_179647_0_, "name");
@@ -408,7 +408,7 @@ public class PlayerSelector
         return list;
     }
 
-    private static List<Predicate<Entity>> func_179662_g(Map<String, String> p_179662_0_)
+    private static List<Predicate<Entity>> getRotationsPredicates(Map<String, String> p_179662_0_)
     {
         List<Predicate<Entity>> list = Lists.<Predicate<Entity>>newArrayList();
 

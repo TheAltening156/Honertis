@@ -96,11 +96,11 @@ public class BlockLadder extends Block
         }
         else
         {
-            for (Object enumfacing : EnumFacing.Plane.HORIZONTAL)
+            for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
             {
-                if (this.canBlockStay(worldIn, pos, (EnumFacing) enumfacing))
+                if (this.canBlockStay(worldIn, pos, enumfacing))
                 {
-                    return this.getDefaultState().withProperty(FACING, (EnumFacing)enumfacing);
+                    return this.getDefaultState().withProperty(FACING, enumfacing);
                 }
             }
 

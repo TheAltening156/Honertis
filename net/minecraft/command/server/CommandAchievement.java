@@ -98,7 +98,7 @@ public class CommandAchievement extends CommandBase
                             {
                                 if (entityplayermp.getStatFile().hasAchievementUnlocked(achievement))
                                 {
-                                    throw new CommandException("commands.achievement.alreadyHave", new Object[] {entityplayermp.getName(), statbase.func_150955_j()});
+                                    throw new CommandException("commands.achievement.alreadyHave", new Object[] {entityplayermp.getName(), statbase.createChatComponent()});
                                 }
 
                                 List<Achievement> list;
@@ -117,7 +117,7 @@ public class CommandAchievement extends CommandBase
                             {
                                 if (!entityplayermp.getStatFile().hasAchievementUnlocked(achievement))
                                 {
-                                    throw new CommandException("commands.achievement.dontHave", new Object[] {entityplayermp.getName(), statbase.func_150955_j()});
+                                    throw new CommandException("commands.achievement.dontHave", new Object[] {entityplayermp.getName(), statbase.createChatComponent()});
                                 }
 
                                 List<Achievement> list1 = Lists.newArrayList(Iterators.filter(AchievementList.achievementList.iterator(), new Predicate<Achievement>()
@@ -161,12 +161,12 @@ public class CommandAchievement extends CommandBase
                         if (flag)
                         {
                             entityplayermp.triggerAchievement(statbase);
-                            notifyOperators(sender, this, "commands.achievement.give.success.one", new Object[] {entityplayermp.getName(), statbase.func_150955_j()});
+                            notifyOperators(sender, this, "commands.achievement.give.success.one", new Object[] {entityplayermp.getName(), statbase.createChatComponent()});
                         }
                         else if (flag1)
                         {
                             entityplayermp.func_175145_a(statbase);
-                            notifyOperators(sender, this, "commands.achievement.take.success.one", new Object[] {statbase.func_150955_j(), entityplayermp.getName()});
+                            notifyOperators(sender, this, "commands.achievement.take.success.one", new Object[] {statbase.createChatComponent(), entityplayermp.getName()});
                         }
                     }
                 }

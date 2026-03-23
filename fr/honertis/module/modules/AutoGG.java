@@ -3,9 +3,7 @@ package fr.honertis.module.modules;
 import fr.honertis.event.EventUpdate;
 import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
-import fr.honertis.utils.LangManager;
 import fr.honertis.utils.TimeUtils;
-import net.minecraft.util.ChatComponentText;
 
 public class AutoGG extends ModuleBase{
 	public TimeUtils timer = new TimeUtils();
@@ -19,8 +17,8 @@ public class AutoGG extends ModuleBase{
 	
 	@Override
 	public void onUpdate(EventUpdate e) {
-		boolean gg = eq(mc.ingameGUI.title, "Victoire") || eq(mc.ingameGUI.title, "Défaite") || eq(mc.ingameGUI.title, "GG") || eq(mc.ingameGUI.title, "VICTORY") || eq(mc.ingameGUI.title, "DEFEAT");
-		boolean gl = eq(mc.ingameGUI.title, "Bonne chance") || eq(mc.ingameGUI.title, "c'est parti");
+		boolean gg = eq(mc.ingameGUI.displayedTitle, "Victoire") || eq(mc.ingameGUI.displayedTitle, "Défaite") || eq(mc.ingameGUI.displayedTitle, "GG") || eq(mc.ingameGUI.displayedTitle, "VICTORY") || eq(mc.ingameGUI.displayedTitle, "DEFEAT");
+		boolean gl = eq(mc.ingameGUI.displayedTitle, "Bonne chance") || eq(mc.ingameGUI.displayedTitle, "c'est parti");
 		if (timer.hasTimeElapsed(60000, gg || gl))
 		if (gg) {
 			mc.thePlayer.sendChatMessage("gg");

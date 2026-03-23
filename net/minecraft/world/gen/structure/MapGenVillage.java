@@ -96,11 +96,11 @@ public class MapGenVillage extends MapGenStructure
         {
         }
 
-        public Start(World worldIn, Random rand, int x, int z, int p_i2092_5_)
+        public Start(World worldIn, Random rand, int x, int z, int size)
         {
             super(x, z);
-            List<StructureVillagePieces.PieceWeight> list = StructureVillagePieces.getStructureVillageWeightedPieceList(rand, p_i2092_5_);
-            StructureVillagePieces.Start structurevillagepieces$start = new StructureVillagePieces.Start(worldIn.getWorldChunkManager(), 0, rand, (x << 4) + 2, (z << 4) + 2, list, p_i2092_5_);
+            List<StructureVillagePieces.PieceWeight> list = StructureVillagePieces.getStructureVillageWeightedPieceList(rand, size);
+            StructureVillagePieces.Start structurevillagepieces$start = new StructureVillagePieces.Start(worldIn.getWorldChunkManager(), 0, rand, (x << 4) + 2, (z << 4) + 2, list, size);
             this.components.add(structurevillagepieces$start);
             structurevillagepieces$start.buildComponent(structurevillagepieces$start, this.components, rand);
             List<StructureComponent> list1 = structurevillagepieces$start.field_74930_j;

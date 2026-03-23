@@ -1,16 +1,3 @@
-/*
- * Decompiled with CFR 0.150.
- * 
- * Could not load the following classes:
- *  net.minecraft.client.Minecraft
- *  net.minecraft.client.gui.GuiScreen
- *  net.minecraft.client.gui.inventory.GuiContainer
- *  net.minecraft.client.gui.inventory.GuiContainerCreative
- *  net.minecraft.inventory.Slot
- *  net.minecraft.item.ItemStack
- *  org.lwjgl.input.Keyboard
- *  org.lwjgl.input.Mouse
- */
 package yalter.mousetweaks;
 
 import java.io.File;
@@ -23,15 +10,6 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import yalter.mousetweaks.Config;
-import yalter.mousetweaks.Constants;
-import yalter.mousetweaks.IGuiScreenHandler;
-import yalter.mousetweaks.Logger;
-import yalter.mousetweaks.MouseButton;
-import yalter.mousetweaks.OnTickMethod;
-import yalter.mousetweaks.Reflection;
-import yalter.mousetweaks.WheelScrollDirection;
-import yalter.mousetweaks.WheelSearchOrder;
 import yalter.mousetweaks.api.IMTModGuiContainer2;
 import yalter.mousetweaks.api.IMTModGuiContainer2Ex;
 import yalter.mousetweaks.handlers.GuiContainerCreativeHandler;
@@ -70,13 +48,13 @@ public class Main {
         config.read();
         Reflection.reflectGuiContainer();
         Reflection.reflectGuiContainerCreative();
-        boolean bl = forge = entryPoint == Constants.EntryPoint.FORGE || Reflection.doesClassExist("net.minecraftforge.client.MinecraftForgeClient");
+        forge = entryPoint == Constants.EntryPoint.FORGE || Reflection.doesClassExist("net.minecraftforge.client.MinecraftForgeClient");
         if (forge) {
             Logger.Log("Minecraft Forge is installed.");
         } else {
             Logger.Log("Minecraft Forge is not installed.");
         }
-        boolean bl2 = liteLoader = entryPoint == Constants.EntryPoint.LITELOADER || Reflection.doesClassExist("com.mumfrey.liteloader.core.LiteLoader");
+        liteLoader = entryPoint == Constants.EntryPoint.LITELOADER || Reflection.doesClassExist("com.mumfrey.liteloader.core.LiteLoader");
         if (liteLoader) {
             Logger.Log("LiteLoader is installed.");
         } else {
@@ -133,7 +111,7 @@ public class Main {
             }
             Main.onUpdateInGui(currentScreen);
         }
-        oldRMBDown = Mouse.isButtonDown((int)1);
+        oldRMBDown = Mouse.isButtonDown(1);
     }
 
     private static void onUpdateInGui(GuiScreen currentScreen) {
@@ -159,7 +137,7 @@ public class Main {
             return;
         }
         Slot selectedSlot = handler.getSlotUnderMouse();
-        if (Mouse.isButtonDown((int)1)) {
+        if (Mouse.isButtonDown(1)) {
             if (!oldRMBDown) {
                 firstRightClickedSlot = selectedSlot;
             }
@@ -185,12 +163,12 @@ public class Main {
             Logger.DebugLog("You have selected a new slot, it's slot number is " + selectedSlot.slotNumber);
             targetStack = Main.copyStack(selectedSlot.getStack());
             stackOnMouse = Main.copyStack(Main.mc.thePlayer.inventory.getItemStack());
-            boolean bl = shiftIsDown = Keyboard.isKeyDown((int)42) || Keyboard.isKeyDown((int)54);
-            if (Mouse.isButtonDown((int)1)) {
+            shiftIsDown = Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54);
+            if (Mouse.isButtonDown(1)) {
                 if (Main.config.rmbTweak && !handler.isIgnored(selectedSlot) && !handler.isCraftingOutput(selectedSlot) && stackOnMouse != null && Main.areStacksCompatible(stackOnMouse, targetStack) && selectedSlot.isItemValid(stackOnMouse)) {
                     handler.clickSlot(selectedSlot, MouseButton.RIGHT, false);
                 }
-            } else if (Mouse.isButtonDown((int)0)) {
+            } else if (Mouse.isButtonDown(0)) {
                 if (stackOnMouse != null) {
                     if (Main.config.lmbTweakWithItem && !handler.isIgnored(selectedSlot) && targetStack != null && Main.areStacksCompatible(stackOnMouse, targetStack)) {
                         if (shiftIsDown) {
@@ -216,7 +194,7 @@ public class Main {
     private static void handleWheel(Slot selectedSlot) {
         int numItemsToMove;
         int wheel;
-        int n = wheel = Main.config.wheelTweak && !disableWheelForThisContainer ? Mouse.getDWheel() / 120 : 0;
+        wheel = Main.config.wheelTweak && !disableWheelForThisContainer ? Mouse.getDWheel() / 120 : 0;
         if (Main.config.wheelScrollDirection == WheelScrollDirection.INVERTED) {
             wheel = -wheel;
         }

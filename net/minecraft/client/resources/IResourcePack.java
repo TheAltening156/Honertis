@@ -16,7 +16,7 @@ public interface IResourcePack
 
     Set<String> getResourceDomains();
 
-    <T extends IMetadataSection> T getPackMetadata(IMetadataSerializer p_135058_1_, String p_135058_2_) throws IOException;
+    <T extends IMetadataSection> T getPackMetadata(IMetadataSerializer metadataSerializer, String metadataSectionName) throws IOException;
 
     BufferedImage getPackImage() throws IOException;
 

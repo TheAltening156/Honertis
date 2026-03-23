@@ -24,7 +24,7 @@ public class ChunkProviderClient implements IChunkProvider
      * coordinates.
      */
     private Chunk blankChunk;
-    private LongHashMap chunkMapping = new LongHashMap();
+    private LongHashMap<Chunk> chunkMapping = new LongHashMap();
     private List<Chunk> chunkListing = Lists.<Chunk>newArrayList();
 
     /** Reference to the World object. */
@@ -48,26 +48,29 @@ public class ChunkProviderClient implements IChunkProvider
      * Unload chunk from ChunkProviderClient's hashmap. Called in response to a Packet50PreChunk with its mode field set
      * to false
      */
-    public void unloadChunk(int p_73234_1_, int p_73234_2_)
+    public void unloadChunk(int x, int z)
     {
-        Chunk chunk = this.provideChunk(p_73234_1_, p_73234_2_);
+        Chunk chunk = this.provideChunk(x, z);
 
         if (!chunk.isEmpty())
         {
             chunk.onChunkUnload();
         }
 
-        this.chunkMapping.remove(ChunkCoordIntPair.chunkXZ2Int(p_73234_1_, p_73234_2_));
+        this.chunkMapping.remove(ChunkCoordIntPair.chunkXZ2Int(x, z));
         this.chunkListing.remove(chunk);
     }
 
     /**
      * loads or generates the chunk at the chunk location specified
+     *  
+     * @param chunkX x coord of the chunk to load (block coord >> 4)
+     * @param chunkZ z coord of the chunk to load (block coord >> 4)
      */
-    public Chunk loadChunk(int p_73158_1_, int p_73158_2_)
+    public Chunk loadChunk(int chunkX, int chunkZ)
     {
-        Chunk chunk = new Chunk(this.worldObj, p_73158_1_, p_73158_2_);
-        this.chunkMapping.add(ChunkCoordIntPair.chunkXZ2Int(p_73158_1_, p_73158_2_), chunk);
+        Chunk chunk = new Chunk(this.worldObj, chunkX, chunkZ);
+        this.chunkMapping.add(ChunkCoordIntPair.chunkXZ2Int(chunkX, chunkZ), chunk);
         this.chunkListing.add(chunk);
         chunk.setChunkLoaded(true);
         return chunk;
@@ -87,7 +90,7 @@ public class ChunkProviderClient implements IChunkProvider
      * Two modes of operation: if passed true, save all Chunks in one go.  If passed false, save up to two chunks.
      * Return true if all chunks have been saved.
      */
-    public boolean saveChunks(boolean p_73151_1_, IProgressUpdate progressCallback)
+    public boolean saveChunks(boolean saveAllChunks, IProgressUpdate progressCallback)
     {
         return true;
     }
@@ -131,11 +134,11 @@ public class ChunkProviderClient implements IChunkProvider
     /**
      * Populates chunk with ores etc etc
      */
-    public void populate(IChunkProvider p_73153_1_, int p_73153_2_, int p_73153_3_)
+    public void populate(IChunkProvider chunkProvider, int x, int z)
     {
     }
 
-    public boolean func_177460_a(IChunkProvider p_177460_1_, Chunk p_177460_2_, int p_177460_3_, int p_177460_4_)
+    public boolean populateChunk(IChunkProvider chunkProvider, Chunk chunkIn, int x, int z)
     {
         return false;
     }
@@ -163,7 +166,7 @@ public class ChunkProviderClient implements IChunkProvider
         return this.chunkListing.size();
     }
 
-    public void recreateStructures(Chunk p_180514_1_, int p_180514_2_, int p_180514_3_)
+    public void recreateStructures(Chunk chunkIn, int x, int z)
     {
     }
 

@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import org.lwjgl.input.Mouse;
-
 import com.google.common.collect.Lists;
 
 import fr.honertis.event.Events;
@@ -114,7 +112,7 @@ public class ModuleBase extends Events{
     	return false;
     }
 	
-	public boolean mouseReleased(int mouseX, int mouseY) {
+	public boolean mouseReleased() {
 		if (isEnabled())
 			return isClicked = false;
 		return false;

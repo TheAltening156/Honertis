@@ -228,8 +228,8 @@ public class ScoreboardSaveData extends WorldSavedData
             nbttagcompound.setString("Suffix", scoreplayerteam.getColorSuffix());
             nbttagcompound.setBoolean("AllowFriendlyFire", scoreplayerteam.getAllowFriendlyFire());
             nbttagcompound.setBoolean("SeeFriendlyInvisibles", scoreplayerteam.getSeeFriendlyInvisiblesEnabled());
-            nbttagcompound.setString("NameTagVisibility", scoreplayerteam.getNameTagVisibility().field_178830_e);
-            nbttagcompound.setString("DeathMessageVisibility", scoreplayerteam.getDeathMessageVisibility().field_178830_e);
+            nbttagcompound.setString("NameTagVisibility", scoreplayerteam.getNameTagVisibility().internalName);
+            nbttagcompound.setString("DeathMessageVisibility", scoreplayerteam.getDeathMessageVisibility().internalName);
             NBTTagList nbttaglist1 = new NBTTagList();
 
             for (String s : scoreplayerteam.getMembershipCollection())

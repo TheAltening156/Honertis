@@ -318,14 +318,18 @@ public class EntityEnderman extends EntityMob
 
     /**
      * Drop 0-2 items of this living's type
+     *  
+     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
+     * or tameable)
+     * @param lootingModifier level of enchanment to be applied to this drop
      */
-    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
         Item item = this.getDropItem();
 
         if (item != null)
         {
-            int i = this.rand.nextInt(2 + p_70628_2_);
+            int i = this.rand.nextInt(2 + lootingModifier);
 
             for (int j = 0; j < i; ++j)
             {

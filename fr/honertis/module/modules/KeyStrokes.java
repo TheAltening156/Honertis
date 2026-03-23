@@ -2,15 +2,12 @@ package fr.honertis.module.modules;
 
 import java.awt.Color;
 import java.util.List;
-import java.util.Timer;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import com.google.common.collect.Lists;
 
 import fr.honertis.event.EventRenderGui;
-import fr.honertis.event.EventUpdate;
 import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.settings.BooleanSettings;

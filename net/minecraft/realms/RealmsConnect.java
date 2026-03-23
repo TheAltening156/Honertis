@@ -42,7 +42,7 @@ public class RealmsConnect
                         return;
                     }
 
-                    RealmsConnect.this.connection = NetworkManager.func_181124_a(inetaddress, p_connect_2_, Minecraft.getMinecraft().gameSettings.func_181148_f());
+                    RealmsConnect.this.connection = NetworkManager.createNetworkManagerAndConnect(inetaddress, p_connect_2_, Minecraft.getMinecraft().gameSettings.isUsingNativeTransport());
 
                     if (RealmsConnect.this.aborted)
                     {
@@ -75,7 +75,7 @@ public class RealmsConnect
                     }
 
                     RealmsConnect.LOGGER.error((String)"Couldn\'t connect to world", (Throwable)unknownhostexception);
-                    Minecraft.getMinecraft().getResourcePackRepository().func_148529_f();
+                    Minecraft.getMinecraft().getResourcePackRepository().clearResourcePack();
                     Realms.setScreen(new DisconnectedRealmsScreen(RealmsConnect.this.onlineScreen, "connect.failed", new ChatComponentTranslation("disconnect.genericReason", new Object[] {"Unknown host \'" + p_connect_1_ + "\'"})));
                 }
                 catch (Exception exception)

@@ -3,10 +3,8 @@ package net.minecraft.client.gui;
 import com.google.common.collect.Lists;
 
 import fr.honertis.Honertis;
-import fr.honertis.guis.music.MusicPlayerGui;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.utils.LangManager;
-import fr.honertis.utils.Utils;
 
 import java.io.IOException;
 import java.util.List;
@@ -72,14 +70,14 @@ public class GuiChat extends GuiScreen
         musicPlayer.enabled = true;
         this.buttonList.add(musicPlayer);
     }
-
+    
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
     	if (button.id == 10) {
     		mc.displayGuiScreen(Honertis.INSTANCE.musicPlayer);
     	}
     }
-    
+
     /**
      * Called when the screen is unloaded. Used to disable keyboard repeat events
      */
@@ -182,7 +180,7 @@ public class GuiChat extends GuiScreen
             this.mc.ingameGUI.getChatGUI().scroll(i);
         }
     }
-    
+
     /**
      * Called when the mouse is clicked. Args : mouseX, mouseY, clickedButton
      */
@@ -204,16 +202,13 @@ public class GuiChat extends GuiScreen
         this.inputField.mouseClicked(mouseX, mouseY, mouseButton);
         super.mouseClicked(mouseX, mouseY, mouseButton);
     }
-
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
     	for (ModuleBase m : Honertis.INSTANCE.modulesManager.getModulesPriority()) {
-    		if (m.mouseReleased(mouseX, mouseY))
+    		if (m.mouseReleased())
     			break;
     	}
     }
-    
-    
     /**
      * Sets the text of the chat
      */
@@ -328,11 +323,11 @@ public class GuiChat extends GuiScreen
      * Draws the screen and all the components in it. Args : mouseX, mouseY, renderPartialTicks
      */
     public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    { 
+    {
     	for (ModuleBase m : Honertis.INSTANCE.modulesManager.getModulesPriority()) {
     		m.drawScreen(mouseX, mouseY);
     	}
-		drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
+        drawRect(2, this.height - 14, this.width - 2, this.height - 2, Integer.MIN_VALUE);
         this.inputField.drawTextBox();
         IChatComponent ichatcomponent = this.mc.ingameGUI.getChatGUI().getChatComponent(Mouse.getX(), Mouse.getY());
 
@@ -340,7 +335,7 @@ public class GuiChat extends GuiScreen
         {
             this.handleComponentHover(ichatcomponent, mouseX, mouseY);
         }
-        
+
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

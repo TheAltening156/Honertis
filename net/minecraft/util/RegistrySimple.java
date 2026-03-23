@@ -27,17 +27,17 @@ public class RegistrySimple<K, V> implements IRegistry<K, V>
     /**
      * Register an object on this registry.
      */
-    public void putObject(K p_82595_1_, V p_82595_2_)
+    public void putObject(K key, V value)
     {
-        Validate.notNull(p_82595_1_);
-        Validate.notNull(p_82595_2_);
+        Validate.notNull(key);
+        Validate.notNull(value);
 
-        if (this.registryObjects.containsKey(p_82595_1_))
+        if (this.registryObjects.containsKey(key))
         {
-            logger.debug("Adding duplicate key \'" + p_82595_1_ + "\' to registry");
+            logger.debug("Adding duplicate key \'" + key + "\' to registry");
         }
 
-        this.registryObjects.put(p_82595_1_, p_82595_2_);
+        this.registryObjects.put(key, value);
     }
 
     public Set<K> getKeys()
@@ -48,9 +48,9 @@ public class RegistrySimple<K, V> implements IRegistry<K, V>
     /**
      * Does this registry contain an entry for the given key?
      */
-    public boolean containsKey(K p_148741_1_)
+    public boolean containsKey(K key)
     {
-        return this.registryObjects.containsKey(p_148741_1_);
+        return this.registryObjects.containsKey(key);
     }
 
     public Iterator<V> iterator()

@@ -14,10 +14,10 @@ public class BlockWorldState
     private TileEntity tileEntity;
     private boolean tileEntityInitialized;
 
-    public BlockWorldState(World p_i46451_1_, BlockPos p_i46451_2_, boolean p_i46451_3_)
+    public BlockWorldState(World worldIn, BlockPos posIn, boolean p_i46451_3_)
     {
-        this.world = p_i46451_1_;
-        this.pos = p_i46451_2_;
+        this.world = worldIn;
+        this.pos = posIn;
         this.field_181628_c = p_i46451_3_;
     }
 
@@ -47,13 +47,13 @@ public class BlockWorldState
         return this.pos;
     }
 
-    public static Predicate<BlockWorldState> hasState(final Predicate<IBlockState> p_177510_0_)
+    public static Predicate<BlockWorldState> hasState(final Predicate<IBlockState> predicatesIn)
     {
         return new Predicate<BlockWorldState>()
         {
             public boolean apply(BlockWorldState p_apply_1_)
             {
-                return p_apply_1_ != null && p_177510_0_.apply(p_apply_1_.getBlockState());
+                return p_apply_1_ != null && predicatesIn.apply(p_apply_1_.getBlockState());
             }
         };
     }

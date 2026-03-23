@@ -22,14 +22,14 @@ public abstract class BanEntry<T> extends UserListEntry<T>
         this.reason = banReason == null ? "Banned by an operator." : banReason;
     }
 
-    protected BanEntry(T p_i1174_1_, JsonObject p_i1174_2_)
+    protected BanEntry(T valueIn, JsonObject json)
     {
-        super(p_i1174_1_, p_i1174_2_);
+        super(valueIn, json);
         Date date;
 
         try
         {
-            date = p_i1174_2_.has("created") ? dateFormat.parse(p_i1174_2_.get("created").getAsString()) : new Date();
+            date = json.has("created") ? dateFormat.parse(json.get("created").getAsString()) : new Date();
         }
         catch (ParseException var7)
         {
@@ -37,12 +37,12 @@ public abstract class BanEntry<T> extends UserListEntry<T>
         }
 
         this.banStartDate = date;
-        this.bannedBy = p_i1174_2_.has("source") ? p_i1174_2_.get("source").getAsString() : "(Unknown)";
+        this.bannedBy = json.has("source") ? json.get("source").getAsString() : "(Unknown)";
         Date date1;
 
         try
         {
-            date1 = p_i1174_2_.has("expires") ? dateFormat.parse(p_i1174_2_.get("expires").getAsString()) : null;
+            date1 = json.has("expires") ? dateFormat.parse(json.get("expires").getAsString()) : null;
         }
         catch (ParseException var6)
         {
@@ -50,7 +50,7 @@ public abstract class BanEntry<T> extends UserListEntry<T>
         }
 
         this.banEndDate = date1;
-        this.reason = p_i1174_2_.has("reason") ? p_i1174_2_.get("reason").getAsString() : "Banned by an operator.";
+        this.reason = json.has("reason") ? json.get("reason").getAsString() : "Banned by an operator.";
     }
 
     public Date getBanEndDate()

@@ -237,10 +237,12 @@ public class Blocks
 
     /**
      * Returns the Block in the blockRegistry with the specified name.
+     *  
+     * @param blockName The block's name to register
      */
-    private static Block getRegisteredBlock(String p_180383_0_)
+    private static Block getRegisteredBlock(String blockName)
     {
-        return (Block)Block.blockRegistry.getObject(new ResourceLocation(p_180383_0_));
+        return (Block)Block.blockRegistry.getObject(new ResourceLocation(blockName));
     }
 
     static

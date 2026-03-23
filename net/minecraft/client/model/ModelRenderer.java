@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
-import optifine.ModelSprite;
-
+import net.minecraft.src.Config;
+import net.minecraft.util.ResourceLocation;
+import net.optifine.entity.model.anim.ModelUpdater;
+import net.optifine.model.ModelSprite;
+import net.optifine.shaders.Shaders;
 import org.lwjgl.opengl.GL11;
 
 public class ModelRenderer
@@ -39,26 +43,38 @@ public class ModelRenderer
 
     /** Hides the model. */
     public boolean isHidden;
-    public List cubeList;
-    public List childModels;
+    public List<ModelBox> cubeList;
+    public List<ModelRenderer> childModels;
     public final String boxName;
     private ModelBase baseModel;
     public float offsetX;
     public float offsetY;
     public float offsetZ;
-    private static final String __OBFID = "CL_00000874";
     public List spriteList;
     public boolean mirrorV;
-    float savedScale;
+    public float scaleX;
+    public float scaleY;
+    public float scaleZ;
+    private int countResetDisplayList;
+    private ResourceLocation textureLocation;
+    private String id;
+    private ModelUpdater modelUpdater;
+    private RenderGlobal renderGlobal;
 
     public ModelRenderer(ModelBase model, String boxNameIn)
     {
         this.spriteList = new ArrayList();
         this.mirrorV = false;
+        this.scaleX = 1.0F;
+        this.scaleY = 1.0F;
+        this.scaleZ = 1.0F;
+        this.textureLocation = null;
+        this.id = null;
+        this.renderGlobal = Config.getRenderGlobal();
         this.textureWidth = 64.0F;
         this.textureHeight = 32.0F;
         this.showModel = true;
-        this.cubeList = Lists.newArrayList();
+        this.cubeList = Lists.<ModelBox>newArrayList();
         this.baseModel = model;
         model.boxList.add(this);
         this.boxName = boxNameIn;
@@ -83,7 +99,7 @@ public class ModelRenderer
     {
         if (this.childModels == null)
         {
-            this.childModels = Lists.newArrayList();
+            this.childModels = Lists.<ModelRenderer>newArrayList();
         }
 
         this.childModels.add(renderer);
@@ -136,17 +152,67 @@ public class ModelRenderer
     {
         if (!this.isHidden && this.showModel)
         {
+            this.checkResetDisplayList();
+
             if (!this.compiled)
             {
                 this.compileDisplayList(p_78785_1_);
             }
 
+            int i = 0;
+
+            if (this.textureLocation != null && !this.renderGlobal.renderOverlayDamaged)
+            {
+                if (this.renderGlobal.renderOverlayEyes)
+                {
+                    return;
+                }
+
+                i = GlStateManager.getBoundTexture();
+                Config.getTextureManager().bindTexture(this.textureLocation);
+            }
+
+            if (this.modelUpdater != null)
+            {
+                this.modelUpdater.update();
+            }
+
+            boolean flag = this.scaleX != 1.0F || this.scaleY != 1.0F || this.scaleZ != 1.0F;
             GlStateManager.translate(this.offsetX, this.offsetY, this.offsetZ);
 
             if (this.rotateAngleX == 0.0F && this.rotateAngleY == 0.0F && this.rotateAngleZ == 0.0F)
             {
                 if (this.rotationPointX == 0.0F && this.rotationPointY == 0.0F && this.rotationPointZ == 0.0F)
                 {
+                    if (flag)
+                    {
+                        GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
+                    }
+
+                    GlStateManager.callList(this.displayList);
+
+                    if (this.childModels != null)
+                    {
+                        for (int l = 0; l < this.childModels.size(); ++l)
+                        {
+                            ((ModelRenderer)this.childModels.get(l)).render(p_78785_1_);
+                        }
+                    }
+
+                    if (flag)
+                    {
+                        GlStateManager.scale(1.0F / this.scaleX, 1.0F / this.scaleY, 1.0F / this.scaleZ);
+                    }
+                }
+                else
+                {
+                    GlStateManager.translate(this.rotationPointX * p_78785_1_, this.rotationPointY * p_78785_1_, this.rotationPointZ * p_78785_1_);
+
+                    if (flag)
+                    {
+                        GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
+                    }
+
                     GlStateManager.callList(this.displayList);
 
                     if (this.childModels != null)
@@ -156,18 +222,10 @@ public class ModelRenderer
                             ((ModelRenderer)this.childModels.get(k)).render(p_78785_1_);
                         }
                     }
-                }
-                else
-                {
-                    GlStateManager.translate(this.rotationPointX * p_78785_1_, this.rotationPointY * p_78785_1_, this.rotationPointZ * p_78785_1_);
-                    GlStateManager.callList(this.displayList);
 
-                    if (this.childModels != null)
+                    if (flag)
                     {
-                        for (int j = 0; j < this.childModels.size(); ++j)
-                        {
-                            ((ModelRenderer)this.childModels.get(j)).render(p_78785_1_);
-                        }
+                        GlStateManager.scale(1.0F / this.scaleX, 1.0F / this.scaleY, 1.0F / this.scaleZ);
                     }
 
                     GlStateManager.translate(-this.rotationPointX * p_78785_1_, -this.rotationPointY * p_78785_1_, -this.rotationPointZ * p_78785_1_);
@@ -193,13 +251,18 @@ public class ModelRenderer
                     GlStateManager.rotate(this.rotateAngleX * (180F / (float)Math.PI), 1.0F, 0.0F, 0.0F);
                 }
 
+                if (flag)
+                {
+                    GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
+                }
+
                 GlStateManager.callList(this.displayList);
 
                 if (this.childModels != null)
                 {
-                    for (int i = 0; i < this.childModels.size(); ++i)
+                    for (int j = 0; j < this.childModels.size(); ++j)
                     {
-                        ((ModelRenderer)this.childModels.get(i)).render(p_78785_1_);
+                        ((ModelRenderer)this.childModels.get(j)).render(p_78785_1_);
                     }
                 }
 
@@ -207,6 +270,11 @@ public class ModelRenderer
             }
 
             GlStateManager.translate(-this.offsetX, -this.offsetY, -this.offsetZ);
+
+            if (i != 0)
+            {
+                GlStateManager.bindTexture(i);
+            }
         }
     }
 
@@ -214,11 +282,32 @@ public class ModelRenderer
     {
         if (!this.isHidden && this.showModel)
         {
+            this.checkResetDisplayList();
+
             if (!this.compiled)
             {
                 this.compileDisplayList(p_78791_1_);
             }
 
+            int i = 0;
+
+            if (this.textureLocation != null && !this.renderGlobal.renderOverlayDamaged)
+            {
+                if (this.renderGlobal.renderOverlayEyes)
+                {
+                    return;
+                }
+
+                i = GlStateManager.getBoundTexture();
+                Config.getTextureManager().bindTexture(this.textureLocation);
+            }
+
+            if (this.modelUpdater != null)
+            {
+                this.modelUpdater.update();
+            }
+
+            boolean flag = this.scaleX != 1.0F || this.scaleY != 1.0F || this.scaleZ != 1.0F;
             GlStateManager.pushMatrix();
             GlStateManager.translate(this.rotationPointX * p_78791_1_, this.rotationPointY * p_78791_1_, this.rotationPointZ * p_78791_1_);
 
@@ -237,8 +326,27 @@ public class ModelRenderer
                 GlStateManager.rotate(this.rotateAngleZ * (180F / (float)Math.PI), 0.0F, 0.0F, 1.0F);
             }
 
+            if (flag)
+            {
+                GlStateManager.scale(this.scaleX, this.scaleY, this.scaleZ);
+            }
+
             GlStateManager.callList(this.displayList);
+
+            if (this.childModels != null)
+            {
+                for (int j = 0; j < this.childModels.size(); ++j)
+                {
+                    ((ModelRenderer)this.childModels.get(j)).render(p_78791_1_);
+                }
+            }
+
             GlStateManager.popMatrix();
+
+            if (i != 0)
+            {
+                GlStateManager.bindTexture(i);
+            }
         }
     }
 
@@ -249,6 +357,8 @@ public class ModelRenderer
     {
         if (!this.isHidden && this.showModel)
         {
+            this.checkResetDisplayList();
+
             if (!this.compiled)
             {
                 this.compileDisplayList(scale);
@@ -290,7 +400,6 @@ public class ModelRenderer
     {
         if (this.displayList == 0)
         {
-            this.savedScale = scale;
             this.displayList = GLAllocation.generateDisplayLists(1);
         }
 
@@ -337,12 +446,109 @@ public class ModelRenderer
         return this.displayList;
     }
 
-    public void resetDisplayList()
+    private void checkResetDisplayList()
     {
-        if (this.compiled)
+        if (this.countResetDisplayList != Shaders.countResetDisplayLists)
         {
             this.compiled = false;
-            this.compileDisplayList(this.savedScale);
+            this.countResetDisplayList = Shaders.countResetDisplayLists;
         }
+    }
+
+    public ResourceLocation getTextureLocation()
+    {
+        return this.textureLocation;
+    }
+
+    public void setTextureLocation(ResourceLocation p_setTextureLocation_1_)
+    {
+        this.textureLocation = p_setTextureLocation_1_;
+    }
+
+    public String getId()
+    {
+        return this.id;
+    }
+
+    public void setId(String p_setId_1_)
+    {
+        this.id = p_setId_1_;
+    }
+
+    public void addBox(int[][] p_addBox_1_, float p_addBox_2_, float p_addBox_3_, float p_addBox_4_, float p_addBox_5_, float p_addBox_6_, float p_addBox_7_, float p_addBox_8_)
+    {
+        this.cubeList.add(new ModelBox(this, p_addBox_1_, p_addBox_2_, p_addBox_3_, p_addBox_4_, p_addBox_5_, p_addBox_6_, p_addBox_7_, p_addBox_8_, this.mirror));
+    }
+
+    public ModelRenderer getChild(String p_getChild_1_)
+    {
+        if (p_getChild_1_ == null)
+        {
+            return null;
+        }
+        else
+        {
+            if (this.childModels != null)
+            {
+                for (int i = 0; i < this.childModels.size(); ++i)
+                {
+                    ModelRenderer modelrenderer = (ModelRenderer)this.childModels.get(i);
+
+                    if (p_getChild_1_.equals(modelrenderer.getId()))
+                    {
+                        return modelrenderer;
+                    }
+                }
+            }
+
+            return null;
+        }
+    }
+
+    public ModelRenderer getChildDeep(String p_getChildDeep_1_)
+    {
+        if (p_getChildDeep_1_ == null)
+        {
+            return null;
+        }
+        else
+        {
+            ModelRenderer modelrenderer = this.getChild(p_getChildDeep_1_);
+
+            if (modelrenderer != null)
+            {
+                return modelrenderer;
+            }
+            else
+            {
+                if (this.childModels != null)
+                {
+                    for (int i = 0; i < this.childModels.size(); ++i)
+                    {
+                        ModelRenderer modelrenderer1 = (ModelRenderer)this.childModels.get(i);
+                        ModelRenderer modelrenderer2 = modelrenderer1.getChildDeep(p_getChildDeep_1_);
+
+                        if (modelrenderer2 != null)
+                        {
+                            return modelrenderer2;
+                        }
+                    }
+                }
+
+                return null;
+            }
+        }
+    }
+
+    public void setModelUpdater(ModelUpdater p_setModelUpdater_1_)
+    {
+        this.modelUpdater = p_setModelUpdater_1_;
+    }
+
+    public String toString()
+    {
+        StringBuffer stringbuffer = new StringBuffer();
+        stringbuffer.append("id: " + this.id + ", boxes: " + (this.cubeList != null ? Integer.valueOf(this.cubeList.size()) : null) + ", submodels: " + (this.childModels != null ? Integer.valueOf(this.childModels.size()) : null));
+        return stringbuffer.toString();
     }
 }

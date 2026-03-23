@@ -26,18 +26,20 @@ public class ServerData
     public int version = 47;
 
     /** Game version for this server. */
-    public String gameVersion = "1.8.8";
+    public String gameVersion = "1.8.9";
     public boolean field_78841_f;
     public String playerList;
     private ServerData.ServerResourceMode resourceMode = ServerData.ServerResourceMode.PROMPT;
     private String serverIcon;
-    private boolean field_181042_l;
 
-    public ServerData(String p_i46420_1_, String p_i46420_2_, boolean p_i46420_3_)
+    /** True if the server is a LAN server */
+    private boolean lanServer;
+
+    public ServerData(String name, String ip, boolean isLan)
     {
-        this.serverName = p_i46420_1_;
-        this.serverIP = p_i46420_2_;
-        this.field_181042_l = p_i46420_3_;
+        this.serverName = name;
+        this.serverIP = ip;
+        this.lanServer = isLan;
     }
 
     /**
@@ -120,9 +122,12 @@ public class ServerData
         this.serverIcon = icon;
     }
 
-    public boolean func_181041_d()
+    /**
+     * Return true if the server is a LAN server
+     */
+    public boolean isOnLAN()
     {
-        return this.field_181042_l;
+        return this.lanServer;
     }
 
     public void copyFrom(ServerData serverDataIn)
@@ -131,7 +136,7 @@ public class ServerData
         this.serverName = serverDataIn.serverName;
         this.setResourceMode(serverDataIn.getResourceMode());
         this.serverIcon = serverDataIn.serverIcon;
-        this.field_181042_l = serverDataIn.field_181042_l;
+        this.lanServer = serverDataIn.lanServer;
     }
 
     public static enum ServerResourceMode
@@ -142,9 +147,9 @@ public class ServerData
 
         private final IChatComponent motd;
 
-        private ServerResourceMode(String p_i1053_3_)
+        private ServerResourceMode(String name)
         {
-            this.motd = new ChatComponentTranslation("addServer.resourcePack." + p_i1053_3_, new Object[0]);
+            this.motd = new ChatComponentTranslation("addServer.resourcePack." + name, new Object[0]);
         }
 
         public IChatComponent getMotd()

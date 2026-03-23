@@ -90,9 +90,9 @@ public class UserList<K, V extends UserListEntry<K>>
         return (V)((UserListEntry)this.values.get(this.getObjectKey(obj)));
     }
 
-    public void removeEntry(K p_152684_1_)
+    public void removeEntry(K entry)
     {
-        this.values.remove(this.getObjectKey(p_152684_1_));
+        this.values.remove(this.getObjectKey(entry));
 
         try
         {

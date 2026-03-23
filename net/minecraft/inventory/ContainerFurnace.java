@@ -9,10 +9,10 @@ import net.minecraft.tileentity.TileEntityFurnace;
 public class ContainerFurnace extends Container
 {
     private final IInventory tileFurnace;
-    private int field_178152_f;
-    private int field_178153_g;
-    private int field_178154_h;
-    private int field_178155_i;
+    private int cookTime;
+    private int totalCookTime;
+    private int furnaceBurnTime;
+    private int currentItemBurnTime;
 
     public ContainerFurnace(InventoryPlayer playerInventory, IInventory furnaceInventory)
     {
@@ -38,7 +38,7 @@ public class ContainerFurnace extends Container
     public void onCraftGuiOpened(ICrafting listener)
     {
         super.onCraftGuiOpened(listener);
-        listener.func_175173_a(this, this.tileFurnace);
+        listener.sendAllWindowProperties(this, this.tileFurnace);
     }
 
     /**
@@ -52,31 +52,31 @@ public class ContainerFurnace extends Container
         {
             ICrafting icrafting = (ICrafting)this.crafters.get(i);
 
-            if (this.field_178152_f != this.tileFurnace.getField(2))
+            if (this.cookTime != this.tileFurnace.getField(2))
             {
                 icrafting.sendProgressBarUpdate(this, 2, this.tileFurnace.getField(2));
             }
 
-            if (this.field_178154_h != this.tileFurnace.getField(0))
+            if (this.furnaceBurnTime != this.tileFurnace.getField(0))
             {
                 icrafting.sendProgressBarUpdate(this, 0, this.tileFurnace.getField(0));
             }
 
-            if (this.field_178155_i != this.tileFurnace.getField(1))
+            if (this.currentItemBurnTime != this.tileFurnace.getField(1))
             {
                 icrafting.sendProgressBarUpdate(this, 1, this.tileFurnace.getField(1));
             }
 
-            if (this.field_178153_g != this.tileFurnace.getField(3))
+            if (this.totalCookTime != this.tileFurnace.getField(3))
             {
                 icrafting.sendProgressBarUpdate(this, 3, this.tileFurnace.getField(3));
             }
         }
 
-        this.field_178152_f = this.tileFurnace.getField(2);
-        this.field_178154_h = this.tileFurnace.getField(0);
-        this.field_178155_i = this.tileFurnace.getField(1);
-        this.field_178153_g = this.tileFurnace.getField(3);
+        this.cookTime = this.tileFurnace.getField(2);
+        this.furnaceBurnTime = this.tileFurnace.getField(0);
+        this.currentItemBurnTime = this.tileFurnace.getField(1);
+        this.totalCookTime = this.tileFurnace.getField(3);
     }
 
     public void updateProgressBar(int id, int data)

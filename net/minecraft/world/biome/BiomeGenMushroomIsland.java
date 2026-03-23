@@ -5,9 +5,9 @@ import net.minecraft.init.Blocks;
 
 public class BiomeGenMushroomIsland extends BiomeGenBase
 {
-    public BiomeGenMushroomIsland(int p_i1984_1_)
+    public BiomeGenMushroomIsland(int id)
     {
-        super(p_i1984_1_);
+        super(id);
         this.theBiomeDecorator.treesPerChunk = -100;
         this.theBiomeDecorator.flowersPerChunk = -100;
         this.theBiomeDecorator.grassPerChunk = -100;

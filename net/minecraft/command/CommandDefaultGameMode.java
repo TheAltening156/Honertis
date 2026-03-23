@@ -40,16 +40,16 @@ public class CommandDefaultGameMode extends CommandGameMode
         }
     }
 
-    protected void setGameType(WorldSettings.GameType p_71541_1_)
+    protected void setGameType(WorldSettings.GameType gameMode)
     {
         MinecraftServer minecraftserver = MinecraftServer.getServer();
-        minecraftserver.setGameType(p_71541_1_);
+        minecraftserver.setGameType(gameMode);
 
         if (minecraftserver.getForceGamemode())
         {
-            for (EntityPlayerMP entityplayermp : MinecraftServer.getServer().getConfigurationManager().func_181057_v())
+            for (EntityPlayerMP entityplayermp : MinecraftServer.getServer().getConfigurationManager().getPlayerList())
             {
-                entityplayermp.setGameType(p_71541_1_);
+                entityplayermp.setGameType(gameMode);
                 entityplayermp.fallDistance = 0.0F;
             }
         }

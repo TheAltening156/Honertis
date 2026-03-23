@@ -223,12 +223,16 @@ public class EntitySkeleton extends EntityMob implements IRangedAttackMob
 
     /**
      * Drop 0-2 items of this living's type
+     *  
+     * @param wasRecentlyHit true if this this entity was recently hit by appropriate entity (generally only if player
+     * or tameable)
+     * @param lootingModifier level of enchanment to be applied to this drop
      */
-    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_)
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier)
     {
         if (this.getSkeletonType() == 1)
         {
-            int i = this.rand.nextInt(3 + p_70628_2_) - 1;
+            int i = this.rand.nextInt(3 + lootingModifier) - 1;
 
             for (int j = 0; j < i; ++j)
             {
@@ -237,7 +241,7 @@ public class EntitySkeleton extends EntityMob implements IRangedAttackMob
         }
         else
         {
-            int k = this.rand.nextInt(3 + p_70628_2_);
+            int k = this.rand.nextInt(3 + lootingModifier);
 
             for (int i1 = 0; i1 < k; ++i1)
             {
@@ -245,7 +249,7 @@ public class EntitySkeleton extends EntityMob implements IRangedAttackMob
             }
         }
 
-        int l = this.rand.nextInt(3 + p_70628_2_);
+        int l = this.rand.nextInt(3 + lootingModifier);
 
         for (int j1 = 0; j1 < l; ++j1)
         {
@@ -333,9 +337,9 @@ public class EntitySkeleton extends EntityMob implements IRangedAttackMob
     /**
      * Attack the specified entity using a ranged attack.
      */
-    public void attackEntityWithRangedAttack(EntityLivingBase p_82196_1_, float p_82196_2_)
+    public void attackEntityWithRangedAttack(EntityLivingBase target, float p_82196_2_)
     {
-        EntityArrow entityarrow = new EntityArrow(this.worldObj, this, p_82196_1_, 1.6F, (float)(14 - this.worldObj.getDifficulty().getDifficultyId() * 4));
+        EntityArrow entityarrow = new EntityArrow(this.worldObj, this, target, 1.6F, (float)(14 - this.worldObj.getDifficulty().getDifficultyId() * 4));
         int i = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, this.getHeldItem());
         int j = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, this.getHeldItem());
         entityarrow.setDamage((double)(p_82196_2_ * 2.0F) + this.rand.nextGaussian() * 0.25D + (double)((float)this.worldObj.getDifficulty().getDifficultyId() * 0.11F));

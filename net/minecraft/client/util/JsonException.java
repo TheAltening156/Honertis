@@ -9,19 +9,19 @@ import org.apache.commons.lang3.StringUtils;
 public class JsonException extends IOException
 {
     private final List<JsonException.Entry> field_151383_a = Lists.<JsonException.Entry>newArrayList();
-    private final String field_151382_b;
+    private final String exceptionMessage;
 
-    public JsonException(String p_i45279_1_)
+    public JsonException(String message)
     {
         this.field_151383_a.add(new JsonException.Entry());
-        this.field_151382_b = p_i45279_1_;
+        this.exceptionMessage = message;
     }
 
-    public JsonException(String p_i45280_1_, Throwable p_i45280_2_)
+    public JsonException(String message, Throwable cause)
     {
-        super(p_i45280_2_);
+        super(cause);
         this.field_151383_a.add(new JsonException.Entry());
-        this.field_151382_b = p_i45280_1_;
+        this.exceptionMessage = message;
     }
 
     public void func_151380_a(String p_151380_1_)
@@ -37,7 +37,7 @@ public class JsonException extends IOException
 
     public String getMessage()
     {
-        return "Invalid " + ((JsonException.Entry)this.field_151383_a.get(this.field_151383_a.size() - 1)).toString() + ": " + this.field_151382_b;
+        return "Invalid " + ((JsonException.Entry)this.field_151383_a.get(this.field_151383_a.size() - 1)).toString() + ": " + this.exceptionMessage;
     }
 
     public static JsonException func_151379_a(Exception p_151379_0_)

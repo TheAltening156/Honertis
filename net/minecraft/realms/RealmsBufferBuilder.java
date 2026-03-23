@@ -21,7 +21,7 @@ public class RealmsBufferBuilder
 
     public void sortQuads(float p_sortQuads_1_, float p_sortQuads_2_, float p_sortQuads_3_)
     {
-        this.b.func_181674_a(p_sortQuads_1_, p_sortQuads_2_, p_sortQuads_3_);
+        this.b.sortVertexData(p_sortQuads_1_, p_sortQuads_2_, p_sortQuads_3_);
     }
 
     public void fixupQuadColor(int p_fixupQuadColor_1_)
@@ -146,6 +146,6 @@ public class RealmsBufferBuilder
 
     public void noColor()
     {
-        this.b.markDirty();
+        this.b.noColor();
     }
 }

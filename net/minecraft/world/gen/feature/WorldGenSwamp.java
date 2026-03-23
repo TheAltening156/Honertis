@@ -58,7 +58,7 @@ public class WorldGenSwamp extends WorldGenAbstractTree
                     {
                         if (j >= 0 && j < 256)
                         {
-                            Block block = worldIn.getBlockState(blockpos$mutableblockpos.func_181079_c(l, j, i1)).getBlock();
+                            Block block = worldIn.getBlockState(blockpos$mutableblockpos.set(l, j, i1)).getBlock();
 
                             if (block.getMaterial() != Material.air && block.getMaterial() != Material.leaves)
                             {
@@ -138,7 +138,7 @@ public class WorldGenSwamp extends WorldGenAbstractTree
                         {
                             for (int j4 = position.getZ() - j3; j4 <= position.getZ() + j3; ++j4)
                             {
-                                blockpos$mutableblockpos1.func_181079_c(i4, j2, j4);
+                                blockpos$mutableblockpos1.set(i4, j2, j4);
 
                                 if (worldIn.getBlockState(blockpos$mutableblockpos1).getBlock().getMaterial() == Material.leaves)
                                 {
