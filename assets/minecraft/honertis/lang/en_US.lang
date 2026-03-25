@@ -83,7 +83,7 @@ module.noCamHurt.hand=Hand move
 gui.honertis.options.name=Honertis Options
 gui.honertis.credits.name=Credits
 gui.honertis.moduleOptions.name=Modules Options
-gui.honertis.website=Website (Soon)
+gui.honertis.website=Website
 gui.honertis.discord=Discord Server (french)
 gui.honertis.lbxmb=LBXMB (partner)
 

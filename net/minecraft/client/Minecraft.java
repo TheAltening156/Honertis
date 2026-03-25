@@ -498,7 +498,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.setInitialDisplayMode();
         Honertis.INSTANCE.start();
         FreeLook fr = Honertis.INSTANCE.getModule(FreeLook.class);
-        if (fr.isEnabled()) fr.setEnabled(false);
+        	if (fr.isEnabled()) fr.setEnabled(false);
         this.createDisplay();
         OpenGlHelper.initializeTextures();
         this.framebufferMc = new Framebuffer(this.displayWidth, this.displayHeight, true);

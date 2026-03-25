@@ -25,7 +25,6 @@ public class GuiHonertisOptions extends GuiScreen {
 		buttonList.add(new GuiButton(2, this.width / 2 + 2,   this.height/2 - 21, 150, 20, LangManager.format("gui.honertis.credits.name")));
 		buttonList.add(websiteButton = new GuiButton(3, this.width / 2 - 152, this.height/2 + 1, 150, 20, LangManager.format("gui.honertis.website")));
 		buttonList.add(discordButton = new GuiButton(4, this.width / 2 + 2,   this.height/2 + 1, 150, 20, LangManager.format("gui.honertis.discord")));
-		websiteButton.enabled = false;
 		super.initGui();
 	}
 	
@@ -59,7 +58,16 @@ public class GuiHonertisOptions extends GuiScreen {
 			this.mc.displayGuiScreen(new GuiHonertisCredits(this));
 		}
 		if (button.id == 3) {
-			;
+			WebUtils.browseWebsite("https://thealtening156.github.io/HonertisWebSite/");
+			new Thread(() -> {
+				try {
+					websiteButton.enabled = false;
+					Thread.sleep(5000L);
+					websiteButton.enabled = true;
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}).start();
 		}
 		if (button.id == 4) {
 			WebUtils.browseWebsite("https://discord.gg/hrCY2ZtF5g");

@@ -105,6 +105,7 @@ public enum RenderEntityParameterBool implements IExpressionBool
 
                     case IS_WET:
                         return entitylivingbase.isWet();
+                    
                 }
             }
 
