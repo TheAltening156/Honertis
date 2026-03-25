@@ -2,6 +2,7 @@ package net.minecraft.client.gui;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+
 import java.io.IOException;
 import java.util.List;
 import net.minecraft.client.multiplayer.GuiConnecting;
@@ -10,6 +11,7 @@ import net.minecraft.client.multiplayer.ServerList;
 import net.minecraft.client.network.LanServerDetector;
 import net.minecraft.client.network.OldServerPinger;
 import net.minecraft.client.resources.I18n;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
@@ -20,7 +22,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
     private final OldServerPinger oldServerPinger = new OldServerPinger();
     private GuiScreen parentScreen;
     private ServerSelectionList serverListSelector;
-    private ServerList savedServerList;
+    public ServerList savedServerList;
     private GuiButton btnEditServer;
     private GuiButton btnSelectServer;
     private GuiButton btnDeleteServer;
@@ -130,7 +132,6 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
             this.lanServerDetector.interrupt();
             this.lanServerDetector = null;
         }
-
         this.oldServerPinger.clearPendingNetworks();
     }
 
@@ -142,7 +143,7 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
         if (button.enabled)
         {
             GuiListExtended.IGuiListEntry guilistextended$iguilistentry = this.serverListSelector.func_148193_k() < 0 ? null : this.serverListSelector.getListEntry(this.serverListSelector.func_148193_k());
-
+            
             if (button.id == 2 && guilistextended$iguilistentry instanceof ServerListEntryNormal)
             {
                 String s4 = ((ServerListEntryNormal)guilistextended$iguilistentry).getServerData().serverName;
@@ -413,8 +414,8 @@ public class GuiMultiplayer extends GuiScreen implements GuiYesNoCallback
 
             if (guilistextended$iguilistentry instanceof ServerListEntryNormal)
             {
-                this.btnEditServer.enabled = true;
-                this.btnDeleteServer.enabled = true;
+                this.btnEditServer.enabled = !((ServerListEntryNormal) guilistextended$iguilistentry).getServerData().equals(savedServerList.serverLbxmb);
+                this.btnDeleteServer.enabled = !((ServerListEntryNormal) guilistextended$iguilistentry).getServerData().equals(savedServerList.serverLbxmb);
             }
         }
     }

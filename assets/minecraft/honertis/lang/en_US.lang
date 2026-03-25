@@ -13,6 +13,8 @@ gui.open=Open song folder
 gui.error=Error
 gui.ffmpegNotFound=ffmpeg not found, install it manually.
 gui.loading=Loading...
+gui.packs.loading=Loading resource packs...
+gui.packs.loaded=Resource packs loaded successfully !
 
 # Other
 color.red=Red
@@ -79,14 +81,18 @@ module.noCamHurt.hand=Hand move
 
 # Honertis Menu
 gui.honertis.options.name=Honertis Options
-gui.honertis.gui.options.name=Gui Options
-gui.honertis.module.options.name=Modules Options
+gui.honertis.credits.name=Credits
+gui.honertis.moduleOptions.name=Modules Options
+gui.honertis.website=Website (Soon)
+gui.honertis.discord=Discord Server (french)
+gui.honertis.lbxmb=LBXMB (partner)
 
 # Credits Screen
 gui.honertis.credits.text1=Thanks to LCCRAFT for the icon and all Music Player buttons.
 gui.honertis.credits.text2=Thanks to Yalter for giving me the permission to use
 gui.honertis.credits.text3="Yalter's MouseTweaks" mod.
 gui.honertis.credits.text4=And thanks also to Alfaa for giving me back the motivation to develop this PvP client.
+gui.honertis.credits.text5=Thanks to LB'XMB for beign a partner !
 
 gui.musicPlayer.name=Music player
 gui.musicPlayer.search=Search... (YouTube)

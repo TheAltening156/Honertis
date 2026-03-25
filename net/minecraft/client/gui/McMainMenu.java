@@ -6,6 +6,8 @@ import com.google.common.collect.Lists;
 import fr.honertis.Honertis;
 import fr.honertis.guis.GuiHonertisCredits;
 import fr.honertis.guis.GuiHonertisOptions;
+import fr.honertis.utils.LangManager;
+import fr.honertis.utils.WebUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -234,6 +236,7 @@ public class McMainMenu extends GuiScreen implements GuiYesNoCallback
         this.mc.setConnectedToRealms(false);
     }
 
+    public GuiButton lbxmbButton;
     /**
      * Adds Singleplayer and Multiplayer buttons on Main Menu for players who have bought the game.
      */
@@ -241,8 +244,8 @@ public class McMainMenu extends GuiScreen implements GuiYesNoCallback
     {
         this.buttonList.add(new GuiButton(1, this.width / 2 - 100, p_73969_1_, I18n.format("menu.singleplayer", new Object[0])));
         this.buttonList.add(new GuiButton(2, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 1, I18n.format("menu.multiplayer", new Object[0])));
-        this.buttonList.add(new GuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, 98, 20, "Honertis Options"));
-        this.buttonList.add(new GuiButton(15, this.width / 2 + 2, p_73969_1_ + p_73969_2_ * 2, 98, 20, "Credits"));
+        this.buttonList.add(new GuiButton(14, this.width / 2 - 100, p_73969_1_ + p_73969_2_ * 2, 98, 20, LangManager.format("gui.honertis.options.name")));
+        this.buttonList.add(lbxmbButton = new GuiButton(15, this.width / 2 + 2, p_73969_1_ + p_73969_2_ * 2, 98, 20, LangManager.format("gui.honertis.lbxmb")));
     }
 
     /**
@@ -290,9 +293,19 @@ public class McMainMenu extends GuiScreen implements GuiYesNoCallback
         {
             this.mc.displayGuiScreen(new GuiHonertisOptions(this));
         }
-        if (button.id == 15)
+        if (button.id == 15 && button.enabled)
         {
-            this.mc.displayGuiScreen(new GuiHonertisCredits(this));
+            //this.mc.displayGuiScreen(new LBXMBPartnerScreen(this));
+        	WebUtils.browseWebsite("https://lbxmb.fr/");
+        	new Thread(() -> {
+        		try {
+        			lbxmbButton.enabled = false;
+					Thread.sleep(5000);
+        			lbxmbButton.enabled = true;
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+        	}).start();
         }
         
         if (button.id == 4)

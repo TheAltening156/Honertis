@@ -3,6 +3,7 @@ package net.minecraft.client.gui;
 import com.google.common.collect.Lists;
 
 import fr.honertis.Honertis;
+import fr.honertis.utils.ChatUtils;
 import fr.honertis.utils.LangManager;
 
 import java.awt.Color;
@@ -78,10 +79,10 @@ public class GuiScreenResourcePacks extends GuiScreen
 							this.availableResourcePacks.add(new ResourcePackListEntryFound(this, resourcepackrepository$entry));
 						}
 					}
+					if (!(mc.currentScreen instanceof GuiScreenResourcePacks))
+						ChatUtils.printChat(LangManager.format("gui.packs.loaded"));
 					Honertis.INSTANCE.packsThread = null;
 				}, "Resource Packs Thread")).start();
-			} else {
-				
 			}
 			for (ResourcePackRepository.Entry resourcepackrepository$entry1 : Lists
 					.reverse(resourcepackrepository.getRepositoryEntries())) {

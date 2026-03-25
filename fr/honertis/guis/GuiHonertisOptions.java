@@ -3,6 +3,7 @@ package fr.honertis.guis;
 import java.io.IOException;
 
 import fr.honertis.utils.LangManager;
+import fr.honertis.utils.WebUtils;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
@@ -10,6 +11,8 @@ import net.minecraft.client.resources.I18n;
 
 public class GuiHonertisOptions extends GuiScreen {
 	public GuiScreen parent;
+	public GuiButton discordButton;
+	public GuiButton websiteButton;
 	
 	public GuiHonertisOptions(GuiScreen parent) {
 		this.parent = parent;
@@ -17,10 +20,12 @@ public class GuiHonertisOptions extends GuiScreen {
 	
 	@Override
 	public void initGui() {
-		this.mc.displayGuiScreen(new GuiModuleOptions(parent));
 		buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height - 25, I18n.format("gui.back", new Object[0])));
-		buttonList.add(new GuiButton(1, this.width / 2 - 152, this.height/3 + 35 - 10, 150, 20, LangManager.format("gui.honertis.module.options.name")));
-		buttonList.add(new GuiButton(2, this.width / 2 + 2,   this.height/3 + 35 - 10, 150, 20, LangManager.format("gui.honertis.gui.options.name")));
+		buttonList.add(new GuiButton(1, this.width / 2 - 152, this.height/2 - 21, 150, 20, LangManager.format("gui.honertis.moduleOptions.name")));
+		buttonList.add(new GuiButton(2, this.width / 2 + 2,   this.height/2 - 21, 150, 20, LangManager.format("gui.honertis.credits.name")));
+		buttonList.add(websiteButton = new GuiButton(3, this.width / 2 - 152, this.height/2 + 1, 150, 20, LangManager.format("gui.honertis.website")));
+		buttonList.add(discordButton = new GuiButton(4, this.width / 2 + 2,   this.height/2 + 1, 150, 20, LangManager.format("gui.honertis.discord")));
+		websiteButton.enabled = false;
 		super.initGui();
 	}
 	
@@ -42,11 +47,31 @@ public class GuiHonertisOptions extends GuiScreen {
 	
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
+		if (!button.enabled) return;
+		
 		if (button.id == 0) {
 			this.mc.displayGuiScreen(parent);
 		}
 		if (button.id == 1) {
-			this.mc.displayGuiScreen(new GuiModuleOptions(parent));
+			this.mc.displayGuiScreen(new GuiModuleOptions(this));
+		}
+		if (button.id == 2) {
+			this.mc.displayGuiScreen(new GuiHonertisCredits(this));
+		}
+		if (button.id == 3) {
+			;
+		}
+		if (button.id == 4) {
+			WebUtils.browseWebsite("https://discord.gg/hrCY2ZtF5g");
+			new Thread(() -> {
+				try {
+					discordButton.enabled = false;
+					Thread.sleep(5000L);
+					discordButton.enabled = true;
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}).start();
 		}
 	}
 	

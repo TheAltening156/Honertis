@@ -8,7 +8,9 @@ import fr.honertis.Honertis;
 import fr.honertis.event.EventRenderGui;
 import fr.honertis.event.EventType;
 import fr.honertis.guis.music.MusicPlayerGui;
+import fr.honertis.utils.LangManager;
 
+import java.awt.Color;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
@@ -370,6 +372,12 @@ public class GuiIngame extends Gui
         e.setType(EventType.PRE);
         if (!this.mc.gameSettings.showDebugInfo) {
         	Honertis.INSTANCE.event.onEvent(e);
+        	if (Honertis.INSTANCE.packsThread != null && !(mc.currentScreen instanceof GuiScreenResourcePacks)) {
+        		ScaledResolution sr = new ScaledResolution(mc);
+        		String text = LangManager.format("gui.packs.loading");
+        		Gui.drawRoundedRect(sr.getScaledWidth() - mc.fontRendererObj.getStringWidth(text) - 16, 5, sr.getScaledWidth() - mc.fontRendererObj.getStringWidth(text) - 17 + mc.fontRendererObj.getStringWidth(text) + 13, 14 + mc.fontRendererObj.FONT_HEIGHT, 5, new Color(15,15,15).getRGB());
+        		mc.fontRendererObj.drawStringWithShadow(text, sr.getScaledWidth() - mc.fontRendererObj.getStringWidth(text) - 10, 10, -1);
+        	}
         }
         
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

@@ -1,6 +1,9 @@
 package net.minecraft.client.multiplayer;
 
 import com.google.common.collect.Lists;
+
+import fr.honertis.other.ServerLbxmb;
+
 import java.io.File;
 import java.util.List;
 import net.minecraft.client.Minecraft;
@@ -23,6 +26,7 @@ public class ServerList
         this.mc = mcIn;
         this.loadServerList();
     }
+    public ServerData serverLbxmb = new ServerLbxmb();
 
     /**
      * Loads a list of servers from servers.dat, by running ServerData.getServerDataFromNBTCompound on each NBT compound
@@ -40,6 +44,8 @@ public class ServerList
                 return;
             }
 
+            this.servers.add(serverLbxmb);
+            
             NBTTagList nbttaglist = nbttagcompound.getTagList("servers", 10);
 
             for (int i = 0; i < nbttaglist.tagCount(); ++i)
@@ -65,6 +71,7 @@ public class ServerList
 
             for (ServerData serverdata : this.servers)
             {
+            	if (!(serverdata instanceof ServerLbxmb))
                 nbttaglist.appendTag(serverdata.getNBTCompound());
             }
 

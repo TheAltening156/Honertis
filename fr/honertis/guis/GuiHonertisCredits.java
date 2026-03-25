@@ -29,7 +29,7 @@ public class GuiHonertisCredits extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawDefaultBackground();
 		int posY = 0;
-		for (String txt : new String[] {"gui.honertis.credits.text1", "gui.honertis.credits.text2", "gui.honertis.credits.text3", "gui.honertis.credits.text4"}) {
+		for (String txt : new String[] {"gui.honertis.credits.text1", "gui.honertis.credits.text2", "gui.honertis.credits.text3", "gui.honertis.credits.text4", "gui.honertis.credits.text5"}) {
 			mc.fontRendererObj.drawCenteredString(LangManager.format(txt), this.width/2,  this.height/3 + posY, -1);
 			posY += mc.fontRendererObj.FONT_HEIGHT*2;
 		}

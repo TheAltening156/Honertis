@@ -133,7 +133,7 @@ public class GuiModuleOptions extends GuiScreen {
     	GlStateManager.pushMatrix();
     	GlStateManager.scale(1.5, 1.5, 0);
     	GlStateManager.translate(-this.width / 6, -10, 0);
-		mc.fontRendererObj.drawCenteredStringWithShadow(LangManager.format("gui.honertis.module.options.name"), this.width / 2, 20, -1);
+		mc.fontRendererObj.drawCenteredStringWithShadow(LangManager.format("gui.honertis.moduleOptions.name"), this.width / 2, 20, -1);
 		GlStateManager.popMatrix();
 		GlStateManager.pushMatrix();
     	GL11.glEnable(GL11.GL_SCISSOR_TEST);
