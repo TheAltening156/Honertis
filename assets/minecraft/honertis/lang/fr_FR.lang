@@ -25,10 +25,10 @@ color.alpha=Alpha
 #Module
 module.gg=Dis GG ou GL à chaque debut de game commençant, perdue ou gagnée
 
-module.blockhit=Remet l'animation du blockhit d'avant la 1.8
+module.blockhit=Remet l'animation du blockhit d'avant la <1.7
 module.blockhit.sword=Ancienne position de l'épée
 
-module.blocktap=Remet la possibilité de tapper des blocs pendans le blockHit
+module.blocktap=Remet la possibilité de tapper des blocs pendant le blockHit
 
 module.cps=Montre combien de cps vous faites en 1 seconde
 
@@ -55,6 +55,7 @@ module.keystrokes.delay=Délai
 module.keystrokes.spacebar=Barre espace
 
 module.lowfire=Baisse l'overlay du feu
+module.lowfire.height=Hauteur du feu
 
 module.particles=Multiplie les particules par une valeur
 module.particles.multiply=Particules
@@ -86,6 +87,13 @@ gui.honertis.moduleOptions.name=Options des Modules
 gui.honertis.website=Site Web
 gui.honertis.discord=Serveur Discord
 gui.honertis.lbxmb=LBXMB.fr
+
+gui.honertis.altWarn=Vous devez utiliser le launcher.
+gui.honertis.altManager=Gestionnaire de Comptes
+gui.honertis.altManager.action=En attente d'une action.
+gui.honertis.altManager.logInError=Impossible de se connecter
+gui.honertis.altManager.connect=Se connecter
+gui.honertis.altManager.connected=Connecté à
 
 # Credits Screen
 gui.honertis.credits.text1=Merci à LCCRAFT pour l'icone et boutons du lecteur de musique.

@@ -15,10 +15,22 @@ import fr.honertis.settings.NumberSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.Util;
+import net.minecraft.util.Util.EnumOS;
 
 public class Utils {
-	public static File dir = new File(new File(net.minecraft.client.main.Main.getAppData(), ".minecraft"), "Honertis");
+	public static File dir = new File("Honertis");
+	public static File workdir = new File(getAppData(), ".honertis");
+;
 
+	public static File getAppData() {
+		EnumOS os = net.minecraft.util.Util.getOSType();
+		if (os == EnumOS.WINDOWS)
+			return new File(System.getenv("APPDATA"));
+		if (os == EnumOS.OSX)
+			return new File(new File(System.getProperty("user.home"), "Library"), "Application Support");
+		return new File(System.getProperty("user.home"));
+	}
+	
 	public static double textScroll(double textWidth, double maxTextWidth, long time, double speed) {
         double offset = 0;
 		if (textWidth > maxTextWidth) {

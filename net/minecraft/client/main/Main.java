@@ -102,17 +102,17 @@ public class Main
         PropertyMap propertymap1 = gson.fromJson(optionset.valueOf(optionspec16), PropertyMap.class);
         File file1 = optionset.valueOf(optionspec2);
         File file2 = optionset.has(optionspec3) ? (File)optionset.valueOf(optionspec3) : new File(file1, "assets/");
-        File file3 = optionset.has(optionspec4) ? (File)optionset.valueOf(optionspec4) : new File(new File(getAppData(), ".minecraft"), "resourcepacks/");
+        File file3 = optionset.has(optionspec4) ? (File)optionset.valueOf(optionspec4) : new File(file1, "resourcepacks/");
         String s4 = optionset.has(optionspec10) ? (String)optionspec10.value(optionset) : (String)optionspec9.value(optionset);
         String s5 = optionset.has(optionspec17) ? (String)optionspec17.value(optionset) : null;
         String s6 = optionset.valueOf(optionspec);
         Integer integer = optionset.valueOf(optionspec1);
         Session session = new Session(optionspec9.value(optionset), s4, optionspec11.value(optionset), optionspec18.value(optionset));
         GameConfiguration gameconfiguration = new GameConfiguration(new GameConfiguration.UserInformation(session, propertymap, propertymap1, proxy), new GameConfiguration.DisplayInformation(i, j, flag, flag1), new GameConfiguration.FolderInformation(file1, file3, file2, s5), new GameConfiguration.GameInformation(flag2, s3), new GameConfiguration.ServerInformation(s6, integer.intValue()));
-        
+        	
         Honertis.INSTANCE.isLauncher = optionspec20.value(optionset) != "-1";
         Honertis.INSTANCE.launcherVersion = optionspec20.value(optionset);
-                
+        
         Runtime.getRuntime().addShutdownHook(new Thread("Client Shutdown Thread")
         {
             public void run()
@@ -123,15 +123,6 @@ public class Main
         Thread.currentThread().setName("Client thread");
         (new Minecraft(gameconfiguration)).run();
     }
-
-    public static File getAppData() {
-		EnumOS os = net.minecraft.util.Util.getOSType();
-		if (os == EnumOS.WINDOWS)
-			return new File(System.getenv("APPDATA"));
-		if (os == EnumOS.OSX)
-			return new File(new File(System.getProperty("user.home"), "Library"), "Application Support");
-		return new File(System.getProperty("user.home"));
-	}
     
     private static boolean isNullOrEmpty(String str)
     {
