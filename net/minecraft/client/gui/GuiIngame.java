@@ -8,6 +8,7 @@ import fr.honertis.Honertis;
 import fr.honertis.event.EventRenderGui;
 import fr.honertis.event.EventType;
 import fr.honertis.guis.music.MusicPlayerGui;
+import fr.honertis.module.modules.Saturation;
 import fr.honertis.utils.LangManager;
 
 import java.awt.Color;
@@ -800,6 +801,7 @@ public class GuiIngame extends Gui
             }
 
             Entity entity = entityplayer.ridingEntity;
+            boolean satShown = Honertis.INSTANCE.getModule(Saturation.class).isEnabled();
 
             if (entity == null)
             {
@@ -842,13 +844,14 @@ public class GuiIngame extends Gui
                             this.drawTexturedModalRect(j9, j7, l7 + 63, 27, 9, 9);
                         }
                     }
-                    this.drawTexturedModalRect(j9, j7 - 8, 16 + k8 * 9, 27, 9, 9);
-
-                    if (k6 * 2 + 1 < saturation)
-                    {
-                        this.drawTexturedModalRect(j9, j7 - 8, l7 + 36, 27, 9, 9);//TODO: Saturation Bar
+                    if (satShown) {
+	                    this.drawTexturedModalRect(j9, j7 - 8, 16 + k8 * 9, 27, 9, 9);
+	
+	                    if (k6 * 2 + 1 < saturation)
+	                    {
+	                        this.drawTexturedModalRect(j9, j7 - 8, l7 + 36, 27, 9, 9);//TODO: Saturation Bar
+	                    }
                     }
-                    
                     if (k6 * 2 + 1 < k)
                     {
                         this.drawTexturedModalRect(j9, j7, l7 + 36, 27, 9, 9);
@@ -916,7 +919,6 @@ public class GuiIngame extends Gui
                 int k7 = MathHelper.ceiling_double_int((double)(l6 - 2) * 10.0D / 300.0D);
                 int i8 = MathHelper.ceiling_double_int((double)l6 * 10.0D / 300.0D) - k7;
                 
-                boolean satShown = false;
                 int k3 = k1;
                 k3 -= satShown ? 17 : 8;
                 

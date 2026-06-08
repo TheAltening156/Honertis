@@ -80,6 +80,8 @@ module.itemPhysics.rotSpeed=Rotation Speed
 module.noCamHurt=Disable the moving camera/hand while getting hit
 module.noCamHurt.hand=Hand move
 
+module.saturation=Shows the remaining saturation above the hunger bar
+
 # Honertis Menu
 gui.honertis.options.name=Honertis Options
 gui.honertis.credits.name=Credits
