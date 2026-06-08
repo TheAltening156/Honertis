@@ -8,6 +8,7 @@ import fr.honertis.guis.alts.GuiAltManager;
 import fr.honertis.utils.LangManager;
 import fr.honertis.utils.WebUtils;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -75,7 +76,23 @@ public class GuiHonertisOptions extends GuiScreen {
 			this.mc.displayGuiScreen(new GuiHonertisCredits(this));
 		}
 		if (button.id == 3) {
-			WebUtils.browseWebsite("https://thealtening156.github.io/HonertisWebSite/");
+            this.mc.displayGuiScreen(new GuiConfirmOpenLink(this, website, 3, true));
+		}
+		if (button.id == 4) {
+            this.mc.displayGuiScreen(new GuiConfirmOpenLink(this, discord, 4, true));
+		}
+		if (button.id == 5) {
+			this.mc.displayGuiScreen(new GuiAltManager(this));
+		}
+	}
+	
+	public String discord = "https://discord.gg/hrCY2ZtF5g";
+	public String website = "https://thealtening156.github.io/HonertisWebSite/";
+	
+	@Override
+	public void confirmClicked(boolean result, int id) {
+		if (id == 3 && result) {
+			WebUtils.browseWebsite(website);
 			new Thread(() -> {
 				try {
 					websiteButton.enabled = false;
@@ -85,9 +102,8 @@ public class GuiHonertisOptions extends GuiScreen {
 					e.printStackTrace();
 				}
 			}).start();
-		}
-		if (button.id == 4) {
-			WebUtils.browseWebsite("https://discord.gg/hrCY2ZtF5g");
+		} else if (id == 4 && result) {
+			WebUtils.browseWebsite(discord);
 			new Thread(() -> {
 				try {
 					discordButton.enabled = false;
@@ -98,9 +114,7 @@ public class GuiHonertisOptions extends GuiScreen {
 				}
 			}).start();
 		}
-		if (button.id == 5) {
-			this.mc.displayGuiScreen(new GuiAltManager(this));
-		}
+		this.mc.displayGuiScreen(this);
 	}
 	
 	@Override

@@ -29,7 +29,7 @@ public class Honertis {
 	public Map<File, List<File>> subFolderPacks;
 	public Thread packsThread = null;
 	public GuiScreenResourcePacks guiScreenResourcePacks;
-	
+
 	public void start() {
 		name = "Honertis";
 		version = "1.9";

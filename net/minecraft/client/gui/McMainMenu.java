@@ -263,6 +263,7 @@ public class McMainMenu extends GuiScreen implements GuiYesNoCallback
             this.buttonResetDemo.enabled = false;
         }
     }
+	public String website = "https://lbxmb.fr/";
 
     /**
      * Called by the controls from the buttonList when activated. (Mouse pressed for buttons)
@@ -295,17 +296,7 @@ public class McMainMenu extends GuiScreen implements GuiYesNoCallback
         }
         if (button.id == 15 && button.enabled)
         {
-            //this.mc.displayGuiScreen(new LBXMBPartnerScreen(this));
-        	WebUtils.browseWebsite("https://lbxmb.fr/");
-        	new Thread(() -> {
-        		try {
-        			lbxmbButton.enabled = false;
-					Thread.sleep(5000);
-        			lbxmbButton.enabled = true;
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-        	}).start();
+            this.mc.displayGuiScreen(new GuiConfirmOpenLink(this, website, 15, true));
         }
         
         if (button.id == 4)
@@ -349,7 +340,6 @@ public class McMainMenu extends GuiScreen implements GuiYesNoCallback
             ISaveFormat isaveformat = this.mc.getSaveLoader();
             isaveformat.flushCache();
             isaveformat.deleteWorldDirectory("Demo_World");
-            this.mc.displayGuiScreen(this);
         }
         else if (id == 13)
         {
@@ -367,8 +357,21 @@ public class McMainMenu extends GuiScreen implements GuiYesNoCallback
                 }
             }
 
-            this.mc.displayGuiScreen(this);
+        } else if (id == 15) {
+        	if (result) {
+	        	WebUtils.browseWebsite(website);
+	        	new Thread(() -> {
+	        		try {
+	        			lbxmbButton.enabled = false;
+						Thread.sleep(5000);
+	        			lbxmbButton.enabled = true;
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+	        	}).start();
+	        }
         }
+        this.mc.displayGuiScreen(this);
     }
 
     /**

@@ -186,7 +186,7 @@ public class GuiIngame extends Gui
         {
             GlStateManager.tryBlendFuncSeparate(775, 769, 1, 0);
             GlStateManager.enableAlpha();
-            this.drawTexturedModalRect(i / 2 - 7, j / 2 - 7, 0, 0, 16, 16);
+            this.drawTexturedModalRect(i / 2 - 7, j / 2 - 7, 0, 0, 16, 16);//TODO crosshair
         }
 
         GlStateManager.enableAlpha();
@@ -668,6 +668,7 @@ public class GuiIngame extends Gui
             this.rand.setSeed((long)(this.updateCounter * 312871));
             boolean flag1 = false;
             FoodStats foodstats = entityplayer.getFoodStats();
+            float saturation = foodstats.getSaturationLevel();
             int k = foodstats.getFoodLevel();
             int l = foodstats.getPrevFoodLevel();
             IAttributeInstance iattributeinstance = entityplayer.getEntityAttribute(SharedMonsterAttributes.maxHealth);
@@ -841,7 +842,13 @@ public class GuiIngame extends Gui
                             this.drawTexturedModalRect(j9, j7, l7 + 63, 27, 9, 9);
                         }
                     }
+                    this.drawTexturedModalRect(j9, j7 - 8, 16 + k8 * 9, 27, 9, 9);
 
+                    if (k6 * 2 + 1 < saturation)
+                    {
+                        this.drawTexturedModalRect(j9, j7 - 8, l7 + 36, 27, 9, 9);//TODO: Saturation Bar
+                    }
+                    
                     if (k6 * 2 + 1 < k)
                     {
                         this.drawTexturedModalRect(j9, j7, l7 + 36, 27, 9, 9);
@@ -908,16 +915,20 @@ public class GuiIngame extends Gui
                 int l6 = this.mc.thePlayer.getAir();
                 int k7 = MathHelper.ceiling_double_int((double)(l6 - 2) * 10.0D / 300.0D);
                 int i8 = MathHelper.ceiling_double_int((double)l6 * 10.0D / 300.0D) - k7;
-
+                
+                boolean satShown = false;
+                int k3 = k1;
+                k3 -= satShown ? 17 : 8;
+                
                 for (int l8 = 0; l8 < k7 + i8; ++l8)
                 {
                     if (l8 < k7)
                     {
-                        this.drawTexturedModalRect(j1 - l8 * 8 - 9, j2, 16, 18, 9, 9);
+                        this.drawTexturedModalRect(j1 - l8 * 8 - 9, k3, 16, 18, 9, 9);//TODO: Water
                     }
                     else
                     {
-                        this.drawTexturedModalRect(j1 - l8 * 8 - 9, j2, 25, 18, 9, 9);
+                        this.drawTexturedModalRect(j1 - l8 * 8 - 9, k3, 25, 18, 9, 9);
                     }
                 }
             }

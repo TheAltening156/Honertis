@@ -33,7 +33,7 @@ public class CurrentPlayingSong {
         	GL11.glDisable(GL11.GL_SCISSOR_TEST);
         	GlStateManager.popMatrix();
         	if (mode == 0)
-        	drawImageFromYoutubeURL(posX + 12, posY + 217, 55, 30.93, thumbnail);
+        		drawImageFromYoutubeURL(posX + 12, posY + 217, 55, 30.93, thumbnail);
 	        offset++;
 	    }
 	
