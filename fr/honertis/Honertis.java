@@ -32,7 +32,7 @@ public class Honertis {
 
 	public void start() {
 		name = "Honertis";
-		version = "1.9";
+		version = "1.9U1";
 		title = "Minecraft 1.8.9 | " + name + " v" + version;
 		
 		modulesManager = new ModulesManager();
