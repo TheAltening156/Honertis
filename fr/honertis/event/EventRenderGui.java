@@ -1,5 +1,12 @@
 package fr.honertis.event;
 
-public class EventRenderGui extends Event<EventRenderGui>{
+import net.minecraft.client.gui.ScaledResolution;
 
+public class EventRenderGui extends Event<EventRenderGui>{
+	public ScaledResolution sr;
+	
+	public EventRenderGui(ScaledResolution sr) {
+		this.sr = sr;
+	}
+	
 }

@@ -36,7 +36,7 @@ implements IGuiScreenHandler {
     }
 
     private int getRequiredMouseX() {
-        ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
+        ScaledResolution scaledResolution = new ScaledResolution(this.mc);
         return Mouse.getX() * scaledResolution.getScaledWidth() / this.getDisplayWidth();
     }
 

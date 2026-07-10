@@ -16,7 +16,6 @@ import fr.honertis.utils.Utils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.settings.KeyBinding;
 
@@ -178,7 +177,7 @@ public class KeyStrokes extends ModuleBase{
 	        int keyCode = keys.getKeyCode();
 	        k.drawRect((int) k.colorProgress, keyCode, posX, posY);
 	    }
-	    Utils.calculate(68, 84, this.posX, this.posY, new ScaledResolution(mc));
+	    Utils.calculate(68, 84, this.posX, this.posY, e.sr);
 	}
 
 }

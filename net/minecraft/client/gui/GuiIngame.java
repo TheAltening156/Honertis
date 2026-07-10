@@ -9,7 +9,10 @@ import fr.honertis.event.EventRenderGui;
 import fr.honertis.event.EventType;
 import fr.honertis.guis.music.MusicPlayerGui;
 import fr.honertis.module.modules.Saturation;
+import fr.honertis.utils.ChatUtils;
+import fr.honertis.utils.DrawUtils;
 import fr.honertis.utils.LangManager;
+import fr.honertis.utils.TimeUtils;
 
 import java.awt.Color;
 import java.util.Collection;
@@ -35,6 +38,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.scoreboard.Score;
@@ -368,13 +372,13 @@ public class GuiIngame extends Gui
         	this.overlayPlayerList.updatePlayerList(true);
             this.overlayPlayerList.renderPlayerlist(i, scoreboard, scoreobjective1);
         }
-
-        EventRenderGui e = new EventRenderGui();
+        
+		ScaledResolution sr = new ScaledResolution(mc);
+        EventRenderGui e = new EventRenderGui(sr);
         e.setType(EventType.PRE);
         if (!this.mc.gameSettings.showDebugInfo) {
         	Honertis.INSTANCE.event.onEvent(e);
         	if (Honertis.INSTANCE.packsThread != null && !(mc.currentScreen instanceof GuiScreenResourcePacks)) {
-        		ScaledResolution sr = new ScaledResolution(mc);
         		String text = LangManager.format("gui.packs.loading");
         		Gui.drawRoundedRect(sr.getScaledWidth() - mc.fontRendererObj.getStringWidth(text) - 16, 5, sr.getScaledWidth() - mc.fontRendererObj.getStringWidth(text) - 17 + mc.fontRendererObj.getStringWidth(text) + 13, 14 + mc.fontRendererObj.FONT_HEIGHT, 5, new Color(15,15,15).getRGB());
         		mc.fontRendererObj.drawStringWithShadow(text, sr.getScaledWidth() - mc.fontRendererObj.getStringWidth(text) - 10, 10, -1);
@@ -667,10 +671,9 @@ public class GuiIngame extends Gui
             this.playerHealth = i;
             int j = this.lastPlayerHealth;
             this.rand.setSeed((long)(this.updateCounter * 312871));
-            boolean flag1 = false;
             FoodStats foodstats = entityplayer.getFoodStats();
             float saturation = foodstats.getSaturationLevel();
-            int k = foodstats.getFoodLevel();
+            int foodLevel = foodstats.getFoodLevel();
             int l = foodstats.getPrevFoodLevel();
             IAttributeInstance iattributeinstance = entityplayer.getEntityAttribute(SharedMonsterAttributes.maxHealth);
             int i1 = scaledRes.getScaledWidth() / 2 - 91;
@@ -717,6 +720,8 @@ public class GuiIngame extends Gui
 
             this.mc.mcProfiler.endStartSection("health");
 
+            int k4 = entityplayer.worldObj.getWorldInfo().isHardcoreModeEnabled() ? 5 : 0;
+            
             for (int i6 = MathHelper.ceiling_float_int((f + f1) / 2.0F) - 1; i6 >= 0; --i6)
             {
                 int j6 = 16;
@@ -749,13 +754,6 @@ public class GuiIngame extends Gui
                 if (i6 == l2)
                 {
                     j4 -= 2;
-                }
-
-                int k4 = 0;
-
-                if (entityplayer.worldObj.getWorldInfo().isHardcoreModeEnabled())
-                {
-                    k4 = 5;
                 }
 
                 this.drawTexturedModalRect(i4, j4, 16 + k3 * 9, 9 * k4, 9, 9);
@@ -807,6 +805,23 @@ public class GuiIngame extends Gui
             {
                 this.mc.mcProfiler.endStartSection("food");
 
+                ItemStack is = mc.thePlayer.getHeldItem();
+
+                int previewFood = foodLevel;
+                float previewSaturation = saturation;
+
+                if (is != null && is.getItem() instanceof ItemFood) {
+                    ItemFood food = (ItemFood)is.getItem();
+
+                    int heal = food.getHealAmount(is);
+                    previewFood = Math.min(foodLevel + heal, 20);
+
+                    float saturationGain = heal * food.getSaturationModifier(is) * 2.0F;
+                    previewSaturation = Math.min(saturation + saturationGain, previewFood);
+                }
+
+                float alpha = (float)((Math.sin(System.currentTimeMillis() / 250.0) + 1.0) / 2.0);
+                
                 for (int k6 = 0; k6 < 10; ++k6)
                 {
                     int j7 = k1;
@@ -819,20 +834,57 @@ public class GuiIngame extends Gui
                         k8 = 13;
                     }
 
-                    if (entityplayer.getFoodStats().getSaturationLevel() <= 0.0F && this.updateCounter % (k * 3 + 1) == 0)
+                    if (saturation <= 0.0F && this.updateCounter % (foodLevel * 3 + 1) == 0)
                     {
                         j7 = k1 + (this.rand.nextInt(3) - 1);
                     }
 
-                    if (flag1)
+                    /*if (flag1)
                     {
                         k8 = 1;
-                    }
+                    }*/
 
                     int j9 = j1 - k6 * 8 - 9;
-                    this.drawTexturedModalRect(j9, j7, 16 + k8 * 9, 27, 9, 9);
+                    this.drawTexturedModalRect(j9, j7, 16 + k8 * 9, 27, 9, 9);//Back
 
-                    if (flag1)
+                    if (k6 * 2 + 1 < foodLevel)
+                    {
+                        this.drawTexturedModalRect(j9, j7, l7 + 36, 27, 9, 9);//Full
+                    }
+
+                    if (k6 * 2 + 1 == foodLevel)
+                    {
+                        this.drawTexturedModalRect(j9, j7, l7 + 45, 27, 9, 9);//Half
+                    }
+                	if (satShown) {
+	                    this.drawTexturedModalRect(j9, j7 - 9, 16 + k8 * 9, 27, 9, 9);//TODO: Saturation Bar Background
+	                	
+	                    
+	                    GlStateManager.enableBlend();
+	                    GlStateManager.color(1F, 1F, 1F, alpha);
+
+	                    if (k6 * 2 + 1 < previewSaturation)
+	                        this.drawTexturedModalRect(j9, j7 - 9, l7 + 36, 27, 9, 9);//TODO: New Saturation Bar
+
+	                    GlStateManager.color(1F, 1F, 1F, 1F);
+	                    if (k6 * 2 + 1 < saturation)
+	                    	this.drawTexturedModalRect(j9, j7 - 9, l7 + 36, 27, 9, 9);//TODO: Saturation Bar
+
+                    }
+                	 if (is != null && is.getItem() instanceof ItemFood) {
+
+                         GlStateManager.enableBlend();
+                         GlStateManager.color(1F, 1F, 1F, alpha);
+
+                         if (k6 * 2 + 1 > foodLevel && k6 * 2 + 1 < previewFood)
+                             this.drawTexturedModalRect(j9, j7, l7 + 36, 27, 9, 9);
+
+                         if (k6 * 2 + 1 == previewFood && (previewFood & 1) == 1)
+                             this.drawTexturedModalRect(j9, j7, l7 + 45, 27, 9, 9);
+
+                         GlStateManager.color(1F, 1F, 1F, 1F);
+                     }
+                    /*if (flag1)
                     {
                         if (k6 * 2 + 1 < l)
                         {
@@ -843,24 +895,7 @@ public class GuiIngame extends Gui
                         {
                             this.drawTexturedModalRect(j9, j7, l7 + 63, 27, 9, 9);
                         }
-                    }
-                    if (satShown) {
-	                    this.drawTexturedModalRect(j9, j7 - 8, 16 + k8 * 9, 27, 9, 9);
-	
-	                    if (k6 * 2 + 1 < saturation)
-	                    {
-	                        this.drawTexturedModalRect(j9, j7 - 8, l7 + 36, 27, 9, 9);//TODO: Saturation Bar
-	                    }
-                    }
-                    if (k6 * 2 + 1 < k)
-                    {
-                        this.drawTexturedModalRect(j9, j7, l7 + 36, 27, 9, 9);
-                    }
-
-                    if (k6 * 2 + 1 == k)
-                    {
-                        this.drawTexturedModalRect(j9, j7, l7 + 45, 27, 9, 9);
-                    }
+                    }*/
                 }
             }
             else if (entity instanceof EntityLivingBase)
@@ -887,11 +922,6 @@ public class GuiIngame extends Gui
                     {
                         int j5 = 52;
                         int k5 = 0;
-
-                        if (flag1)
-                        {
-                            k5 = 1;
-                        }
 
                         int l5 = j1 - i5 * 8 - 9;
                         this.drawTexturedModalRect(l5, i9, j5 + k5 * 9, 9, 9, 9);
@@ -920,7 +950,7 @@ public class GuiIngame extends Gui
                 int i8 = MathHelper.ceiling_double_int((double)l6 * 10.0D / 300.0D) - k7;
                 
                 int k3 = k1;
-                k3 -= satShown ? 17 : 8;
+                k3 -= satShown ? 18 : 9;
                 
                 for (int l8 = 0; l8 < k7 + i8; ++l8)
                 {
@@ -938,6 +968,8 @@ public class GuiIngame extends Gui
             this.mc.mcProfiler.endSection();
         }
     }
+    
+    public TimeUtils timer = new TimeUtils();
 
     /**
      * Renders dragon's (boss) health on the HUD

@@ -10,7 +10,6 @@ import fr.honertis.module.ModuleBase;
 import fr.honertis.settings.BooleanSettings;
 import fr.honertis.utils.Utils;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
 
 public class FPS extends ModuleBase{
 	public List<Long> list = Lists.newArrayList();
@@ -29,7 +28,7 @@ public class FPS extends ModuleBase{
 		Gui.drawRect(posX.getValue(), posY.getValue(), posX.getValue() + width, posY.getValue() + height, 0x90000000);
 		mc.fontRendererObj.drawStringWithShadow(name, posX.getValue() + 4, posY.getValue() + 4, -1);
 		
-		Utils.calculate(width, height, posX, posY, new ScaledResolution(mc));
+		Utils.calculate(width, height, posX, posY, e.sr);
 	}
 	
 	@Override

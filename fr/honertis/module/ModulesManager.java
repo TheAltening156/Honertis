@@ -35,7 +35,8 @@ import fr.honertis.utils.YamlUtils.ConfigMod;
 
 public class ModulesManager {
 	public static CopyOnWriteArrayList<ModuleBase> modules = new CopyOnWriteArrayList<ModuleBase>();
-
+	private volatile List<ModuleBase> cachedReversed = null;
+	
 	public ModulesManager() {
 		add(
 			new BlockHit(),
@@ -65,14 +66,18 @@ public class ModulesManager {
 	}
 	
 	public List<ModuleBase> getModulesPriority() {
-	    CopyOnWriteArrayList<ModuleBase> modules = Honertis.INSTANCE.modulesManager.modules;
-	    List<ModuleBase> reversed = new ArrayList<>(modules);
-	    Collections.reverse(reversed);
-	    return reversed;
+	    List<ModuleBase> local = cachedReversed;
+	    if (local == null) {
+	    	local = new ArrayList<>(modules);
+	    	Collections.reverse(local);
+	    	cachedReversed = local;
+	    }
+	    return local;
 	}
 	
 	private void add(ModuleBase... m) {
 		modules.addAll(Arrays.asList(m));
+		cachedReversed = null;
 	}
 
 	public ModuleBase getModuleByName(String name) {

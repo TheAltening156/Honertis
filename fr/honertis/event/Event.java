@@ -7,20 +7,19 @@ public class Event<T> {
 	public boolean cancelled;
 	public EventType type;
 	
-	public void onEvent(T e) {
-		for (ModuleBase m : Honertis.INSTANCE.modulesManager.getModulesPriority()) {
-			if (m.isEnabled()) {
-				if (e instanceof EventUpdate) {
-					m.onUpdate((EventUpdate) e);
-				}	
-				if (e instanceof EventRenderGui) {
-					m.onGuiRender((EventRenderGui) e);
-				}
-				if (e instanceof EventRender2D) {
-					m.onRender2D((EventRender2D) e);
-				}
-			}
-		}
+	public void onEvent(EventUpdate e) {
+	    for (ModuleBase m : Honertis.INSTANCE.modulesManager.getModulesPriority())
+	        if (m.isEnabled()) m.onUpdate(e);
+	}
+
+	public void onEvent(EventRenderGui e) {
+	    for (ModuleBase m : Honertis.INSTANCE.modulesManager.getModulesPriority())
+	        if (m.isEnabled()) m.onGuiRender(e);
+	}
+
+	public void onEvent(EventRender2D e) {
+	    for (ModuleBase m : Honertis.INSTANCE.modulesManager.getModulesPriority())
+	        if (m.isEnabled()) m.onRender2D(e);
 	}
 	
 	public boolean isCancelled() {
