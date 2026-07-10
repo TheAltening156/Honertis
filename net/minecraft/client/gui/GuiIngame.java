@@ -18,6 +18,9 @@ import java.awt.Color;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -389,7 +392,7 @@ public class GuiIngame extends Gui
         GlStateManager.disableLighting();
         GlStateManager.enableAlpha();
     }
-
+    
     public MusicPlayerGui musicPlayer = Honertis.INSTANCE.musicPlayer;
     
     protected void renderTooltip(ScaledResolution sr, float partialTicks)

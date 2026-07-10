@@ -21,6 +21,7 @@ import fr.honertis.module.modules.BlockTap;
 import fr.honertis.module.modules.DropSwing;
 import fr.honertis.module.modules.FreeLook;
 import fr.honertis.module.modules.Zoom;
+import fr.honertis.other.GameModeInfo;
 import fr.honertis.utils.TimeUtils;
 import fr.honertis.utils.WebUtils;
 
@@ -1245,6 +1246,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         	m.update();
         }
         
+        GameModeInfo.keyListener();
+        
         if (saveConfigFile.hasTimeElapsed(120000, true)) {
         	FileManager.save();
         	saveConfigFile.reset();
@@ -1986,6 +1989,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 			if (k == mod.key.getKey())
                 				mod.toggle();
                 		}
+                    	
+                    	GameModeInfo.keyListener();
                     	
                         if (k == 1)
                         {

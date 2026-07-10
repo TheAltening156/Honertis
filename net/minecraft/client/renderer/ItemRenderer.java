@@ -366,6 +366,8 @@ public class ItemRenderer
         GlStateManager.rotate(60.0F, 0.0F, 1.0F, 0.0F);
     }
     public BlockHit blockhit = Honertis.INSTANCE.getModule(BlockHit.class);
+    public FishingRod fishRod = Honertis.INSTANCE.getModule(FishingRod.class);
+    public LowFire lowFire = Honertis.INSTANCE.getModule(LowFire.class);
 
     /**
      * Renders the active item in the player's hand when in first person mode. Args: partialTickTime
@@ -433,7 +435,7 @@ public class ItemRenderer
                     this.doItemUsedTransformations(f1);
                     this.transformFirstPersonItem(f, f1);
                 }
-                if (Honertis.INSTANCE.getModule(FishingRod.class).isEnabled()) {
+                if (fishRod.isEnabled()) {
     	            if (this.itemToRender.getItem() instanceof ItemFishingRod) {
     	            	GlStateManager.translate(0, 0.33, 0);
     	            	GlStateManager.scale(0.65, 0.65, 0.65);
@@ -605,7 +607,7 @@ public class ItemRenderer
             float f4 = textureatlassprite.getMaxV();
             float f5 = (0.0F - f) / 2.0F;
             float f6 = f5 + f;
-            float f7 = 0.0F - f / (Honertis.INSTANCE.getModule(LowFire.class).isEnabled() ? Honertis.INSTANCE.getModule(LowFire.class).height.getFloatValue() : 2.0f);
+            float f7 = 0.0F - f / (lowFire.isEnabled() ? lowFire.height.getFloatValue() : 2.0f);
             float f8 = f7 + f;
             float f9 = -0.5F;
             GlStateManager.translate((float)(-(i * 2 - 1)) * 0.24F, -0.3F, 0.0F);

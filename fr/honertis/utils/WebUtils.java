@@ -41,6 +41,8 @@ public class WebUtils{
 	    try {
 	      URL url = new URL(urly);
 	      HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+	      connection.setConnectTimeout(5000);
+	      connection.setReadTimeout(5000);
 	      connection.addRequestProperty(agent1, agent2);
 	      BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
 	      String line;

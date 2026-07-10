@@ -20,6 +20,7 @@ import fr.honertis.utils.Utils;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -161,12 +162,33 @@ public class GuiModuleOptions extends GuiScreen {
 						boolean hover = isHovered(modX + 8, modY - 5, (modX + 8) + 18, (modY - 5) + 18, mouseX, mouseY);
 						drawImage(modX + 8, modY - 5, 18, 18, new ResourceLocation("honertis/settings" + (hover ? (m.showSettings() ? "OH" : "H") : m.showSettings() ? "O" : "C") + ".png"));
 					}
-			
+					
 					if (m.showSettings()) {
 						HitColor clr = Honertis.INSTANCE.getModule(HitColor.class);
 						if (m.getName().equals(clr.getName()) && clr.custom.isEnabled()) {
-							drawRect(settsX + 165, settsY + 15, settsX + 190, settsY + 40, new Color((int)clr.r.getDefValue(), (int)clr.g.getDefValue(), (int)clr.b.getDefValue(), (int)clr.a.getDefValue()).getRGB());
-							mc.fontRendererObj.drawString("rendu :", settsX + 160, settsY, -1);
+							if (mc.thePlayer != null) {
+								GuiInventory.drawEntityOnScreen(settsX + 180, settsY + 130, 45, 0, 0, mc.thePlayer);
+
+							    GlStateManager.pushMatrix();
+							    GlStateManager.enableBlend();
+							    GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+							    
+							    GlStateManager.color(
+							        (float)(clr.r.getDefValue() / 255f), 
+							        (float)(clr.g.getDefValue() / 255f), 
+							        (float)(clr.b.getDefValue() / 255f), 
+							        (float)(Math.min(clr.a.getDefValue(), 233)/ 255f)
+							    );
+
+							    GlStateManager.disableTexture2D(); 
+
+							    GuiInventory.drawEntityOnScreen(settsX + 180, settsY + 130, 45, 0, 0, mc.thePlayer);
+
+							    GlStateManager.enableTexture2D();
+							    GlStateManager.disableBlend();
+							    GlStateManager.resetColor();
+							    GlStateManager.popMatrix();
+							}
 						}
 					}
 					for (Settings s : m.settings) {

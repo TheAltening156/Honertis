@@ -111,3 +111,9 @@ gui.musicPlayer.wav=Placez vos fichiers ".wav" dans le dossier
 
 gui.musicPlayer.macTooOld1=Votre version Mac est trop ancienne (
 gui.musicPlayer.macTooOld2=) pour la recherche YouTube, \nVeuillez mettre à jour votre Mac vers une version plus récente (10.15 Catalina minimum).
+
+# InGame Switcher
+debug.gamemodes.error=Vous n'avez pas la permission d'ouvrir le sélecteur de mode de jeu
+debug.gamemodes.help=F3 + F4 = Ouvrir le sélecteur de mode de jeu
+debug.gamemodes.press_f4=[ F4 ]
+debug.gamemodes.select_next=%s Suivant

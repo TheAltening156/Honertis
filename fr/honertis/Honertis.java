@@ -1,6 +1,8 @@
 package fr.honertis;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +12,11 @@ import fr.honertis.guis.music.MusicPlayerGui;
 import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.module.ModulesManager;
+import fr.honertis.other.GameModeInfo;
 import net.minecraft.client.gui.GuiScreenResourcePacks;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import yalter.mousetweaks.Constants;
 
 public class Honertis {
@@ -29,7 +35,7 @@ public class Honertis {
 	public Map<File, List<File>> subFolderPacks;
 	public Thread packsThread = null;
 	public GuiScreenResourcePacks guiScreenResourcePacks;
-
+	
 	public void start() {
 		name = "Honertis";
 		version = "1.9U1";
@@ -43,6 +49,7 @@ public class Honertis {
 		FileManager.init();
 		rpc.init();
 		yalter.mousetweaks.Main.initialize(Constants.EntryPoint.UNDEFINED);
+		GameModeInfo.createArraylist();
 	}
 	
 	public <T extends ModuleBase> T getModule(Class<T> m) {

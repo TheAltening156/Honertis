@@ -111,3 +111,9 @@ gui.musicPlayer.wav=Put your ".wav" files in the folder
 
 gui.musicPlayer.macTooOld1=Your mac version is too old (
 gui.musicPlayer.macTooOld2=) for youtube research, \nPlease update you mac to a later version (10.15 Catalina minimum).
+
+# InGame Switcher
+debug.gamemodes.error=Unable to open game mode switcher; no permission
+debug.gamemodes.help=F3 + F4 = Open game mode switcher
+debug.gamemodes.press_f4=[ F4 ]
+debug.gamemodes.select_next=%s Next
