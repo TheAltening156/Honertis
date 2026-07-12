@@ -21,7 +21,7 @@ public class Reach extends ModuleBase{
 	
 	@Override
 	public void onGuiRender(EventRenderGui e) {
-		String name = "Reach : " + (lastReach > 3 ? EnumChatFormatting.RED +  "" : "") + String.format("%.2f", lastReach);
+		String name = "Reach : " + (lastReach > 4 ? EnumChatFormatting.DARK_RED + "": lastReach > 3 ? EnumChatFormatting.RED +  "" : "") + String.format("%.2f", lastReach);
 		double width = mc.fontRendererObj.getStringWidth(name) + 8;
 		double height = 15;
 		Gui.drawRect(posX.getValue(), posY.getValue(), posX.getValue() + width, posY.getValue() + height, 0x90000000);
@@ -33,6 +33,6 @@ public class Reach extends ModuleBase{
 	@Override
 	public void onAttacking(EventAttack e) {
 		float dist = mc.thePlayer.getDistanceToEntity(e.entity);
-		lastReach = dist <= 5 ? mc.thePlayer.getDistanceToEntity(e.entity) : lastReach;
+		lastReach = dist <= 6 ? mc.thePlayer.getDistanceToEntity(e.entity) : lastReach;
 	}
 }
