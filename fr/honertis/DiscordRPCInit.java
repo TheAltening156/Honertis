@@ -12,12 +12,7 @@ public class DiscordRPCInit {
 	
 	public static void init() {
 		DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().setReadyEventHandler((user) -> {
-            DiscordRichPresence.Builder presence = new DiscordRichPresence.Builder("https://bit.ly/honertis");            
-            presence.setSmallImage("512", Minecraft.getMinecraft().getSession().getUsername());
-            presence.setBigImage("1024", Honertis.INSTANCE.name + " v" + Honertis.INSTANCE.version);
-            presence.setDetails(Honertis.INSTANCE.name + " v" + Honertis.INSTANCE.version);
-            presence.setStartTimestamps(System.currentTimeMillis() / 1000);
-            DiscordRPC.discordUpdatePresence(presence.build());
+            updateRPC();
         }).build();
         DiscordRPC.discordInitialize(id, handlers, false);
         DiscordRPC.discordRegister(id, "");
@@ -30,5 +25,14 @@ public class DiscordRPCInit {
 			}
 		}, "RPC-Callback");
         rpcThread.start();
+	}
+	
+	public static void updateRPC() {
+		DiscordRichPresence.Builder presence = new DiscordRichPresence.Builder("https://bit.ly/honertis");            
+        presence.setSmallImage("512", Minecraft.getMinecraft().getSession().getUsername());
+        presence.setBigImage("1024", Honertis.INSTANCE.name + " v" + Honertis.INSTANCE.version);
+        presence.setDetails(Honertis.INSTANCE.name + " v" + Honertis.INSTANCE.version);
+        presence.setStartTimestamps(System.currentTimeMillis() / 1000);
+        DiscordRPC.discordUpdatePresence(presence.build());
 	}
 }

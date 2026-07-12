@@ -1,6 +1,10 @@
 package net.minecraft.client.renderer.entity;
 
 import com.google.common.collect.Maps;
+
+import fr.honertis.Honertis;
+import fr.honertis.module.modules.FreeLook;
+
 import java.util.Collections;
 import java.util.Map;
 import net.minecraft.block.Block;
@@ -276,8 +280,8 @@ public class RenderManager
         }
         else
         {
-            this.playerViewY = livingPlayerIn.prevRotationYaw + (livingPlayerIn.rotationYaw - livingPlayerIn.prevRotationYaw) * partialTicks;
-            this.playerViewX = livingPlayerIn.prevRotationPitch + (livingPlayerIn.rotationPitch - livingPlayerIn.prevRotationPitch) * partialTicks;
+            this.playerViewY = freelook.isEnabled() ? freelook.rotYaw : livingPlayerIn.prevRotationYaw + (livingPlayerIn.rotationYaw - livingPlayerIn.prevRotationYaw) * partialTicks;
+            this.playerViewX = freelook.isEnabled() ? freelook.rotPitch : livingPlayerIn.prevRotationPitch + (livingPlayerIn.rotationPitch - livingPlayerIn.prevRotationPitch) * partialTicks;
         }
 
         if (optionsIn.thirdPersonView == 2)
@@ -290,6 +294,8 @@ public class RenderManager
         this.viewerPosZ = livingPlayerIn.lastTickPosZ + (livingPlayerIn.posZ - livingPlayerIn.lastTickPosZ) * (double)partialTicks;
     }
 
+    public FreeLook freelook = Honertis.INSTANCE.modulesManager.getModuleByClass(FreeLook.class);
+    
     public void setPlayerViewY(float playerViewYIn)
     {
         this.playerViewY = playerViewYIn;

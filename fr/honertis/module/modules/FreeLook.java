@@ -2,6 +2,7 @@ package fr.honertis.module.modules;
 
 import org.lwjgl.input.Keyboard;
 
+import fr.honertis.Honertis;
 import fr.honertis.event.EventRender2D;
 import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
@@ -24,6 +25,9 @@ public class FreeLook extends ModuleBase {
 	public float lastYaw = 0.0F;
 	public float lastPitch = 0.0F;
 
+	public float lastPlayerViewX = 0.0F;
+	public float lastPlayerViewY = 0.0F;
+	
 	public int lastView;
 	
 	@Override
@@ -32,7 +36,8 @@ public class FreeLook extends ModuleBase {
 	    this.rotYaw = lastYaw = mc.thePlayer.rotationYaw;
 	    this.rotPitch = lastPitch = mc.thePlayer.rotationPitch;
 	    mc.gameSettings.thirdPersonView = 1;
-
+	    lastPlayerViewY = mc.getRenderManager().playerViewY;
+	    lastPlayerViewX = mc.getRenderManager().playerViewX;
 	}
 
 	@Override
@@ -40,7 +45,8 @@ public class FreeLook extends ModuleBase {
 		mc.thePlayer.rotationYaw = this.lastYaw;
 		mc.thePlayer.rotationPitch = this.lastPitch;
 	    mc.gameSettings.thirdPersonView = lastView;
-
+	    mc.getRenderManager().playerViewY = lastPlayerViewY;
+	    mc.getRenderManager().playerViewX = lastPlayerViewX;
 	}
 
 	@Override

@@ -148,6 +148,7 @@ public class GuiAltManager extends GuiScreen{
 				MicrosoftAuthResult result = new MicrosoftAuthenticator().loginWithRefreshToken(accs.get(accountName).refreshToken);
 				mc.session = new Session(result.getProfile().getName(), result.getProfile().getId(), result.getAccessToken(), "legacy");
 				setActionTextAndColor(LangManager.format("gui.honertis.altManager.connected") + " " + accountName + ".", Color.GREEN);
+				Honertis.INSTANCE.rpc.updateRPC();
 			} catch (MicrosoftAuthenticationException e) {
 				setActionTextAndColor(LangManager.format("gui.honertis.altManager.logInError") + ": " + e.getLocalizedMessage(), Color.GREEN);
 				e.printStackTrace();
