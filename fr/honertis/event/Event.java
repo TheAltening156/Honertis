@@ -11,6 +11,11 @@ public class Event<T> {
 	    for (ModuleBase m : Honertis.INSTANCE.modulesManager.getModulesPriority())
 	        if (m.isEnabled()) m.onUpdate(e);
 	}
+	
+	public void onEvent(EventAttack e) {
+	    for (ModuleBase m : Honertis.INSTANCE.modulesManager.getModulesPriority())
+	        if (m.isEnabled()) m.onAttacking(e);
+	}
 
 	public void onEvent(EventRenderGui e) {
 	    for (ModuleBase m : Honertis.INSTANCE.modulesManager.getModulesPriority())

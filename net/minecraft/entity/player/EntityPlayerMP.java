@@ -3,6 +3,10 @@ package net.minecraft.entity.player;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.mojang.authlib.GameProfile;
+
+import fr.honertis.Honertis;
+import fr.honertis.event.EventAttack;
+import fr.honertis.event.EventType;
 import io.netty.buffer.Unpooled;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -1271,6 +1275,10 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
      */
     public void attackTargetEntityWithCurrentItem(Entity targetEntity)
     {
+    	EventAttack e = new EventAttack(targetEntity);
+    	e.setType(EventType.PRE);
+    	Honertis.INSTANCE.event.onEvent(e);
+    	
         if (this.theItemInWorldManager.getGameType() == WorldSettings.GameType.SPECTATOR)
         {
             this.setSpectatingEntity(targetEntity);

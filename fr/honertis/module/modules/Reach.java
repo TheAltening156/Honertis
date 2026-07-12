@@ -2,8 +2,8 @@ package fr.honertis.module.modules;
 
 import java.util.stream.Collectors;
 
+import fr.honertis.event.EventAttack;
 import fr.honertis.event.EventRenderGui;
-import fr.honertis.event.EventUpdate;
 import fr.honertis.module.Category;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.utils.Utils;
@@ -31,10 +31,8 @@ public class Reach extends ModuleBase{
 	}
 	
 	@Override
-	public void onUpdate(EventUpdate e) {
-		for (Entity target : mc.theWorld.loadedEntityList) {
-			float dist = mc.thePlayer.getDistanceToEntity(target);
-			lastReach = dist <= 3 ? mc.thePlayer.getDistanceToEntity(target) : lastReach;
-		}
+	public void onAttacking(EventAttack e) {
+		float dist = mc.thePlayer.getDistanceToEntity(e.entity);
+		lastReach = dist <= 5 ? mc.thePlayer.getDistanceToEntity(e.entity) : lastReach;
 	}
 }
