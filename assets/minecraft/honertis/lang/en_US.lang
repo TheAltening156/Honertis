@@ -82,6 +82,8 @@ module.noCamHurt.hand=Hand move
 
 module.saturation=Shows the remaining saturation above the hunger bar
 
+module.reachIndicator=Displays the reach of your last hit
+
 # Honertis Menu
 gui.honertis.options.name=Honertis Options
 gui.honertis.credits.name=Credits
@@ -115,5 +117,4 @@ gui.musicPlayer.macTooOld2=) for youtube research, \nPlease update you mac to a 
 # InGame Switcher
 debug.gamemodes.error=Unable to open game mode switcher; no permission
 debug.gamemodes.help=F3 + F4 = Open game mode switcher
-debug.gamemodes.press_f4=[ F4 ]
-debug.gamemodes.select_next=%s Next
+debug.gamemodes.select_next=Next

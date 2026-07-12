@@ -26,6 +26,7 @@ import fr.honertis.module.modules.MoreParticles;
 import fr.honertis.module.modules.MouseTweaks;
 import fr.honertis.module.modules.NorCamHurt;
 import fr.honertis.module.modules.Ping;
+import fr.honertis.module.modules.Reach;
 import fr.honertis.module.modules.Saturation;
 import fr.honertis.module.modules.ToggleSneak;
 import fr.honertis.module.modules.ToggleSprint;
@@ -61,7 +62,8 @@ public class ModulesManager {
 			new MiniPlayer(),
 			new ItemPhysics(),
 			new NorCamHurt(),
-			new Saturation());
+			new Saturation(),
+			new Reach());
 		
 	}
 	

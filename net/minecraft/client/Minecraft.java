@@ -478,6 +478,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
             return;
         }
     }
+	public FreeLook mod;
 
     /**
      * Starts the game: initializes the canvas, the title, the settings, etcetera.
@@ -498,8 +499,8 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.setWindowIcon();
         this.setInitialDisplayMode();
         Honertis.INSTANCE.start();
-        FreeLook fr = Honertis.INSTANCE.getModule(FreeLook.class);
-        	if (fr.isEnabled()) fr.setEnabled(false);
+        mod = Honertis.INSTANCE.getModule(FreeLook.class);
+        	if (mod.isEnabled()) mod.setEnabled(false);
         this.createDisplay();
         OpenGlHelper.initializeTextures();
         this.framebufferMc = new Framebuffer(this.displayWidth, this.displayHeight, true);
@@ -1236,7 +1237,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         this.mcProfiler.endSection();
     }
 
-    public TimeUtils saveConfigFile = new TimeUtils();
+    public TimeUtils configTimer = new TimeUtils();
     
     public void updateDisplay()
     {
@@ -1246,11 +1247,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage
         	m.update();
         }
         
-        GameModeInfo.keyListener();
+        GameModeInfo.update();
         
-        if (saveConfigFile.hasTimeElapsed(120000, true)) {
+        if (configTimer.hasTimeElapsed(120000, true)) {
         	FileManager.save();
-        	saveConfigFile.reset();
+        	configTimer.reset();
         }
         Display.update();
         this.mcProfiler.endSection();
@@ -1983,14 +1984,12 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                     }
                     else
                     {
-                    	
-                    	FreeLook mod = Honertis.INSTANCE.getModule(FreeLook.class);
                     	if (!mod.hold.isEnabled()) {
                 			if (k == mod.key.getKey())
                 				mod.toggle();
                 		}
                     	
-                    	GameModeInfo.keyListener();
+                    	GameModeInfo.keyListener(k);
                     	
                         if (k == 1)
                         {

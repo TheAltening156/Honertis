@@ -823,7 +823,7 @@ public class GuiIngame extends Gui
                     previewSaturation = Math.min(saturation + saturationGain, previewFood);
                 }
 
-                float alpha = (float)((Math.sin(System.currentTimeMillis() / 250.0) + 1.0) / 2.0);
+                float alpha = (float)((Math.sin(System.currentTimeMillis() / 125.0) + 1.0) / 2.0);
                 
                 for (int k6 = 0; k6 < 10; ++k6)
                 {

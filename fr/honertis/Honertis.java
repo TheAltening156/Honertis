@@ -49,7 +49,7 @@ public class Honertis {
 		FileManager.init();
 		rpc.init();
 		yalter.mousetweaks.Main.initialize(Constants.EntryPoint.UNDEFINED);
-		GameModeInfo.createArraylist();
+		GameModeInfo.init();
 	}
 	
 	public <T extends ModuleBase> T getModule(Class<T> m) {

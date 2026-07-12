@@ -21,8 +21,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.management.UserListOpsEntry;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.WorldServer;
 
 public class GameModeInfo {
 	public ItemStack is;
@@ -41,7 +43,7 @@ public class GameModeInfo {
 		this.is = is;
 	}
 	
-	public static void createArraylist() {
+	public static void init() {
 		List<GameModeInfo> list = new ArrayList<GameModeInfo>();
 		list.addAll(Arrays.asList(
 				new GameModeInfo("gameMode.creative", "creative", new ItemStack(Blocks.grass)),
@@ -116,10 +118,35 @@ public class GameModeInfo {
 				RenderHelper.disableStandardItemLighting();
 			}
 			drawCenteredString(this.mc.fontRendererObj,
-					"§b" + LangManager.format("debug.gamemodes.press_f4")  + "§r - " + LangManager.format("debug.gamemodes.select_next"),
+					"§b[ F4 ] §r - " + LangManager.format("debug.gamemodes.select_next"),
 					centerX, windowY + windowHeight - 12, 11184810);
 			GlStateManager.disableBlend();
 			GlStateManager.popMatrix();
+		}
+		
+		@Override
+		protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+			ScaledResolution res = new ScaledResolution(mc);
+			int width = res.getScaledWidth();
+			int height = res.getScaledHeight();
+			int renderSlotSize = 26;
+			int count = gameModes.size();
+			int windowWidth = 125;
+			int windowHeight = 75;
+			int centerX = width / 2;
+			int centerY = height / 2;
+			int windowY = centerY - windowHeight / 2 - 30;
+			int slotsStartX = centerX - windowWidth / 2 + 3;
+			int slotsY = windowY + 27;
+			for (int i = 0; i < count; i++) {
+				int x = slotsStartX + i * renderSlotSize + i * 5;
+				if (mouseX >= x && mouseX < x + renderSlotSize && mouseY >= slotsY && mouseY < slotsY + renderSlotSize) {
+					selectedIndex = i;
+					applyGameMode();
+					isVisible = false;
+					mc.setIngameFocus();
+				}
+			}
 		}
 	}
 	
@@ -131,13 +158,9 @@ public class GameModeInfo {
 		}
 	}
 	
-	public static void keyListener() {
-		if (Keyboard.getEventKey() == 62 && Keyboard.getEventKeyState() && Keyboard.isKeyDown(61)) {
+	public static void keyListener(int key) {
+		if (key == 62 && Keyboard.getEventKeyState() && Keyboard.isKeyDown(61)) {
 			if (!isVisible) {
-				/*if (!hasPermission()) {
-					ChatUtils.printChat(EnumChatFormatting.YELLOW + "" + EnumChatFormatting.BOLD + "[Debug] " + EnumChatFormatting.WHITE + LangManager.format("debug.gamemodes.error"));
-					return;
-				}*/
 				openMenu();
 				if (!(mc.currentScreen instanceof GuiIngameSwitcher))
 					mc.displayGuiScreen(new GuiIngameSwitcher());
@@ -195,6 +218,7 @@ public class GameModeInfo {
 	}
 	
 	private static boolean hasPermission() {
+		System.out.println(mc.thePlayer.canCommandSenderUseCommand(2, "gamemode"));
     	return mc.thePlayer != null && mc.thePlayer.canCommandSenderUseCommand(2, "gamemode");
     }
 }

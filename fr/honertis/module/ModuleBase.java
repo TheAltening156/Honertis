@@ -106,7 +106,9 @@ public class ModuleBase extends Events{
 	}
 	
 	public boolean mouseClicked(int mouseX, int mouseY) {
-    	if (GuiScreen.isHovered(posX.getValue(), posY.getValue(), posX.getValue() + posX.getSize(), posY.getValue() + posY.getSize(), mouseX, mouseY) && isEnabled()) {
+		double x = posX.getValue();
+		double y = posY.getValue();
+    	if (GuiScreen.isHovered(x, y, x + posX.getSize(), y + posY.getSize(), mouseX, mouseY) && isEnabled()) {
     		return isClicked = true;
     	}
     	return false;
