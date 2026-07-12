@@ -216,9 +216,4 @@ public class GameModeInfo {
 		mc.displayGuiScreen(null);
 		isVisible = false;
 	}
-	
-	private static boolean hasPermission() {
-		System.out.println(mc.thePlayer.canCommandSenderUseCommand(2, "gamemode"));
-    	return mc.thePlayer != null && mc.thePlayer.canCommandSenderUseCommand(2, "gamemode");
-    }
 }
