@@ -20,6 +20,7 @@ import fr.honertis.utils.Utils;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -138,7 +139,7 @@ public class GuiModuleOptions extends GuiScreen {
 		GlStateManager.popMatrix();
 		GlStateManager.pushMatrix();
     	GL11.glEnable(GL11.GL_SCISSOR_TEST);
-    	Utils.scissorGui(0, 45, width, height - 72);
+    	Utils.scissorGui(0, 45, width, height - 72, new ScaledResolution(mc));
 		int posY = 50 + mouse;
 		for (Category c : Category.values()) {
 			mc.fontRendererObj.drawCenteredStringWithShadow(c.getName(), this.width / 2, posY, -1);

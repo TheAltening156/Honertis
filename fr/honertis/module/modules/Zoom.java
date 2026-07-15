@@ -7,12 +7,13 @@ import fr.honertis.settings.NumberSettings;
 
 public class Zoom extends ModuleBase{
 	public BooleanSettings scroll = new BooleanSettings("Scroll", true);
+	public BooleanSettings smoothCam = new BooleanSettings("Smooth Camera", true);
 	public NumberSettings zoomSpeed = new NumberSettings("module.zoom.zoomspeed", 0.50, 0, 1, 0.01);
 	public boolean isZooming;
 	
 	public Zoom() {
 		super("Zoom", "module.zoom", Category.UTILITIES);
-		this.addSettings(scroll, zoomSpeed);
+		this.addSettings(scroll, zoomSpeed, smoothCam);
 	}
 	
 	

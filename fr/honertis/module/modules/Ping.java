@@ -19,16 +19,22 @@ public class Ping extends ModuleBase{
 	
 	@Override
 	public void onGuiRender(EventRenderGui e) {
+		String pingString;
 		NetworkPlayerInfo d = mc.getNetHandler().getPlayerInfo(mc.thePlayer.getUniqueID());
-		if (d != null) {
-			String pingString = "Ping : " + (mc.isSingleplayer() ? "0" : d.getResponseTime() + " ms");
-			double width = mc.fontRendererObj.getStringWidth(pingString) + 8;
-			double height = 15;
-			Gui.drawRect(posX.getValue(), posY.getValue(), posX.getValue() + width, posY.getValue() + height, 0x90000000);
-			mc.fontRendererObj.drawStringWithShadow(pingString, posX.getValue() + 4, posY.getValue() + 4, -1);
-			
-			Utils.calculate(width, height, posX, posY, e.sr);
+		if (mc.isSingleplayer()) {
+			pingString = "0";
+		} else if (d != null) {
+			pingString = String.valueOf(d.getResponseTime());			
+		} else {
+			pingString = "-1";
 		}
+		pingString = "Ping : " + pingString + " ms";
+		double width = mc.fontRendererObj.getStringWidth(pingString) + 8;
+		double height = 15;
+		Gui.drawRect(posX.getValue(), posY.getValue(), posX.getValue() + width, posY.getValue() + height, 0x90000000);
+		mc.fontRendererObj.drawStringWithShadow(pingString, posX.getValue() + 4, posY.getValue() + 4, -1);
+		
+		Utils.calculate(width, height, posX, posY, e.sr);
 	}
 	
 }

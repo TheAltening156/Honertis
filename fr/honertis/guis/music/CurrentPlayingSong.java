@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import static fr.honertis.utils.DrawUtils.*;
 import fr.honertis.utils.Utils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 
 public class CurrentPlayingSong {
@@ -18,7 +19,7 @@ public class CurrentPlayingSong {
 		if (!songName.equals("") || !thumbnail.equals("")) {
         	GlStateManager.pushMatrix();
         	GL11.glEnable(GL11.GL_SCISSOR_TEST);
-        	Utils.scissorGui(posX + 73, posY, 204, 254);
+        	Utils.scissorGui(posX + 73, posY, 204, 254, new ScaledResolution(mc));
         	String text = StringEscapeUtils.unescapeHtml4(songName);
 	        int textWidth = mc.fontRendererObj.getStringWidth(text + "           ");
 	        double maxTextWidth = 204;

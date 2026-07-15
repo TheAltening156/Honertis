@@ -57,8 +57,7 @@ public class Utils {
         return sb.toString();
 	}
 	
-	public static void scissorGui(double guiX, double guiY, double guiW, double guiH) {
-	    ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+	public static void scissorGui(double guiX, double guiY, double guiW, double guiH, ScaledResolution sr) {
 	    int scale = sr.getScaleFactor();
 
 	    int x = (int) Math.floor(guiX * scale);

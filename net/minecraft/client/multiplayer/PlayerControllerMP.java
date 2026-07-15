@@ -1,5 +1,7 @@
 package net.minecraft.client.multiplayer;
 
+import fr.honertis.event.EventType;
+import fr.honertis.utils.ChatUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;

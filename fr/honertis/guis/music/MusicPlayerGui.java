@@ -206,7 +206,7 @@ public class MusicPlayerGui extends GuiScreen {
             double localH = Math.min(textY + lineSpacing, contentY + (scissorHeight / scaleFactor)) - localY;
 
             if (localW > 0 && localH > 0) {
-                scissorGui(localX, localY, localW, localH);
+                scissorGui(localX, localY, localW, localH, sr);
 
                 if (textWidth > maxTextWidth) {
                     GlStateManager.translate(-offset, 0, 0);

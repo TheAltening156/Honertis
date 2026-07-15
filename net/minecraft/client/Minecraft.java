@@ -15,6 +15,8 @@ import com.mojang.authlib.properties.PropertyMap;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 
 import fr.honertis.Honertis;
+import fr.honertis.event.EventAttack;
+import fr.honertis.event.EventType;
 import fr.honertis.manager.FileManager;
 import fr.honertis.module.ModuleBase;
 import fr.honertis.module.modules.BlockTap;
@@ -1580,6 +1582,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage
                 {
                     case ENTITY:
                         this.playerController.attackEntity(this.thePlayer, this.objectMouseOver.entityHit);
+                        //TODO: test
+                        EventAttack e = new EventAttack(this.objectMouseOver.entityHit);
+                    	e.setType(EventType.POST);
+                    	Honertis.INSTANCE.event.onEvent(e);
                         break;
 
                     case BLOCK:

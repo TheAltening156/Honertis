@@ -7,6 +7,7 @@ import com.mojang.authlib.GameProfile;
 import fr.honertis.Honertis;
 import fr.honertis.event.EventAttack;
 import fr.honertis.event.EventType;
+import fr.honertis.utils.ChatUtils;
 import io.netty.buffer.Unpooled;
 import java.util.Arrays;
 import java.util.Iterator;

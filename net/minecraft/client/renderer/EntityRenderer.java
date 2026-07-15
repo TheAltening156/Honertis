@@ -644,6 +644,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
                 flag = GameSettings.isKeyDown(this.mc.gameSettings.ofKeyBindZoom);
             }
     		zoom.isZooming = flag && zoom.scroll.isEnabled();
+    		if (!zoom.isZooming) zoomTarget = 1;
             if (zoom.isEnabled()) {
             	if (mc.currentScreen == null) {
             		
@@ -651,14 +652,14 @@ public class EntityRenderer implements IResourceManagerReloadListener
 	            	
             		if (!Config.zoomMode) {
 	 	                Config.zoomMode = true;
-	            		this.mc.gameSettings.smoothCamera = true;
+	            		this.mc.gameSettings.smoothCamera = zoom.smoothCam.isEnabled();
 	 	            }
             		
 	            	int i1 = Mouse.getDWheel();
             		
             		if (zoom.isZooming && i1 != 0) { 
-            			zoomTarget += Math.signum(i1) * 0.25f;
-	            		zoomTarget = MathHelper.clamp_float(zoomTarget, 0.5f, 6.0f);
+            			zoomTarget += (Math.signum(i1) * 0.25f) * (zoomValue/1.5f);
+	            		zoomTarget = MathHelper.clamp_float(zoomTarget, 0.5f, 8.0f);
 	            	}
             		
             		float slider = zoom.zoomSpeed.getFloatValue(); 

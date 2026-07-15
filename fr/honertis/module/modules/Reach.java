@@ -10,6 +10,8 @@ import fr.honertis.utils.Utils;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 
 public class Reach extends ModuleBase{
 	public float lastReach = 0;
@@ -32,7 +34,13 @@ public class Reach extends ModuleBase{
 	
 	@Override
 	public void onAttacking(EventAttack e) {
-		float dist = mc.thePlayer.getDistanceToEntity(e.entity);
-		lastReach = dist <= 6 ? mc.thePlayer.getDistanceToEntity(e.entity) : lastReach;
+		if (e.isPost()) {
+			MovingObjectPosition mop = mc.objectMouseOver;
+			if (mop != null) {
+				Vec3 eyes = mc.thePlayer.getPositionEyes(1.0F);
+		    	double reach = eyes.distanceTo(mop.hitVec);
+				lastReach = (float) (reach <= 6 ? reach : lastReach);
+			}
+		}
 	}
 }
