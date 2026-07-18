@@ -30,7 +30,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreenWorking;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.resources.ResourcePackRepository.SubFolder;
 import net.minecraft.client.resources.data.IMetadataSerializer;
 import net.minecraft.client.resources.data.PackMetadataSection;
 import net.minecraft.client.settings.GameSettings;
@@ -155,12 +154,19 @@ public class ResourcePackRepository
         packs.addAll(zips);
         return packs;
     }
+    public class SubFolderPack extends ResourcePackRepository.Entry{    	
+    	public SubFolderPack(File file) {
+    		super(file);
+    	}
+    }
+    
     public class SubFolder extends ResourcePackRepository.Entry{
     	public String name;
     	public boolean opened;
     	
     	public SubFolder(String name) {
-    		super(new File(this.name = name));
+    		super(new File(name));
+    		this.name = name;
     	}
     	@Override
     	public void bindTexturePackIcon(TextureManager textureManagerIn) {
@@ -183,11 +189,6 @@ public class ResourcePackRepository
     	@Override
     	public void updateResourcePack() throws IOException {
     		
-    	}
-    }
-    public class SubFolderPack extends ResourcePackRepository.Entry{    	
-    	public SubFolderPack(File file) {
-    		super(file);
     	}
     }
     
@@ -417,7 +418,7 @@ public class ResourcePackRepository
         private BufferedImage texturePackIcon;
         private ResourceLocation locationTexturePackIcon;
 
-        private Entry(File resourcePackFileIn)
+        public Entry(File resourcePackFileIn)
         {
             this.resourcePackFile = resourcePackFileIn;
         }

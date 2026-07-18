@@ -8,29 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.honertis.Honertis;
 import fr.honertis.module.addons.MiniPlayer;
-import fr.honertis.module.modules.AutoGG;
-import fr.honertis.module.modules.BlockHit;
-import fr.honertis.module.modules.BlockTap;
-import fr.honertis.module.modules.CPS;
-import fr.honertis.module.modules.CustomTime;
-import fr.honertis.module.modules.DropSwing;
-import fr.honertis.module.modules.FPS;
-import fr.honertis.module.modules.FishingRod;
-import fr.honertis.module.modules.FreeLook;
-import fr.honertis.module.modules.FullBright;
-import fr.honertis.module.modules.HitColor;
-import fr.honertis.module.modules.ItemPhysics;
-import fr.honertis.module.modules.KeyStrokes;
-import fr.honertis.module.modules.LowFire;
-import fr.honertis.module.modules.MoreParticles;
-import fr.honertis.module.modules.MouseTweaks;
-import fr.honertis.module.modules.NorCamHurt;
-import fr.honertis.module.modules.Ping;
-import fr.honertis.module.modules.Reach;
-import fr.honertis.module.modules.Saturation;
-import fr.honertis.module.modules.ToggleSneak;
-import fr.honertis.module.modules.ToggleSprint;
-import fr.honertis.module.modules.Zoom;
+import fr.honertis.module.modules.*;
 import fr.honertis.settings.Settings;
 import fr.honertis.utils.YamlUtils.ConfigMod;
 
@@ -63,7 +41,8 @@ public class ModulesManager {
 			new ItemPhysics(),
 			new NorCamHurt(),
 			new Saturation(),
-			new Reach());
+			new Reach(),
+			new Combo());
 		
 	}
 	

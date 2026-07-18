@@ -159,7 +159,7 @@ public class GuiModuleOptions extends GuiScreen {
 					mc.fontRendererObj.drawCenteredString(m.isEnabled() ? "I" : "O", modX + 50, modY, -1);
 					drawRect(  modX + (m.isEnabled() ? 60 : 34), modY - 5, modX + (m.isEnabled() ? 66 : 40), modY + 12, -1);					
 					
-					if (!m.settings.isEmpty() && (m.settings != m.posX && m.settings != m.posY)) {
+					if (!m.settings.isEmpty() && !m.settings.stream().allMatch(s -> s == m.posX || s == m.posY)) {
 						boolean hover = isHovered(modX + 8, modY - 5, (modX + 8) + 18, (modY - 5) + 18, mouseX, mouseY);
 						drawImage(modX + 8, modY - 5, 0, (hover ? (m.showSettings() ? 54 : 18) : m.showSettings() ? 36 : 0), 18, 18, 18, 72, new ResourceLocation("honertis/settings.png"));
 					}
@@ -277,7 +277,7 @@ public class GuiModuleOptions extends GuiScreen {
 							if (isHovered(modX + 35, modY - 5, modX + 66, modY + 12, mouseX, mouseY)) {
 								m.toggle();
 							}
-							if (isHovered(modX + 8, modY - 5, (modX + 8) + 18, (modY - 5) + 18, mouseX, mouseY)) {
+							if (isHovered(modX + 8, modY - 5, (modX + 8) + 18, (modY - 5) + 18, mouseX, mouseY) && !m.settings.stream().allMatch(s -> s == m.posX || s == m.posY)) {
 								m.toggleShowSettings();
 							}
 						}

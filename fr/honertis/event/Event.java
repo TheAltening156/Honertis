@@ -27,6 +27,11 @@ public class Event<T> {
 	        if (m.isEnabled()) m.onRender2D(e);
 	}
 	
+	public void onEvent(EventReceivePacket e) {
+		for (ModuleBase m : Honertis.INSTANCE.modulesManager.getModulesPriority()) 
+			if (m.isEnabled()) m.onReceivePacket(e);
+	}
+	
 	public boolean isCancelled() {
 		return cancelled;
 	}

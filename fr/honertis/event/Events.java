@@ -5,4 +5,5 @@ public class Events {
 	public void onGuiRender(EventRenderGui e) {}
 	public void onRender2D(EventRender2D e) {}
 	public void onAttacking(EventAttack e) {}
+	public void onReceivePacket(EventReceivePacket e) {}
 }

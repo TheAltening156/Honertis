@@ -2,6 +2,10 @@ package net.minecraft.network;
 
 import com.google.common.collect.Queues;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+import fr.honertis.Honertis;
+import fr.honertis.event.EventReceivePacket;
+import fr.honertis.event.EventType;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelException;
@@ -152,7 +156,11 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
         {
             try
             {
-                p_channelRead0_2_.processPacket(this.packetListener);
+            	EventReceivePacket e = new EventReceivePacket(p_channelRead0_2_);
+            	e.setType(EventType.PRE);
+            	Honertis.INSTANCE.event.onEvent(e);
+            	if (!e.isCancelled())
+            		e.getPacket().processPacket(this.packetListener);
             }
             catch (ThreadQuickExitException var4)
             {
